@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class Forwards extends OpMode {
+public class TeleOp extends OpMode {
 
 	DcMotor FR;
 	DcMotor FL;
@@ -51,7 +51,7 @@ public class Forwards extends OpMode {
 	/**
 	 * Constructor
 	 */
-	public Forwards() {
+	public TeleOp() {
 
 	}
 
@@ -105,25 +105,32 @@ public class Forwards extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float throttle = gamepad1.left_stick_x;
-		float direction = -gamepad1.left_stick_y;
-		float right = throttle - direction;
-		float left = throttle + direction;
-
+		float YVal = gamepad1.left_stick_y;
+		float XVal = gamepad1.left_stick_x;
+		float RotVal = -gamepad1.right_stick_x;
 		// clip the right/left values so that the values never exceed +/- 1
-		right = Range.clip(right, -1, 1);
-		left = Range.clip(left, -1, 1);
+		float YPower = Range.clip(YVal, -1, 1);
+		float XPower = Range.clip(XVal, -1, 1);
+		float RotPower = Range.clip(RotVal, -1, 1);
+
+		float FRpower = YPower+XPower-RotPower;
+		float FLpower = -(YPower-XPower+RotPower);
+		float BRpower = YPower-XPower-RotPower;
+		float BLpower = -(YPower+XPower+RotPower);
+
+		FRpower = Range.clip(FRpower, -1, 1);
+		FLpower = Range.clip(FLpower, -1, 1);
+		BRpower = Range.clip(BRpower, -1, 1);
+		BLpower = Range.clip(BLpower, -1, 1);
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
-		right = (float)scaleInput(right);
-		left =  (float)scaleInput(left);
-		
+
 		// write the values to the motors
-		FR.setPower(right);
-		BR.setPower(right);
-		FL.setPower(left);
-		BL.setPower(left);
+		FR.setPower(FRpower);
+		BR.setPower(FLpower);
+		FL.setPower(BRpower);
+		BL.setPower(BLpower);
 
 
 
@@ -134,8 +141,9 @@ public class Forwards extends OpMode {
 		 * are currently write only.
 		 */
         telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
-        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+        telemetry.addData("Forwards power",  "" + String.format("%.2f", YPower));
+        telemetry.addData("Left/Right Power", "" + String.format("%.2f", XPower));
+		telemetry.addData("Rotation power", "" + String.format("%.2f", RotPower));
 
 	}
 
@@ -154,26 +162,5 @@ public class Forwards extends OpMode {
 	 * scaled value is less than linear.  This is to make it easier to drive
 	 * the robot more precisely at slower speeds.
 	 */
-	double scaleInput(double dVal)  {
-		double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-				0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
-		
-		// get the corresponding index for the scaleInput array.
-		int index = (int) (dVal * 16.0);
-		if (index < 0) {
-			index = -index;
-		} else if (index > 16) {
-			index = 16;
-		}
-		
-		double dScale = 0.0;
-		if (dVal < 0) {
-			dScale = -scaleArray[index];
-		} else {
-			dScale = scaleArray[index];
-		}
-		
-		return dScale;
-	}
 
 }
