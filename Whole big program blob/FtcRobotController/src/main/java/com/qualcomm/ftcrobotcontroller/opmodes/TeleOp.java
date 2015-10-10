@@ -131,17 +131,28 @@ public class TeleOp extends OpMode {
     private void atatchmentControl() {
 
         int collectorval;
-        if (gamepad2.dpad_up) {
+        if (gamepad2.right_bumper) {
             collectorval = 1;
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.left_bumper) {
             collectorval = -1;
         } else collectorval = 0;
         collector.setPower(collectorval);
 
-        if (gamepad1.right_bumper) {
-            lock.setPower(0.2); 
-        } else {
-            lock.setPower(0);
+        if (gamepad2.right_trigger!=0){
+            extendor1.setPower(1);
+            extendor2.setPower(-1);
         }
+        else if (gamepad2.left_trigger!=0){
+            extendor1.setPower(-1);
+            extendor2.setPower(1);
+        }
+        else {
+            extendor1.setPower(0);
+            extendor2.setPower(0);
+        }
+
+        if (gamepad1.y) {
+            lock.setPower(0.2);
+        } else lock.setPower(0);
     }
 }
