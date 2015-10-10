@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.ftcrobotcontroller.opmodes.mainDriving;
 
 /**
  * TeleOp Mode
@@ -42,11 +43,17 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad
  */
 public class TeleOp extends OpMode {
-
-	DcMotor FR;
 	DcMotor FL;
 	DcMotor BR;
 	DcMotor BL;
+	DcMotor FR;
+	DcMotor collector;
+	DcMotor extendor1;
+	DcMotor extendor2;
+	DcMotor lock;
+	float YPower, XPower, rotPower;
+	int direction=1;
+	int directionOld=1;
 
 	/**
 	 * Constructor
@@ -84,6 +91,10 @@ public class TeleOp extends OpMode {
 		FL = hardwareMap.dcMotor.get("FL");
 		BR = hardwareMap.dcMotor.get("BR");
 		BL = hardwareMap.dcMotor.get("BL");
+		collector = hardwareMap.dcMotor.get("colmot");
+		extendor1 = hardwareMap.dcMotor.get("ext1");
+		extendor2 = hardwareMap.dcMotor.get("ext2");
+		lock = hardwareMap.dcMotor.get("lock");
 	}
 
 	/*
@@ -93,74 +104,74 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void loop() {
-
-		/*
-		 * Gamepad 1
-		 * 
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
-
-		// throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-		// 1 is full down
-		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
-		// and 1 is full right
-		float YVal = gamepad1.left_stick_y;
-		float XVal = gamepad1.left_stick_x;
-		float RotVal = -gamepad1.right_stick_x;
-		// clip the right/left values so that the values never exceed +/- 1
-		float YPower = Range.clip(YVal, -1, 1);
-		float XPower = Range.clip(XVal, -1, 1);
-		float RotPower = Range.clip(RotVal, -1, 1);
-
-		float FRpower = YPower+XPower-RotPower;
-		float FLpower = -(YPower-XPower+RotPower);
-		float BRpower = YPower-XPower-RotPower;
-		float BLpower = -(YPower+XPower+RotPower);
-
-		FRpower = Range.clip(FRpower, -1, 1);
-		FLpower = Range.clip(FLpower, -1, 1);
-		BRpower = Range.clip(BRpower, -1, 1);
-		BLpower = Range.clip(BLpower, -1, 1);
-
-		// scale the joystick value to make it easier to control
-		// the robot more precisely at slower speeds.
-
-		// write the values to the motors
-		FR.setPower(FRpower);
-		BR.setPower(FLpower);
-		FL.setPower(BRpower);
-		BL.setPower(BLpower);
-
-
-
-		/*
-		 * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
+		if(gamepad1.x==true&&direction==directionOld){
+			direction*=-1;
+		}
+		directionOld=direction;
+		drive();
+		atatchmentControl();
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("Forwards power",  "" + String.format("%.2f", YPower));
         telemetry.addData("Left/Right Power", "" + String.format("%.2f", XPower));
-		telemetry.addData("Rotation power", "" + String.format("%.2f", RotPower));
+		telemetry.addData("Rotation power", "" + String.format("%.2f", rotPower));
+		telemetry.addData("Driving Direction", "" + String.format("%s", direction));
 
 	}
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
 	@Override
 	public void stop() {
 
 	}
-	
-	/*
-	 * This method scales the joystick input so for low joystick values, the 
-	 * scaled value is less than linear.  This is to make it easier to drive
-	 * the robot more precisely at slower speeds.
-	 */
+
+	private void drive() {
+		float YVal = direction*gamepad1.left_stick_y;
+		float XVal = direction*gamepad1.left_stick_x;
+		float RotVal = -direction*gamepad1.right_stick_x;
+		// clip the right/left values so that the values never exceed +/- 1
+		YPower = Range.clip(YVal, -1, 1);
+		XPower = Range.clip(XVal, -1, 1);
+		rotPower = Range.clip(RotVal, -1, 1);
+
+		float FRpower = YPower+XPower-rotPower;
+		float FLpower = -(YPower-XPower+rotPower);
+		float BRpower = YPower-XPower-rotPower;
+		float BLpower = -(YPower+XPower+rotPower);
+
+		FRpower = Range.clip(FRpower, -1, 1);
+		FLpower = Range.clip(FLpower, -1, 1);
+		BRpower = Range.clip(BRpower, -1, 1);
+		BLpower = Range.clip(BLpower, -1, 1);
+
+		// write the values to the motors
+		FR.setPower(FRpower);
+		BR.setPower(FLpower);
+		FL.setPower(BRpower);
+		BL.setPower(BLpower);
+	}
+
+
+	private void atatchmentControl() {
+
+		int collectorval;
+		if (gamepad2.dpad_up == true) {
+			collectorval=1;
+		}
+		else if(gamepad2.dpad_down == true){
+			collectorval=-1;
+		}
+		else collectorval=0;
+		collector.setPower(collectorval);
+
+
+	}
 
 }
