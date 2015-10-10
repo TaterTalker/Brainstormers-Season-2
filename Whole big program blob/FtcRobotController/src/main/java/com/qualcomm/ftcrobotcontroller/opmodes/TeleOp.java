@@ -139,7 +139,7 @@ public class TeleOp extends OpMode {
         collector.setPower(collectorval);
 
         if (gamepad1.right_bumper) {
-            lock.setPower(0.5);
+            lock.setPower(0.2); 
         } else {
             lock.setPower(0);
         }
