@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.ftcrobotcontroller.opmodes.mainDriving;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 
 /**
  * TeleOp Mode
