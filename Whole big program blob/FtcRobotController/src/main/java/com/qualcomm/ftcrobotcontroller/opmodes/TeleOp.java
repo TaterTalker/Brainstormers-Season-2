@@ -22,6 +22,10 @@ public class TeleOp extends OpMode {
     DcMotor extendor1;
     DcMotor extendor2;
     DcMotor lock;
+    Servo sideArmL;
+    Servo sideArmR;
+    Servo climberDumper;
+    Servo debDumper;
     float YPower, XPower, rotPower;
     int direction = 1;
     int directionOld = 1;
@@ -41,27 +45,14 @@ public class TeleOp extends OpMode {
     @Override
     public void init() {
 
-
-		/*
-         * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
-		
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 *   
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
+        sideArmL = hardwareMap.servo.get("sideArmL");
+        sideArmR = hardwareMap.servo.get("sideArmR");
+        climberDumper = hardwareMap.servo.get("climberdumper");
+        debDumper = hardwareMap.servo.get("debDumper");
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
@@ -79,6 +70,7 @@ public class TeleOp extends OpMode {
             direction *= -1;
         }
         directionOld = direction;
+
         drive();
         atatchmentControl();
         telemetry.addData("Text", "*** Robot Data***");
@@ -140,6 +132,29 @@ public class TeleOp extends OpMode {
         } else collectorval = 0;
         collector.setPower(collectorval);
 
+        if (gamepad2.dpad_right) {
+            debDumper.setPosition(1);
+        } else if (gamepad2.dpad_left) {
+            debDumper.setPosition(0);
+        } else debDumper.setPosition(0.5);
+        collector.setPower(collectorval);
+
+        if(gamepad2.a){
+            sideArmL.setPosition(0);
+            sideArmR.setPosition(1);
+        }
+        else{
+            sideArmL.setPosition(1);
+            sideArmR.setPosition(0);
+        }
+
+        if (gamepad2.y){
+            climberDumper.setPosition(0);
+        }
+        else{
+            climberDumper.setPosition(0.62);
+        }
+
         if (gamepad2.right_trigger!=0){
             extendor1.setPower(1);
             extendor2.setPower(-1);
@@ -154,7 +169,7 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad1.y) {
-            lock.setPower(0.2);
+            lock.setPower(-1);
         } else lock.setPower(0);
     }
 }
