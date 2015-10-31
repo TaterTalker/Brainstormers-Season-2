@@ -16,7 +16,7 @@ public class Autonomous extends OpMode{
     DcMotor BR;
     DcMotor BL;
     DcMotor FR;
-    int turning, turningOld;
+    int turning=0, turningOld=0;
     int isTurning=0;
 
     public void init() {
@@ -29,7 +29,7 @@ public class Autonomous extends OpMode{
 
     public void loop() {
         if (gamepad1.x && turning == turningOld) {
-            Turn.Turn(90, 1);
+            //Turn.Turn(90, 1);
             isTurning=1;
         }
         telemetry.addData("Is Turning", "" + String.format("%s", isTurning));
