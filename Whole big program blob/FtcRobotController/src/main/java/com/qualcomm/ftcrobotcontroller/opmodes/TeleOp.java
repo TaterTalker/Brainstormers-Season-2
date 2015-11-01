@@ -3,10 +3,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.ftcrobotcontroller.opmodes.mainDriving;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 
 /**
  * TeleOp Mode
@@ -21,7 +19,9 @@ public class TeleOp extends OpMode {
     DcMotor collector;
     DcMotor extendor1;
     DcMotor extendor2;
-    DcMotor lock;
+    DcMotor climber;
+    TouchSensor TOUCHSENSOR1;
+    TouchSensor TOUCHSENSOR2;
     Servo sideArmL;
     Servo sideArmR;
     Servo climberDumper;
@@ -48,6 +48,8 @@ public class TeleOp extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
+        TOUCHSENSOR1 = hardwareMap.touchSensor.get("t1");
+        TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
         BL = hardwareMap.dcMotor.get("BL");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
@@ -56,7 +58,7 @@ public class TeleOp extends OpMode {
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
-        lock = hardwareMap.dcMotor.get("lock");
+        climber = hardwareMap.dcMotor.get("lock");
     }
 
     /*
@@ -133,9 +135,9 @@ public class TeleOp extends OpMode {
         collector.setPower(collectorval);
 
         if (gamepad2.dpad_right) {
-            debDumper.setPosition(1);
+            debDumper.setPosition(0.3);
         } else if (gamepad2.dpad_left) {
-            debDumper.setPosition(0);
+            debDumper.setPosition(0.7);
         } else debDumper.setPosition(0.5);
         collector.setPower(collectorval);
 
@@ -149,27 +151,30 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad2.y){
-            climberDumper.setPosition(0);
+            climberDumper.setPosition(0.5);
         }
         else{
-            climberDumper.setPosition(0.62);
+            climberDumper.setPosition(0);
         }
 
         if (gamepad2.right_trigger!=0){
+
             extendor1.setPower(1);
             extendor2.setPower(-1);
         }
         else if (gamepad2.left_trigger!=0){
-            extendor1.setPower(-1);
-            extendor2.setPower(1);
+            if(TOUCHSENSOR2.isPressed())extendor1.setPower(0);
+            else extendor1.setPower(-1);
+            if(TOUCHSENSOR1.isPressed()) extendor2.setPower(0);
+            else extendor2.setPower(1);
         }
         else {
             extendor1.setPower(0);
             extendor2.setPower(0);
         }
 
-        if (gamepad1.y) {
-            lock.setPower(-1);
-        } else lock.setPower(0);
+        if (gamepad1.right_bumper) {
+            climber.setPower(-1);
+        } else climber.setPower(0);
     }
 }
