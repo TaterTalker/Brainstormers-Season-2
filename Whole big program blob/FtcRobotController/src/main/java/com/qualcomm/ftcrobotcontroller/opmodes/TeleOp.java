@@ -12,60 +12,55 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad
  */
 public class TeleOp extends OpMode {
+
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
     DcMotor FR;
+
     DcMotor collector;
     DcMotor extendor1;
     DcMotor extendor2;
     DcMotor climber;
+
     TouchSensor TOUCHSENSOR1;
     TouchSensor TOUCHSENSOR2;
+
     Servo sideArmL;
     Servo sideArmR;
     Servo climberDumper;
     Servo debDumper;
+
     float YPower, XPower, rotPower;
     int direction = 1;
     int directionOld = 1;
 
-    /**
-     * Constructor
-     */
     public TeleOp() {
 
     }
 
-    /*
-     * Code to run when the op mode is initialized goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
-     */
     @Override
     public void init() {
 
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
+
         TOUCHSENSOR1 = hardwareMap.touchSensor.get("t1");
         TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
-        BL = hardwareMap.dcMotor.get("BL");
+
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
+
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
         climber = hardwareMap.dcMotor.get("lock");
+        BL = hardwareMap.dcMotor.get("BL");
     }
 
-    /*
-     * This method will be called repeatedly in a loop
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-     */
     @Override
     public void loop() {
         if (gamepad1.x && direction == directionOld) {
@@ -83,15 +78,6 @@ public class TeleOp extends OpMode {
 
     }
 
-    /*
-     * Code to run when the op mode is first disabled goes here
-     *
-     *
-     *
-     *
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-     */
     @Override
     public void stop() {
 
@@ -101,6 +87,7 @@ public class TeleOp extends OpMode {
         float YVal = direction * gamepad1.left_stick_y;
         float XVal = direction * gamepad1.left_stick_x;
         float RotVal = -gamepad1.right_stick_x;
+
         // clip the right/left values so that the values never exceed +/- 1
         YPower = Range.clip(YVal, -1, 1);
         XPower = Range.clip(XVal, -1, 1);
