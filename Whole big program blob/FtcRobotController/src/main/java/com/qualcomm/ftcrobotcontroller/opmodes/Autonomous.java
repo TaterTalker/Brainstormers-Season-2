@@ -38,6 +38,11 @@ public class Autonomous extends OpMode {
         switch (v_state) {
 
             //Reset Motors.
+            case -1:
+                //null state
+                //to be used if action should only be performed once
+                break;
+
             case 0:
 
                 reset_drive_encoders();
@@ -53,7 +58,7 @@ public class Autonomous extends OpMode {
                 // Start the drive wheel motors at full power
                 set_drive_power(1.0f, 1.0f);
 
-                if (have_drive_encoders_reached(40000, 40000)) {
+                if (have_drive_encoders_reached(4000, 4000)) {
                     reset_drive_encoders();
                     set_drive_power(0.0f, 0.0f);
                     v_state++;
