@@ -98,10 +98,10 @@ public class TeleOp extends OpMode {
         XPower = Range.clip(XVal, -1, 1);
         rotPower = Range.clip(RotVal, -1, 1);
 
-        float FRpower = YPower + XPower - rotPower;
-        float FLpower = -(YPower - XPower + rotPower);
-        float BRpower = YPower - XPower - rotPower;
-        float BLpower = -(YPower + XPower + rotPower);
+        float FRpower = YPower - XPower + rotPower;
+        float BRpower = YPower + XPower + rotPower;
+        float FLpower = -YPower - XPower + rotPower;
+        float BLpower = -YPower + XPower + rotPower;
 
         FRpower = Range.clip(FRpower, -1, 1);
         FLpower = Range.clip(FLpower, -1, 1);
