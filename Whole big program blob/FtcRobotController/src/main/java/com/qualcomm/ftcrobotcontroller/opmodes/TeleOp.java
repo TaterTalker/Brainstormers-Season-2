@@ -47,6 +47,7 @@ public class TeleOp extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
+        BL = hardwareMap.dcMotor.get("BL");
 
         TOUCHSENSOR1 = hardwareMap.touchSensor.get("t1");
         TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
@@ -61,7 +62,7 @@ public class TeleOp extends OpMode {
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
         climber = hardwareMap.dcMotor.get("lock");
-        BL = hardwareMap.dcMotor.get("BL");
+
     }
 
     @Override
@@ -98,9 +99,9 @@ public class TeleOp extends OpMode {
         rotPower = Range.clip(RotVal, -1, 1);
 
         float FRpower = YPower + XPower - rotPower;
-        float FLpower = YPower - XPower + rotPower;
+        float FLpower = -(YPower - XPower + rotPower);
         float BRpower = YPower - XPower - rotPower;
-        float BLpower = YPower + XPower + rotPower;
+        float BLpower = -(YPower + XPower + rotPower);
 
         FRpower = Range.clip(FRpower, -1, 1);
         FLpower = Range.clip(FLpower, -1, 1);

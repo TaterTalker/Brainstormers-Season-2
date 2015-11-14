@@ -117,13 +117,13 @@ public class Autonomous extends OpMode {
 
     void setLeftPower(double power) {
         power=clip(power,-1,1);
-        FL.setPower(-power);
+        FL.setPower(power);
         BL.setPower(power);
     }
 
     void setRightPower(double power) {
         power=clip(power,-1,1);
-        FR.setPower(-power);
+        FR.setPower(power);
         BR.setPower(power);
     }
 
