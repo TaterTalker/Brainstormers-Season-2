@@ -101,5 +101,8 @@ public class FtcOpModeRegister implements OpModeRegister {
       manager.register("Forward", Forward.class);
       manager.register("turnRight", turnRight.class);
       manager.register("crabRight",crabRight.class);
+    manager.register("Odmtest",Odmtest.class);
+    manager.register("Colortest",Colortest.class);
+    manager.register("UltraTest",ultrasonictest.class);
   }
 }
