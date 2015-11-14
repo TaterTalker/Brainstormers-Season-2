@@ -30,6 +30,7 @@ public class TeleOp extends OpMode {
     Servo sideArmR;
     Servo climberDumper;
     Servo debDumper;
+    Servo door;
 
     float YPower, XPower, rotPower;
     int direction = 1;
@@ -53,6 +54,7 @@ public class TeleOp extends OpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
+        door = hardwareMap.servo.get("door");
 
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
@@ -123,9 +125,14 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.dpad_right) {
             debDumper.setPosition(0.3);
+            door.setPosition(0);
         } else if (gamepad2.dpad_left) {
-            debDumper.setPosition(0.7);
-        } else debDumper.setPosition(0.5);
+            debDumper.setPosition(0.9);
+            door.setPosition(0);
+        } else {
+            debDumper.setPosition(0.6);
+            door.setPosition(0.5);
+        }
         collector.setPower(collectorval);
 
         if(gamepad2.a){
@@ -138,10 +145,10 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad2.y){
-            climberDumper.setPosition(0.5);
+            climberDumper.setPosition(0);
         }
         else{
-            climberDumper.setPosition(0);
+            climberDumper.setPosition(0.65);
         }
 
         if (gamepad2.right_trigger!=0){
