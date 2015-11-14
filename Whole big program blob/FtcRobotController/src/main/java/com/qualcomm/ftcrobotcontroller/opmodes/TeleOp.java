@@ -89,19 +89,19 @@ public class TeleOp extends OpMode {
 
     private void drive() {
         speedControl();
-        float YVal = direction * gamepad1.left_stick_y/driveMod;
-        float XVal = direction * gamepad1.left_stick_x/driveMod;
-        float RotVal = -gamepad1.right_stick_x/driveMod;
+        float YVal = direction * gamepad1.left_stick_x/driveMod;
+        float XVal = direction * gamepad1.left_stick_y/driveMod;
+        float RotVal = gamepad1.right_stick_x/driveMod;
 
         // clip the right/left values so that the values never exceed +/- 1
         YPower = Range.clip(YVal, -1, 1);
         XPower = Range.clip(XVal, -1, 1);
         rotPower = Range.clip(RotVal, -1, 1);
 
-        float FRpower = YPower - XPower + rotPower;
-        float BRpower = YPower + XPower + rotPower;
-        float FLpower = -YPower - XPower + rotPower;
-        float BLpower = -YPower + XPower + rotPower;
+        float FRpower = -YPower - XPower + rotPower;
+        float BRpower = -YPower + XPower + rotPower;
+        float FLpower = YPower - XPower + rotPower;
+        float BLpower = YPower + XPower + rotPower;
 
         FRpower = Range.clip(FRpower, -1, 1);
         FLpower = Range.clip(FLpower, -1, 1);

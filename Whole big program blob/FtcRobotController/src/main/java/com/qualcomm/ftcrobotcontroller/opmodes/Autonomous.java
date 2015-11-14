@@ -44,14 +44,20 @@ public class Autonomous extends OpMode {
                 break;
 
             case 0:
-                drive(4000, 4000, 1);
+                reset_drive_encoders();
+                run_using_encoders();
+
+
+                v_state++;
                 break;
 
             //Travel 40000 distance.
             case 1:
+                turn(90, 0.2);
+                telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
+                telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 break;
 
-            //Reset Motors.
             default:
 
                 break;
@@ -62,14 +68,13 @@ public class Autonomous extends OpMode {
     //The drive function.
 
 
-    void drive(float rightDistance, float leftDistance, float speed) {
-        run_using_encoders();
-        // Start the drive wheel motors at full power
+    void drive(float distance, float speed) {
+    // Start the drive wheel motors at full power
 
-        if (hasLeftReached(leftDistance) && hasRightReached(rightDistance)) {
+        if (hasLeftReached(distance) && hasRightReached(distance)) {
             setLeftPower(0);
             setRightPower(0);
-            reset_drive_encoders();
+            initEncoders();
             v_state++;
         }
 
@@ -81,18 +86,18 @@ public class Autonomous extends OpMode {
 
     void reset_drive_encoders() {
 
-        FL.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        FR.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        BL.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        BR.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        FL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        FR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        BL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        BR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
     void run_using_encoders() {
 
-        FL.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        FR.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        BL.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        BR.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        FL.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        FR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        BL.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        BR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     boolean hasLeftReached(double leftd) {
@@ -135,5 +140,24 @@ public class Autonomous extends OpMode {
             variable=max;
 
         return variable;
+    }
+
+    void initEncoders(){
+        reset_drive_encoders();
+        run_using_encoders();
+    }
+
+    void turn(int degrees, double power){
+        if(hasLeftReached(degrees*10)&&hasRightReached(degrees*10)){
+            setLeftPower(0);
+            setRightPower(0);
+            reset_drive_encoders();
+            run_using_encoders();
+            v_state++;
+        }
+        else{
+            setLeftPower(power);
+            setRightPower(-power);
+        }
     }
 }
