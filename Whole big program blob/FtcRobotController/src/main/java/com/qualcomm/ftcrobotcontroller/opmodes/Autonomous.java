@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomousMethods.Drive;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by August on 10/10/2015.
@@ -13,12 +14,14 @@ public class Autonomous extends OpMode {
     DcMotor BR;
     DcMotor BL;
     DcMotor FR;
+    Servo climberDumper;
 
     private int v_state = 0;
 
     //Map the motors.
     public void init() {
-
+        climberDumper = hardwareMap.servo.get("climberdumper");
+        v_state= 0;
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
@@ -30,6 +33,7 @@ public class Autonomous extends OpMode {
     public void start() {
 
         super.start();
+        v_state = 0;
     }
 
     //Loop through the state machine completing each task.
@@ -46,18 +50,23 @@ public class Autonomous extends OpMode {
             case 0:
                 reset_drive_encoders();
                 run_using_encoders();
-
-
                 v_state++;
                 break;
 
             //Travel 40000 distance.
             case 1:
-                turn(90, 0.2);
+                drive(200,1);
+            case 2:
+                turn(50, 0.2);
                 telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                 telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 break;
 
+            case 3:
+                drive(5000,1);
+                break;
+            case 4:
+                climberDumper.setPosition(0);
             default:
 
                 break;
@@ -74,7 +83,6 @@ public class Autonomous extends OpMode {
         if (hasLeftReached(distance) && hasRightReached(distance)) {
             setLeftPower(0);
             setRightPower(0);
-            initEncoders();
             v_state++;
         }
 
