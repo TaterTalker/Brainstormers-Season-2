@@ -16,7 +16,6 @@ public class Drive {
     DcMotor BR;
     DcMotor BL;
     DcMotor FR;
-    public void drive(float distance, float speed){
 
-    }
+
 }

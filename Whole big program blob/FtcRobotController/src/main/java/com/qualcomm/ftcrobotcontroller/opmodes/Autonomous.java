@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.ftcrobotcontroller.opmodes.autonomousMethods.Drive;
 
 /**
  * Created by August on 10/10/2015.
@@ -29,7 +30,6 @@ public class Autonomous extends OpMode {
     public void start() {
 
         super.start();
-        reset_drive_encoders();
     }
 
     //Loop through the state machine completing each task.
@@ -44,35 +44,14 @@ public class Autonomous extends OpMode {
                 break;
 
             case 0:
-
-                reset_drive_encoders();
-
-                v_state++;
-
+                drive(4000, 4000, 1);
                 break;
 
             //Travel 40000 distance.
             case 1:
-
-                run_using_encoders();
-                // Start the drive wheel motors at full power
-                set_drive_power(1.0f, 1.0f);
-
-                if (have_drive_encoders_reached(4000, 4000)) {
-                    reset_drive_encoders();
-                    set_drive_power(0.0f, 0.0f);
-                    v_state++;
-                }
                 break;
 
             //Reset Motors.
-            case 2:
-
-                if (have_drive_encoders_reset()) {
-                    v_state++;
-                }
-                break;
-            //End the state machine.
             default:
 
                 break;
@@ -81,15 +60,22 @@ public class Autonomous extends OpMode {
     }
 
     //The drive function.
-    void set_drive_power(double left_power, double right_power) {
 
-        if (FL != null && BL != null) {
-            FL.setPower(-left_power);
-            BL.setPower(left_power);
+
+    void drive(float rightDistance, float leftDistance, float speed) {
+        run_using_encoders();
+        // Start the drive wheel motors at full power
+
+        if (hasLeftReached(leftDistance) && hasRightReached(rightDistance)) {
+            setLeftPower(0);
+            setRightPower(0);
+            reset_drive_encoders();
+            v_state++;
         }
-        if (FR != null && BR != null) {
-            BR.setPower(right_power);
-            FR.setPower(-right_power);
+
+        else {
+            setLeftPower(speed);
+            setRightPower(speed);
         }
     }
 
@@ -109,12 +95,15 @@ public class Autonomous extends OpMode {
         BR.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
-    boolean have_drive_encoders_reached(double leftd, double rightd) {
+    boolean hasLeftReached(double leftd) {
 
-        telemetry.addData("Encoder", "Encoderdistance: " + FL.getCurrentPosition());
         return (Math.abs(FL.getCurrentPosition()) > leftd) &&
-                (Math.abs(BL.getCurrentPosition()) > leftd) &&
-                (Math.abs(FR.getCurrentPosition()) > rightd) &&
+                (Math.abs(BL.getCurrentPosition()) > leftd);
+    }
+
+    boolean hasRightReached(double rightd) {
+
+        return (Math.abs(FR.getCurrentPosition()) > rightd) &&
                 (Math.abs(BR.getCurrentPosition()) > rightd);
     }
 
@@ -124,5 +113,27 @@ public class Autonomous extends OpMode {
                 FR.getCurrentPosition() == 0 &&
                 BL.getCurrentPosition() == 0 &&
                 BR.getCurrentPosition() == 0);
+    }
+
+    void setLeftPower(double power) {
+        power=clip(power,-1,1);
+        FL.setPower(-power);
+        BL.setPower(power);
+    }
+
+    void setRightPower(double power) {
+        power=clip(power,-1,1);
+        FR.setPower(-power);
+        BR.setPower(power);
+    }
+
+    double clip(double variable, double min, double max){
+        if(variable<min)
+            variable=min;
+
+        if (variable>max)
+            variable=max;
+
+        return variable;
     }
 }

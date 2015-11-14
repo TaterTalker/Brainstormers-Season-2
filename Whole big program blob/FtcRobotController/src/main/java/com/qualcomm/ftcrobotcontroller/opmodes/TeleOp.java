@@ -98,9 +98,9 @@ public class TeleOp extends OpMode {
         rotPower = Range.clip(RotVal, -1, 1);
 
         float FRpower = YPower + XPower - rotPower;
-        float FLpower = -(YPower - XPower + rotPower);
+        float FLpower = YPower - XPower + rotPower;
         float BRpower = YPower - XPower - rotPower;
-        float BLpower = -(YPower + XPower + rotPower);
+        float BLpower = YPower + XPower + rotPower;
 
         FRpower = Range.clip(FRpower, -1, 1);
         FLpower = Range.clip(FLpower, -1, 1);
@@ -116,7 +116,7 @@ public class TeleOp extends OpMode {
 
     public void speedControl(){
         if(gamepad1.right_trigger==1){
-            driveMod=2;
+            driveMod=5;
         }
         else{
             driveMod=1;
@@ -159,11 +159,7 @@ public class TeleOp extends OpMode {
             climberDumper.setPosition(0);
         }
         else{
-<<<<<<< HEAD
             climberDumper.setPosition(0.65);
-=======
-            climberDumper.setPosition(0.5);
->>>>>>> origin/master
         }
 
         if (gamepad2.right_trigger!=0){
