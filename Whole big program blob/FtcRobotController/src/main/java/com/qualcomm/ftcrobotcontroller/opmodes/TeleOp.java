@@ -30,10 +30,12 @@ public class TeleOp extends OpMode {
     Servo sideArmR;
     Servo climberDumper;
     Servo debDumper;
+    Servo door;
 
     float YPower, XPower, rotPower;
     int direction = 1;
     int directionOld = 1;
+    int driveMod=1;
 
     public TeleOp() {
 
@@ -45,6 +47,7 @@ public class TeleOp extends OpMode {
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
+        BL = hardwareMap.dcMotor.get("BL");
 
         TOUCHSENSOR1 = hardwareMap.touchSensor.get("t1");
         TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
@@ -53,12 +56,13 @@ public class TeleOp extends OpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
+        door = hardwareMap.servo.get("door");
 
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
         climber = hardwareMap.dcMotor.get("lock");
-        BL = hardwareMap.dcMotor.get("BL");
+
     }
 
     @Override
@@ -84,9 +88,10 @@ public class TeleOp extends OpMode {
     }
 
     private void drive() {
-        float YVal = direction * gamepad1.left_stick_y;
-        float XVal = direction * gamepad1.left_stick_x;
-        float RotVal = -gamepad1.right_stick_x;
+        speedControl();
+        float YVal = direction * gamepad1.left_stick_y/driveMod;
+        float XVal = direction * gamepad1.left_stick_x/driveMod;
+        float RotVal = -gamepad1.right_stick_x/driveMod;
 
         // clip the right/left values so that the values never exceed +/- 1
         YPower = Range.clip(YVal, -1, 1);
@@ -110,6 +115,15 @@ public class TeleOp extends OpMode {
         BL.setPower(BLpower);
     }
 
+    public void speedControl(){
+        if(gamepad1.right_trigger==1){
+            driveMod=5;
+        }
+        else{
+            driveMod=1;
+        }
+    }
+
 
     private void atatchmentControl() {
 
@@ -123,9 +137,14 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.dpad_right) {
             debDumper.setPosition(0.3);
+            door.setPosition(0);
         } else if (gamepad2.dpad_left) {
-            debDumper.setPosition(0.7);
-        } else debDumper.setPosition(0.5);
+            debDumper.setPosition(0.9);
+            door.setPosition(0);
+        } else {
+            debDumper.setPosition(0.6);
+            door.setPosition(0.5);
+        }
         collector.setPower(collectorval);
 
         if(gamepad2.a){
@@ -138,10 +157,10 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad2.y){
-            climberDumper.setPosition(0.5);
+            climberDumper.setPosition(0);
         }
         else{
-            climberDumper.setPosition(0);
+            climberDumper.setPosition(0.65);
         }
 
         if (gamepad2.right_trigger!=0){

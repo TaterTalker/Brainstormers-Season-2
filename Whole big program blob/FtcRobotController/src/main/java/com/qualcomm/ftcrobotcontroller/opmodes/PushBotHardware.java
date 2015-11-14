@@ -390,7 +390,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-            v_motor_left_drive.setChannelMode
+            v_motor_left_drive.setMode
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
@@ -409,7 +409,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-            v_motor_right_drive.setChannelMode
+            v_motor_right_drive.setMode
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
@@ -446,10 +446,10 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-            if (v_motor_left_drive.getChannelMode () ==
+            if (v_motor_left_drive.getMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
-                v_motor_left_drive.setChannelMode
+                v_motor_left_drive.setMode
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -469,10 +469,10 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-            if (v_motor_right_drive.getChannelMode () ==
+            if (v_motor_right_drive.getMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
-                v_motor_right_drive.setChannelMode
+                v_motor_right_drive.setMode
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -510,7 +510,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-            v_motor_left_drive.setChannelMode
+            v_motor_left_drive.setMode
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }
@@ -529,7 +529,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-            v_motor_right_drive.setChannelMode
+            v_motor_right_drive.setMode
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }
@@ -610,20 +610,20 @@ public class PushBotHardware extends OpMode
         //
         boolean l_return = false;
 
-            if (v_motor_left_drive != null)
+        if (v_motor_left_drive != null)
+        {
+            //
+            // Has the encoder reached the specified values?
+            //
+            // TODO Implement stall code using these variables.
+            //
+            if (Math.abs (v_motor_left_drive.getCurrentPosition ()) > p_count)
             {
                 //
-                // Has the encoder reached the specified values?
+                // Set the status to a positive indication.
                 //
-                // TODO Implement stall code using these variables.
-                //
-                if (Math.abs (v_motor_left_drive.getCurrentPosition ()) > p_count)
-                {
-                    //
-                    // Set the status to a positive indication.
-                    //
-                    l_return = true;
-                }
+                l_return = true;
+            }
         }
 
         //
@@ -715,7 +715,13 @@ public class PushBotHardware extends OpMode
     /**
      * Indicate whether the drive motors' encoders have reached a value.
      */
-    boolean drive_using_encoders ( double p_left_power, double p_right_power, double p_left_count, double p_right_count)
+    boolean drive_using_encoders
+        ( double p_left_power
+        , double p_right_power
+        , double p_left_count
+        , double p_right_count
+        )
+
     {
         //
         // Assume the encoders have not reached the limit.
