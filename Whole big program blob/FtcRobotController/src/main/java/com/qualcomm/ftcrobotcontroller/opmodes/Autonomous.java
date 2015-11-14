@@ -53,19 +53,16 @@ public class Autonomous extends OpMode {
                 v_state++;
                 break;
 
-            //Travel 40000 distance.
             case 1:
-                drive(200,1);
-            case 2:
-                turn(50, 0.2);
+                turn(310, 0.2);
                 telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                 telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 break;
 
-            case 3:
+            case 2:
                 drive(5000,1);
                 break;
-            case 4:
+            case 3:
                 climberDumper.setPosition(0);
             default:
 
