@@ -117,7 +117,7 @@ public class TeleOp extends OpMode {
 
     public void speedControl(){
         if(gamepad1.right_trigger==1){
-            driveMod=5;
+            driveMod=2;
         }
         else{
             driveMod=1;
@@ -139,7 +139,7 @@ public class TeleOp extends OpMode {
             debDumper.setPosition(0.3);
             door.setPosition(0);
         } else if (gamepad2.dpad_left) {
-            debDumper.setPosition(0.9);
+            debDumper.setPosition(0.95);
             door.setPosition(0);
         } else {
             debDumper.setPosition(0.6);
@@ -180,7 +180,7 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad1.right_bumper) {
-            climber.setPower(-1);
+            climber.setPower(-0.5);
         } else climber.setPower(0);
     }
 }
