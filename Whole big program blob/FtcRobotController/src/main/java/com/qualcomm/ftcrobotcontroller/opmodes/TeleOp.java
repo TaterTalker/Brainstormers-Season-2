@@ -36,6 +36,7 @@ public class TeleOp extends OpMode {
     int direction = 1;
     int directionOld = 1;
     int driveMod=1;
+    boolean drivingForward=true;
 
     public TeleOp() {
 
@@ -89,9 +90,9 @@ public class TeleOp extends OpMode {
 
     private void drive() {
         speedControl();
-        float YVal = direction * gamepad1.left_stick_x/driveMod;
-        float XVal = direction * gamepad1.left_stick_y/driveMod;
-        float RotVal = gamepad1.right_stick_x/driveMod;
+        float YVal = direction * gamepad1.left_stick_x / driveMod;
+        float XVal = direction * gamepad1.left_stick_y / driveMod;
+        float RotVal = gamepad1.right_stick_x / driveMod;
 
         // clip the right/left values so that the values never exceed +/- 1
         YPower = Range.clip(YVal, -1, 1);
@@ -113,6 +114,8 @@ public class TeleOp extends OpMode {
         BR.setPower(FLpower);
         FL.setPower(BRpower);
         BL.setPower(BLpower);
+
+        drivingForward=(FRpower>0 && FLpower>0 && BLpower<0 && BRpower<0);
     }
 
     public void speedControl(){
@@ -136,10 +139,10 @@ public class TeleOp extends OpMode {
         collector.setPower(collectorval);
 
         if (gamepad2.dpad_right) {
-            debDumper.setPosition(0.3);
+            debDumper.setPosition(0.25);
             door.setPosition(0);
         } else if (gamepad2.dpad_left) {
-            debDumper.setPosition(0.95);
+            debDumper.setPosition(1);
             door.setPosition(0);
         } else {
             debDumper.setPosition(0.6);
@@ -181,6 +184,9 @@ public class TeleOp extends OpMode {
 
         if (gamepad1.right_bumper) {
             climber.setPower(-0.5);
-        } else climber.setPower(0);
+        } else if (drivingForward)
+            climber.setPower(0.5);
+        else  climber.setPower(0);
+
     }
 }

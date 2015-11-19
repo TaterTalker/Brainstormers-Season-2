@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by August on 10/10/2015.
  */
-public class Autonomous extends OpMode {
+public abstract class Autonomous extends OpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
@@ -40,7 +40,7 @@ public class Autonomous extends OpMode {
     }
 
     //Loop through the state machine completing each task.
-    public void loop() {
+    public void loop(int turnDirection) {
 
         switch (v_state) {
 
@@ -59,14 +59,14 @@ public class Autonomous extends OpMode {
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                    encoders_have_reset= true;
-                    drive_with_collector(2000, 1);
+                    drive(2000, 0.9);
                 }
                 break;
                 
             case 2:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(45, -1);
+                    turn(45, -1*turnDirection);
                     telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                     telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
@@ -76,13 +76,13 @@ public class Autonomous extends OpMode {
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive_with_collector(6000, 1);
+                    drive(6000, 0.9);
                 }
                 break;
             case 4:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(45, -1);
+                    turn(45, -1*turnDirection);
                     telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                     telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
@@ -102,7 +102,7 @@ public class Autonomous extends OpMode {
             default:
         }
         //telemetry.addData("Text", "State: " + v_state + " " + have_drive_encoders_reset()+ " " + encoders_have_reset);
-
+        
         telemetry.addData("Text", "State: " + v_state + " " + FR.getCurrentPosition() + " " + BR.getCurrentPosition()+ " " + FL.getCurrentPosition() + " " + BL.getCurrentPosition());
     }
 
