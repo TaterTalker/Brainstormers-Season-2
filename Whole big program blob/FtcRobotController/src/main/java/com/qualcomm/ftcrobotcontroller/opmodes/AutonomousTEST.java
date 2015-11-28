@@ -3,13 +3,12 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.ftcrobotcontroller.opmodes.autonomousMethods.Drive;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by August on 10/10/2015.
  */
-public abstract class Autonomous extends OpMode {
+public abstract class AutonomousTEST extends OpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
@@ -17,9 +16,11 @@ public abstract class Autonomous extends OpMode {
     DcMotor collector;
     DcMotor climber;
     Servo climberDumper;
-    private final double TURNRATIO = 10.5;
+
     private int v_state = 0;
     private int loopCount = 0;
+    //21 40 25
+    private final double TURNRATIO = 10.5;
     private boolean encoders_have_reset=false;
 
     //Map the motors.
@@ -59,95 +60,17 @@ public abstract class Autonomous extends OpMode {
                 v_state++;
                 break;
 
+
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
-                   encoders_have_reset= true;
-                    drive(2000, -1);
-                }
-                break;
-            case 2:
-                pause(100);
-                break;
-            case 3:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(40*turnChange, -1*turnDirection);
+                    turn(180, -1);
                     telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                     telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
-
-            case 4:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    drive(5900, -1);
-                }
-                break;
-            case 5:
-                pause(100);
-                break;
-            case 6:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    turn(118*turnChange, 1*turnDirection);
-                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
-                }
-                break;
-            case 7:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    drive(750, 0.5);
-                }
-                break;
-            case 8:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    climberDumper.setPosition(0);
-                    if (climberDumper.getPosition()< 0.2) {
-                        v_state++;
-                    }
-                }
-                break;
-            case 9:
-                pause (100);
-                break;
-            case 10:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    climberDumper.setPosition(1);
-                    if (climberDumper.getPosition()> 0.9) {
-                        v_state++;
-                    }
-                }
-            case 11:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                   drive(-1000, 0.5);
-
-                }
-            case 12:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    turn(45, -1);
-                }
-            case 13:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    drive(-500, 0.5);
-                }
-            case 14:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    turn(90, -1);
-                }
-
-            case 15:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    drive(-3000, 0.5);
-                }
             default:
+                break;
         }
         //telemetry.addData("Text", "State: " + v_state + " " + have_drive_encoders_reset()+ " " + encoders_have_reset);
         
@@ -267,9 +190,11 @@ public abstract class Autonomous extends OpMode {
     }
 
     void turn(double degrees, double power){
-        if (power<0)
-            degrees=degrees*1.05;
-        if(hasLeftReached(degrees*TURNRATIO)||hasRightReached(degrees * TURNRATIO)) {
+        if (power< 0) {
+            degrees = degrees *1.05;
+        }
+        if(hasLeftReached(degrees* TURNRATIO)||hasRightReached(degrees *TURNRATIO ))
+        {
                 setLeftPower(0);
                 setRightPower(0);
                 reset_drive_encoders();
