@@ -15,9 +15,11 @@ public abstract class Autonomous extends OpMode {
     DcMotor BL;
     DcMotor FR;
     DcMotor collector;
+    DcMotor climber;
     Servo climberDumper;
 
     private int v_state = 0;
+    private int loopCount = 0;
     private boolean encoders_have_reset=false;
 
     //Map the motors.
@@ -28,30 +30,31 @@ public abstract class Autonomous extends OpMode {
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
+        climber = hardwareMap.dcMotor.get("lock");
         collector = hardwareMap.dcMotor.get("colmot");
     }
 
     //Start the program and reset the encoders.
     @Override
     public void start() {
-
         super.start();
         v_state = 0;
+        loopCount = 0;
     }
 
     //Loop through the state machine completing each task.
-    public void loop(int turnDirection) {
+    public void loop(double turnDirection, double turnChange) {
 
         switch (v_state) {
 
             //Reset Motors.
             case -1:
                 //null state
-                //to be used if action should only be performed once
                 break;
 
             case 0:
                 reset_drive_encoders();
+                //climber.setPower(0.5);
                 //run_using_encoders();
                 v_state++;
                 break;
@@ -59,41 +62,45 @@ public abstract class Autonomous extends OpMode {
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                    encoders_have_reset= true;
-                    drive(2000, 0.9);
+                    drive(2000, -1);
                 }
                 break;
-                
             case 2:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    turn(45, -1*turnDirection);
-                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
-                }
+                pause(100);
                 break;
-                
-
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(6000, 0.9);
-                }
-                break;
-            case 4:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    turn(45, -1*turnDirection);
+                    turn(40*turnChange, -1*turnDirection);
                     telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
                     telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
-            case 5:
+
+            case 4:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(450, 0.5);
+                    drive(5900, -1);
                 }
                 break;
+            case 5:
+                pause(100);
+                break;
             case 6:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset=true;
+                    turn(118*turnChange, 1*turnDirection);
+                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
+                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
+                }
+                break;
+            case 7:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset=true;
+                    drive(1000, 0.5);
+                }
+                break;
+            case 8:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     climberDumper.setPosition(0);
@@ -106,6 +113,14 @@ public abstract class Autonomous extends OpMode {
         telemetry.addData("Text", "State: " + v_state + " " + FR.getCurrentPosition() + " " + BR.getCurrentPosition()+ " " + FL.getCurrentPosition() + " " + BL.getCurrentPosition());
     }
 
+    void pause(float pauseAmount) {
+        if(loopCount>pauseAmount) {
+            v_state++;
+            loopCount = 0;
+        }
+        else
+            loopCount++;
+    }
     //The drive with collector function.
 
 
@@ -210,7 +225,9 @@ public abstract class Autonomous extends OpMode {
         run_using_encoders();
     }
 
-    void turn(int degrees, double power){
+    void turn(double degrees, double power){
+        if (power<0)
+            degrees=degrees*0.9;
         if(hasLeftReached(degrees*21)||hasRightReached(degrees * 21))
         {
                 setLeftPower(0);

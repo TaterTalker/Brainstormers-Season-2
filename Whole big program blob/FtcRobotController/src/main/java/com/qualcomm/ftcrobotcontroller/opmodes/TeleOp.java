@@ -90,8 +90,8 @@ public class TeleOp extends OpMode {
 
     private void drive() {
         speedControl();
-        float YVal = direction * gamepad1.left_stick_x / driveMod;
-        float XVal = direction * gamepad1.left_stick_y / driveMod;
+        float YVal = direction * gamepad1.left_stick_x;
+        float XVal = direction * gamepad1.left_stick_y;
         float RotVal = gamepad1.right_stick_x / driveMod;
 
         // clip the right/left values so that the values never exceed +/- 1
@@ -104,8 +104,8 @@ public class TeleOp extends OpMode {
         float FLpower = YPower - XPower + rotPower;
         float BLpower = YPower + XPower + rotPower;
 
-        FRpower = Range.clip(FRpower, -1, 1);
-        FLpower = Range.clip(FLpower, -1, 1);
+        FRpower = Range.clip(FRpower, -1, 1)/driveMod;
+        FLpower = Range.clip(FLpower, -1, 1)/driveMod;
         BRpower = Range.clip(BRpower, -1, 1);
         BLpower = Range.clip(BLpower, -1, 1);
 
@@ -131,61 +131,66 @@ public class TeleOp extends OpMode {
     private void atatchmentControl() {
 
         int collectorval;
+        //collection in
         if (gamepad2.right_bumper) {
             collectorval = 1;
+            //collection out
         } else if (gamepad2.left_bumper) {
             collectorval = -1;
+            //resting
         } else collectorval = 0;
         collector.setPower(collectorval);
-
+            //dumping right
         if (gamepad2.dpad_right) {
-            debDumper.setPosition(0.25);
-            door.setPosition(0);
+            debDumper.setPosition(0);
+            door.setPosition(1);
+            //dumping left
         } else if (gamepad2.dpad_left) {
             debDumper.setPosition(1);
-            door.setPosition(0);
+            door.setPosition(1);
+            //resting
         } else {
-            debDumper.setPosition(0.6);
-            door.setPosition(0.5);
+            debDumper.setPosition(0.4);
+            door.setPosition(0.4);
         }
         collector.setPower(collectorval);
 
-        if(gamepad2.a){
-            sideArmL.setPosition(0);
-            sideArmR.setPosition(1);
-        }
-        else{
+        if(gamepad1.left_bumper){
             sideArmL.setPosition(1);
             sideArmR.setPosition(0);
+        }
+        else{
+            sideArmL.setPosition(0.5);
+            sideArmR.setPosition(0.5);
         }
 
         if (gamepad2.y){
             climberDumper.setPosition(0);
         }
         else{
-            climberDumper.setPosition(0.65);
+            climberDumper.setPosition(1);
         }
 
         if (gamepad2.right_trigger!=0){
 
-            extendor1.setPower(1);
-            extendor2.setPower(-1);
+            extendor1.setPower(-1);
+            extendor2.setPower(1);
         }
         else if (gamepad2.left_trigger!=0){
             if(TOUCHSENSOR2.isPressed())extendor1.setPower(0);
-            else extendor1.setPower(-1);
+            else extendor1.setPower(1);
             if(TOUCHSENSOR1.isPressed()) extendor2.setPower(0);
-            else extendor2.setPower(1);
+            else extendor2.setPower(-1);
         }
         else {
             extendor1.setPower(0);
             extendor2.setPower(0);
         }
 
-        if (gamepad1.right_bumper) {
-            climber.setPower(-0.5);
-        } else if (drivingForward)
-            climber.setPower(0.5);
+        if (gamepad1.right_bumper)
+            climber.setPower(-0.3);
+        else if (drivingForward)
+            climber.setPower(1);
         else  climber.setPower(0);
 
     }
