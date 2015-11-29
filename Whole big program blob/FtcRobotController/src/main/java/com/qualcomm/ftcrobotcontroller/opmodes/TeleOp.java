@@ -168,7 +168,7 @@ public class TeleOp extends OpMode {
             climberDumper.setPosition(0);
         }
         else{
-            climberDumper.setPosition(1);
+            climberDumper.setPosition(.92);
         }
 
         if (gamepad2.right_trigger!=0){

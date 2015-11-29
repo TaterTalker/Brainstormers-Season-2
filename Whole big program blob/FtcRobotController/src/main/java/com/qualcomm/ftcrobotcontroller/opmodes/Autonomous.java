@@ -115,7 +115,7 @@ public abstract class Autonomous extends OpMode {
             case 10:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    climberDumper.setPosition(1);
+                    climberDumper.setPosition(.92);
                     if (climberDumper.getPosition()> 0.9) {
                         v_state++;
                     }
