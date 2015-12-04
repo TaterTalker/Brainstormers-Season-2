@@ -26,8 +26,8 @@ public class TeleOp extends OpMode {
     TouchSensor TOUCHSENSOR1;
     TouchSensor TOUCHSENSOR2;
 
+    Servo lock;
     Servo sideArmL;
-    Servo sideArmR;
     Servo climberDumper;
     Servo debDumper;
     Servo door;
@@ -54,7 +54,7 @@ public class TeleOp extends OpMode {
         TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
 
         sideArmL = hardwareMap.servo.get("sideArmL");
-        sideArmR = hardwareMap.servo.get("sideArmR");
+        lock = hardwareMap.servo.get("sideArmR");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
         door = hardwareMap.servo.get("door");
@@ -133,21 +133,21 @@ public class TeleOp extends OpMode {
         int collectorval;
         //collection in
         if (gamepad2.right_bumper) {
-            collectorval = 1;
+            collectorval = -1;
             //collection out
         } else if (gamepad2.left_bumper) {
-            collectorval = -1;
+            collectorval = 1;
             //resting
         } else collectorval = 0;
         collector.setPower(collectorval);
             //dumping right
         if (gamepad2.dpad_right) {
             debDumper.setPosition(0);
-            door.setPosition(1);
+            door.setPosition(0.97);
             //dumping left
         } else if (gamepad2.dpad_left) {
             debDumper.setPosition(1);
-            door.setPosition(1);
+            door.setPosition(0.97);
             //resting
         } else {
             debDumper.setPosition(0.4);
@@ -156,19 +156,17 @@ public class TeleOp extends OpMode {
         collector.setPower(collectorval);
 
         if(gamepad1.left_bumper){
-            sideArmL.setPosition(1);
-            sideArmR.setPosition(0);
+            lock.setPosition(0.6);
         }
         else{
-            sideArmL.setPosition(0.5);
-            sideArmR.setPosition(0.5);
+            lock.setPosition(0);
         }
 
         if (gamepad2.y){
             climberDumper.setPosition(0);
         }
         else{
-            climberDumper.setPosition(.92);
+            climberDumper.setPosition(1);
         }
 
         if (gamepad2.right_trigger!=0){
