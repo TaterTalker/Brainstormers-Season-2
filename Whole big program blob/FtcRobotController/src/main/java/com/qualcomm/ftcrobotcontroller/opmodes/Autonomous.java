@@ -17,6 +17,11 @@ public abstract class Autonomous extends OpMode {
     DcMotor FR;
     DcMotor collector;
     Servo climberDumper;
+    Servo sideArmL;
+    Servo lock;
+    Servo sideArmR;
+    Servo debDumper;
+    Servo door;
     UltrasonicSensor ultra1;
     private final double TURNRATIO = 18.3;
     private int v_state = 0;
@@ -26,13 +31,17 @@ public abstract class Autonomous extends OpMode {
 
     //Map the motors.
     public void init() {
+        sideArmL = hardwareMap.servo.get("sideArmL");
+        sideArmR = hardwareMap.servo.get("sideArmR");
+        lock = hardwareMap.servo.get("lock");
         climberDumper = hardwareMap.servo.get("climberdumper");
+        debDumper = hardwareMap.servo.get("debDumper");
+        door = hardwareMap.servo.get("door");
         v_state= 0;
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
-        collector = hardwareMap.dcMotor.get("colmot");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
     }
 
@@ -56,8 +65,9 @@ public abstract class Autonomous extends OpMode {
 
             case 0:
                 reset_drive_encoders();
-                //climber.setPower(0.5);
-                //run_using_encoders();
+                sideArmL.setPosition(1);
+                sideArmR.setPosition(0);
+                climberDumper.setPosition(1);
                 v_state++;
                 break;
 
@@ -74,15 +84,13 @@ public abstract class Autonomous extends OpMode {
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     turn(40 * turnChange, -1 * turnDirection);
-                    //telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    //telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
 
             case 4:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(5900, -1);
+                    drive(5800, -1);
                 }
                 break;
             case 5:
@@ -92,76 +100,94 @@ public abstract class Autonomous extends OpMode {
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     turn(118 * turnChange, 1 * turnDirection);
-                    //telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    //telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     ultrastate=ultra1.getUltrasonicLevel();
-                    driveForever(0.6);
-                    if(ultrastate < 10);
+                    driveForever(0.2);
+                    if(ultrastate < 15 && ultrastate > 1)
                     {
                         setLeftPower(0);
                         setRightPower(0);
-                        //v_state++;
+                        v_state++;
                     }
-                    telemetry.addData("sav1", "Sensor1: " + ultrastate);
+                    else {driveForever(.2);}
                 }
                 break;
             case 8:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
+                if(encoders_have_reset|| have_drive_encoders_reset()) {
                     climberDumper.setPosition(0);
-                    if (climberDumper.getPosition()< 0.2) {
+                    if (climberDumper.getPosition() < 0.2) {
                         v_state++;
                     }
                 }
                 break;
             case 9:
-                pause (100);
+                pause(200);
                 break;
             case 10:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
+                if(encoders_have_reset|| have_drive_encoders_reset()) {
                     climberDumper.setPosition(.92);
-                    if (climberDumper.getPosition()> 0.9) {
+                    if (climberDumper.getPosition() > 0.72) {
+                        reset_drive_encoders();
                         v_state++;
                     }
                 }
+                break;
             case 11:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                   drive(-1000, 0.5);
-
+                    drive(2500, -1);
                 }
+                break;
             case 12:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(45, -1);
+                    pause(100);
                 }
+                break;
             case 13:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(-500, 0.5);
+                    turn(90, 1);
                 }
+                break;
             case 14:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(90, -1);
+                    drive(2500, -1);
                 }
-
+                break;
             case 15:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(-3000, 0.5);
+                    pause(100);
                 }
+                break;
+            case 16:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset=true;
+                    sideArmL.setPosition(0);
+                    turn(36, 1);
+                }
+                break;
+            case 17:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset=true;
+                    drive(3000, -1);
+                }
+                break;
+            case 18:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset=true;
+                    sideArmL.setPosition(1);
+                }
+                break;
             default:
         }
-        //telemetry.addData("Text", "State: " + v_state + " " + have_drive_encoders_reset()+ " " + encoders_have_reset);
-        
-        telemetry.addData("Text", "State: " + v_state + " " + FR.getCurrentPosition() + " " + BR.getCurrentPosition()+ " " + FL.getCurrentPosition() + " " + BL.getCurrentPosition());
+        telemetry.addData("Text", "State: " + v_state);
     }
 
     void pause(float pauseAmount) {
