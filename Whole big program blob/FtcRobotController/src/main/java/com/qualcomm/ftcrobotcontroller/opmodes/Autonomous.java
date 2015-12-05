@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.ftcrobotcontroller.opmodes.autonomousMethods.Drive;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
  * Created by August on 10/10/2015.
@@ -15,8 +16,8 @@ public abstract class Autonomous extends OpMode {
     DcMotor BL;
     DcMotor FR;
     DcMotor collector;
-    DcMotor climber;
     Servo climberDumper;
+    UltrasonicSensor ultra1;
     private final double TURNRATIO = 18.3;
     private int v_state = 0;
     private int loopCount = 0;
@@ -31,6 +32,7 @@ public abstract class Autonomous extends OpMode {
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
         collector = hardwareMap.dcMotor.get("colmot");
+        ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
     }
 
     //Start the program and reset the encoders.
@@ -70,9 +72,9 @@ public abstract class Autonomous extends OpMode {
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(40*turnChange, -1*turnDirection);
-                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
+                    turn(40 * turnChange, -1 * turnDirection);
+                    //telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
+                    //telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
 
@@ -88,15 +90,22 @@ public abstract class Autonomous extends OpMode {
             case 6:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(118*turnChange, 1*turnDirection);
-                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
+                    turn(118 * turnChange, 1 * turnDirection);
+                    //telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
+                    //telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
                 }
                 break;
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(750, 0.5);
+                    pause(100);
+                    do {
+                        drive(100, 1);
+                    } while(ultra1.getUltrasonicLevel() > 8);
+                    setLeftPower(0);
+                    setRightPower(0);
+                    v_state++;
+                    telemetry.addData("sav1", "Sensor1: " + ultra1.getUltrasonicLevel());
                 }
                 break;
             case 8:
