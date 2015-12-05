@@ -21,6 +21,7 @@ public abstract class Autonomous extends OpMode {
     private final double TURNRATIO = 18.3;
     private int v_state = 0;
     private int loopCount = 0;
+    private double ultrastate = 0;
     private boolean encoders_have_reset=false;
 
     //Map the motors.
@@ -98,14 +99,15 @@ public abstract class Autonomous extends OpMode {
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    pause(100);
-                    do {
-                        drive(100, 1);
-                    } while(ultra1.getUltrasonicLevel() > 8);
-                    setLeftPower(0);
-                    setRightPower(0);
-                    v_state++;
-                    telemetry.addData("sav1", "Sensor1: " + ultra1.getUltrasonicLevel());
+                    ultrastate=ultra1.getUltrasonicLevel();
+                    driveForever(0.6);
+                    if(ultrastate < 10);
+                    {
+                        setLeftPower(0);
+                        setRightPower(0);
+                        //v_state++;
+                    }
+                    telemetry.addData("sav1", "Sensor1: " + ultrastate);
                 }
                 break;
             case 8:
@@ -164,8 +166,8 @@ public abstract class Autonomous extends OpMode {
 
     void pause(float pauseAmount) {
         if(loopCount>pauseAmount) {
-            v_state++;
             loopCount = 0;
+            v_state++;
         }
         else
             loopCount++;
@@ -207,6 +209,12 @@ public abstract class Autonomous extends OpMode {
             setLeftPower(speed);
             setRightPower(speed);
         }
+    }
+    void driveForever(double speed) {
+        // Start the drive wheel motors at full power
+        run_using_encoders();
+        setLeftPower(speed);
+        setRightPower(speed);
     }
 
 
