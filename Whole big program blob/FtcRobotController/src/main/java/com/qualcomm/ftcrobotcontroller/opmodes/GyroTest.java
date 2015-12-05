@@ -27,7 +27,7 @@ public class GyroTest extends OpMode {
     public void loop() {
 
         telemetry.addData("sav1", "SensorXYZ: " + gyroSensor.rawX()+" "+gyroSensor.rawY()+" "+gyroSensor.rawZ());
-
+        telemetry.addData("heading: ", "" + gyroSensor.getHeading());
 
     }
 }
