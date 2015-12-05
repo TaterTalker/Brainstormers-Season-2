@@ -28,6 +28,7 @@ public class TeleOp extends OpMode {
 
     Servo lock;
     Servo sideArmL;
+    Servo sideArmR;
     Servo climberDumper;
     Servo debDumper;
     Servo door;
@@ -54,7 +55,8 @@ public class TeleOp extends OpMode {
         TOUCHSENSOR2= hardwareMap.touchSensor.get("t2");
 
         sideArmL = hardwareMap.servo.get("sideArmL");
-        lock = hardwareMap.servo.get("sideArmR");
+        sideArmR = hardwareMap.servo.get("sideArmR");
+        lock = hardwareMap.servo.get("lock");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
         door = hardwareMap.servo.get("door");
@@ -62,7 +64,6 @@ public class TeleOp extends OpMode {
         collector = hardwareMap.dcMotor.get("colmot");
         extendor1 = hardwareMap.dcMotor.get("ext1");
         extendor2 = hardwareMap.dcMotor.get("ext2");
-        climber = hardwareMap.dcMotor.get("lock");
 
     }
 
@@ -162,6 +163,21 @@ public class TeleOp extends OpMode {
             lock.setPosition(0);
         }
 
+        if(gamepad2.b){
+            sideArmR.setPosition(1);
+        }
+        else{
+            sideArmR.setPosition(0);
+        }
+
+        if(gamepad2.x){
+            sideArmL.setPosition(0);
+        }
+        else{
+            sideArmL.setPosition(1);
+        }
+
+
         if (gamepad2.y){
             climberDumper.setPosition(0);
         }
@@ -184,12 +200,6 @@ public class TeleOp extends OpMode {
             extendor1.setPower(0);
             extendor2.setPower(0);
         }
-
-        if (gamepad1.right_bumper)
-            climber.setPower(-0.3);
-        else if (drivingForward)
-            climber.setPower(1);
-        else  climber.setPower(0);
 
     }
 }

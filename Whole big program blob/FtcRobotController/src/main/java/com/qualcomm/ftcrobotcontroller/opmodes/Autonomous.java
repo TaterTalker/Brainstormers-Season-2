@@ -17,7 +17,7 @@ public abstract class Autonomous extends OpMode {
     DcMotor collector;
     DcMotor climber;
     Servo climberDumper;
-    private final double TURNRATIO = 10.5;
+    private final double TURNRATIO = 18.3;
     private int v_state = 0;
     private int loopCount = 0;
     private boolean encoders_have_reset=false;
@@ -30,7 +30,6 @@ public abstract class Autonomous extends OpMode {
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
-        climber = hardwareMap.dcMotor.get("lock");
         collector = hardwareMap.dcMotor.get("colmot");
     }
 
