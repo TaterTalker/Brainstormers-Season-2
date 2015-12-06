@@ -50,22 +50,21 @@ public class turnTest extends OpMode {
     }
 
 
-    void resetGyro(){
+    void resetGyro() {
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-<<<<<<< HEAD
-    gyroSensor.calibrate();
-        if(gyroSensor.getHeading()==0) {
+
+        gyroSensor.calibrate();
+        if (gyroSensor.getHeading() == 0) {
             i++;
-=======
-        if(gyroSensor.getHeading()!=0){
-            gyroSensor.calibrate();
-        }
-        else {
-            pause(450);
->>>>>>> origin/master
+
+            if (gyroSensor.getHeading() != 0) {
+                gyroSensor.calibrate();
+            } else {
+                pause(450);
+
+            }
         }
     }
-
     void turnWithGyro(int degrees){
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
         degrees=degrees-10;
