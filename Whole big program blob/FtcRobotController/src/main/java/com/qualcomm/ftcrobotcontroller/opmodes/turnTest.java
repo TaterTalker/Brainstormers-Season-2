@@ -16,6 +16,7 @@ public class turnTest extends OpMode {
     boolean turnComplete=false;
     GyroSensor gyroSensor;
     int i=0;
+    int lastgyro;
 
     @Override
     public void init() {
@@ -25,6 +26,7 @@ public class turnTest extends OpMode {
         BL = hardwareMap.dcMotor.get("BL");
         gyroSensor = hardwareMap.gyroSensor.get("G1");
         gyroSensor.calibrate();
+        lastgyro=0;
     }
 
     @Override
@@ -36,6 +38,12 @@ public class turnTest extends OpMode {
             case 1:
                 turnWithGyro(90);
                 break;
+            case 2:
+                pause(100);
+                break;
+            case 3:
+                turnWithGyro(90);
+                break;
             default:
                 break;
         }
@@ -44,11 +52,9 @@ public class turnTest extends OpMode {
 
     void resetGyro(){
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-        if(gyroSensor.getHeading()!=0){
-            gyroSensor.calibrate();
-        }
-        else {
-            pause(1000);
+    gyroSensor.calibrate();
+        if(gyroSensor.getHeading()==0) {
+            i++;
         }
     }
 
@@ -57,19 +63,20 @@ public class turnTest extends OpMode {
         if (degrees<0){
             degrees+=360;
         }
+            degrees-=7;
 
         int curDegs = gyroSensor.getHeading();
         if(turnComplete==false) {
 
             if (degrees > 180) {
-                if (degrees<curDegs) {
+                if (degrees+lastgyro<curDegs) {
                     FR.setPower(-1);
                     BR.setPower(-1);
                     FL.setPower(-1);
                     BL.setPower(-1);
                 }
                 else turnComplete=true;
-            } else if(degrees>curDegs){
+            } else if(degrees+lastgyro>curDegs){
 
                 FR.setPower(1);
                 BR.setPower(1);
@@ -85,6 +92,7 @@ public class turnTest extends OpMode {
             BL.setPower(0);
             FR.setPower(0);
             BR.setPower(0);
+           lastgyro = gyroSensor.getHeading();
             i++;
         }
     }

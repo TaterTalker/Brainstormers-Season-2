@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -13,6 +14,7 @@ public abstract class AutonomousTEST extends OpMode {
     DcMotor BR;
     DcMotor BL;
     DcMotor FR;
+    OpticalDistanceSensor odm;
     DcMotor collector;
     DcMotor climber;
     Servo climberDumper;
@@ -31,6 +33,7 @@ public abstract class AutonomousTEST extends OpMode {
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
+        odm = hardwareMap.opticalDistanceSensor.get("odm1");
         collector = hardwareMap.dcMotor.get("colmot");
     }
 
@@ -63,9 +66,15 @@ public abstract class AutonomousTEST extends OpMode {
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(180, -1);
-                    telemetry.addData("rightTicks", "" + FL.getCurrentPosition());
-                    telemetry.addData("leftTicks", "" + FR.getCurrentPosition());
+                    int odmstate =odm.getLightDetectedRaw();
+                    driveForever(0.2);
+                    if(odmstate >900 )
+                    {
+                        setLeftPower(0);
+                        setRightPower(0);
+                        v_state++;
+                    }
+                    else {driveForever(.2);}
                 }
                 break;
             default:
@@ -181,6 +190,12 @@ public abstract class AutonomousTEST extends OpMode {
             variable=max;
 
         return variable;
+    }
+    void driveForever(double speed) {
+        // Start the drive wheel motors at full power
+        run_using_encoders();
+        setLeftPower(speed);
+        setRightPower(speed);
     }
 
     void initEncoders(){
