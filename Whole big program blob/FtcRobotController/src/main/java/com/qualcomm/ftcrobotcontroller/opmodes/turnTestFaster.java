@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
- * Created by August on 12/5/2015.
+ * Created by David on 12/6/2015.
  */
-public class turnTest extends OpMode {
+public class turnTestFaster extends OpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
@@ -44,12 +44,10 @@ public class turnTest extends OpMode {
 
     void resetGyro(){
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-        if(gyroSensor.getHeading()!=0){
             gyroSensor.calibrate();
-        }
-        else {
-            pause(450);
-        }
+            if(gyroSensor.getHeading()==0) {
+                i++;
+            }
     }
 
     void turnWithGyro(int degrees){
@@ -80,21 +78,13 @@ public class turnTest extends OpMode {
             else turnComplete=true;
         }
 
-       if(turnComplete==true){
-           turnComplete=false;
+        if(turnComplete==true){
+            turnComplete=false;
             FL.setPower(0);
             BL.setPower(0);
             FR.setPower(0);
             BR.setPower(0);
             i++;
         }
-    }
-
-    void pause(float pauseAmount) {
-        if(loopCount>pauseAmount) {
-            loopCount = 0;
-            i++;
-        }
-        loopCount++;
     }
 }
