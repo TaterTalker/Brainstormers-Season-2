@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
- * Created by August on 12/5/2015.
+ * Created by David on 12/6/2015.
  */
-public class turnTest extends OpMode {
+public class turnTestFaster extends OpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
@@ -16,7 +16,6 @@ public class turnTest extends OpMode {
     boolean turnComplete=false;
     GyroSensor gyroSensor;
     int i=0;
-    int lastgyro;
 
     @Override
     public void init() {
@@ -26,7 +25,6 @@ public class turnTest extends OpMode {
         BL = hardwareMap.dcMotor.get("BL");
         gyroSensor = hardwareMap.gyroSensor.get("G1");
         gyroSensor.calibrate();
-        lastgyro=0;
     }
 
     @Override
@@ -38,12 +36,6 @@ public class turnTest extends OpMode {
             case 1:
                 turnWithGyro(90);
                 break;
-            case 2:
-                pause(100);
-                break;
-            case 3:
-                turnWithGyro(90);
-                break;
             default:
                 break;
         }
@@ -52,18 +44,10 @@ public class turnTest extends OpMode {
 
     void resetGyro(){
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-<<<<<<< HEAD
-    gyroSensor.calibrate();
-        if(gyroSensor.getHeading()==0) {
-            i++;
-=======
-        if(gyroSensor.getHeading()!=0){
             gyroSensor.calibrate();
-        }
-        else {
-            pause(450);
->>>>>>> origin/master
-        }
+            if(gyroSensor.getHeading()==0) {
+                i++;
+            }
     }
 
     void turnWithGyro(int degrees){
@@ -72,20 +56,19 @@ public class turnTest extends OpMode {
         if (degrees<0){
             degrees+=360;
         }
-            degrees-=7;
 
         int curDegs = gyroSensor.getHeading();
         if(turnComplete==false) {
 
             if (degrees > 180) {
-                if (degrees+lastgyro<curDegs) {
+                if (degrees<curDegs) {
                     FR.setPower(-1);
                     BR.setPower(-1);
                     FL.setPower(-1);
                     BL.setPower(-1);
                 }
                 else turnComplete=true;
-            } else if(degrees+lastgyro>curDegs){
+            } else if(degrees>curDegs){
 
                 FR.setPower(1);
                 BR.setPower(1);
@@ -95,22 +78,13 @@ public class turnTest extends OpMode {
             else turnComplete=true;
         }
 
-       if(turnComplete==true){
-           turnComplete=false;
+        if(turnComplete==true){
+            turnComplete=false;
             FL.setPower(0);
             BL.setPower(0);
             FR.setPower(0);
             BR.setPower(0);
-           lastgyro = gyroSensor.getHeading();
             i++;
         }
-    }
-
-    void pause(float pauseAmount) {
-        if(loopCount>pauseAmount) {
-            loopCount = 0;
-            i++;
-        }
-        loopCount++;
     }
 }
