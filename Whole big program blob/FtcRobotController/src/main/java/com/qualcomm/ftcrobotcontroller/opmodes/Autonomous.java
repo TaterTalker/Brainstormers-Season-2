@@ -71,7 +71,7 @@ public abstract class Autonomous extends OpMode {
                 sideArmL.setPosition(1);
                 sideArmR.setPosition(0);
                 climberDumper.setPosition(1);
-                resetGyro();
+                v_state++;
                 break;
 
             case 1:
@@ -81,36 +81,37 @@ public abstract class Autonomous extends OpMode {
                 }
                 break;
             case 2:
-                pause(100);
+                resetGyro();
                 break;
             case 3:
+                pause (450);
+                break;
+            case 4:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                   // turn(40 * turnChange, -1 * turnDirection);
+                    // turn(40 * turnChange, -1 * turnDirection);
                     turnWithGyro(40*turnChange);
                 }
                 break;
-            case 4:
-                resetGyro();
             case 5:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-
                     drive(5800, -1);
                 }
                 break;
             case 6:
-                pause(100);
+                resetGyro();
                 break;
             case 7:
+                pause(450);
+                break;
+            case 8:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     //turn(118 * turnChange, 1 * turnDirection);
                     turnWithGyro(118*turnChange);
                 }
                 break;
-            case 8:
-                resetGyro();
             case 9:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
@@ -166,6 +167,7 @@ public abstract class Autonomous extends OpMode {
                 break;
             case 16:
                 resetGyro();
+                break;
             case 17:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
@@ -188,6 +190,7 @@ public abstract class Autonomous extends OpMode {
                 break;
             case 20:
                 resetGyro();
+                break;
             case 21:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
@@ -351,6 +354,7 @@ public abstract class Autonomous extends OpMode {
 
             if (degrees > 180) {
                 if (degrees<curDegs) {
+                    run_using_encoders();
                     FR.setPower(-1);
                     BR.setPower(-1);
                     FL.setPower(-1);
@@ -358,7 +362,7 @@ public abstract class Autonomous extends OpMode {
                 }
                 else turnComplete=true;
             } else if(degrees>curDegs){
-
+                run_using_encoders();
                 FR.setPower(1);
                 BR.setPower(1);
                 FL.setPower(1);
@@ -369,6 +373,7 @@ public abstract class Autonomous extends OpMode {
 
         if(turnComplete==true){
             turnComplete=false;
+            run_using_encoders();
             FL.setPower(0);
             BL.setPower(0);
             FR.setPower(0);

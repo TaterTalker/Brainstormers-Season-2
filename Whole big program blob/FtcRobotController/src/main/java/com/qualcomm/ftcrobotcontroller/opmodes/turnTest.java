@@ -52,7 +52,6 @@ public class turnTest extends OpMode {
 
     void resetGyro() {
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-
         gyroSensor.calibrate();
         if (gyroSensor.getHeading() == 0) {
             i++;
