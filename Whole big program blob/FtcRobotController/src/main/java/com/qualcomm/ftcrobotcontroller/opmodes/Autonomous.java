@@ -40,6 +40,7 @@ public abstract class Autonomous extends OpMode {
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
         door = hardwareMap.servo.get("door");
+        collector= hardwareMap.dcMotor.get ("colmot");
         v_state= 0;
         FR = hardwareMap.dcMotor.get("FR");
         FL = hardwareMap.dcMotor.get("FL");
@@ -68,56 +69,59 @@ public abstract class Autonomous extends OpMode {
 
             case 0:
                 reset_drive_encoders();
+                //run_using_encoders();
                 sideArmL.setPosition(1);
                 sideArmR.setPosition(0);
                 climberDumper.setPosition(1);
+                collector.setPower(1);
                 v_state++;
                 break;
 
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                    encoders_have_reset= true;
-                    drive(2000, -1);
+                    drive(2000, 0.7);
                 }
                 break;
             case 2:
-                resetGyro();
+                //resetGyro();
+                pause (100);
                 break;
             case 3:
-                pause (450);
-                break;
-            case 4:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    // turn(40 * turnChange, -1 * turnDirection);
-                    turnWithGyro(40*turnChange);
+                     turn(32 * turnChange, -0.5 * turnDirection);
+                    //turnWithGyro(20*turnChange);
                 }
+                break;
+            case 4:
+                pause (1);
                 break;
             case 5:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(5800, -1);
+                    drive(5700, 1);
                 }
                 break;
             case 6:
-                resetGyro();
+                pause (100);
                 break;
             case 7:
-                pause(450);
-                break;
-            case 8:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    //turn(118 * turnChange, 1 * turnDirection);
-                    turnWithGyro(118*turnChange);
+                    turn(51  * turnChange, -0.5 * turnDirection);
+                    //turnWithGyro(55*turnChange);
                 }
+                break;
+            case 8:
+                pause(1);
                 break;
             case 9:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     ultrastate=ultra1.getUltrasonicLevel();
                     driveForever(0.2);
-                    if(ultrastate < 15 && ultrastate > 1)
+                    if(ultrastate < 10 && ultrastate > 1)
                     {
                         setLeftPower(0);
                         setRightPower(0);
@@ -149,29 +153,26 @@ public abstract class Autonomous extends OpMode {
             case 13:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(2500, -1);
+                    drive(2500, -0.5);
                 }
                 break;
             case 14:
-                if(encoders_have_reset || have_drive_encoders_reset()) {
-                    encoders_have_reset=true;
-                    pause(100);
-                }
+                pause(100);
                 break;
             case 15:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                   // turn(90, 1);
-                    turnWithGyro(90);
+                   turn(90, 0.5);
+                   // turnWithGyro(-90);
                 }
                 break;
             case 16:
-                resetGyro();
+                pause(1);
                 break;
             case 17:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(2500, -1);
+                    drive(2500, -0.5);
                 }
                 break;
             case 18:
@@ -184,12 +185,12 @@ public abstract class Autonomous extends OpMode {
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                     sideArmL.setPosition(0);
-                  //  turn(36, 1);
-                    turnWithGyro(36);
+                    turn(36, 0.5);
+                   // turnWithGyro(36);
                 }
                 break;
             case 20:
-                resetGyro();
+                pause(1);
                 break;
             case 21:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
@@ -234,7 +235,7 @@ public abstract class Autonomous extends OpMode {
             run_using_encoders();
             setLeftPower(speed);
             setRightPower(speed);
-            collector.setPower(1);
+            collector.setPower(-1);
         }
     }
 
@@ -343,6 +344,10 @@ public abstract class Autonomous extends OpMode {
         }
 
     void turnWithGyro(int degrees){
+        if(loopCount<400) {
+            loopCount ++;
+            return;
+        }
         telemetry.addData("heading: ", "" + gyroSensor.getHeading());
         degrees=degrees-10;
         if (degrees<0){
@@ -355,18 +360,18 @@ public abstract class Autonomous extends OpMode {
             if (degrees > 180) {
                 if (degrees<curDegs) {
                     run_using_encoders();
-                    FR.setPower(-1);
-                    BR.setPower(-1);
-                    FL.setPower(-1);
-                    BL.setPower(-1);
+                    FR.setPower(-0.5);
+                    BR.setPower(-0.5);
+                    FL.setPower(-0.5);
+                    BL.setPower(-0.5);
                 }
                 else turnComplete=true;
             } else if(degrees>curDegs){
                 run_using_encoders();
-                FR.setPower(1);
-                BR.setPower(1);
-                FL.setPower(1);
-                BL.setPower(1);
+                FR.setPower(0.5);
+                BR.setPower(0.5);
+                FL.setPower(0.5);
+                BL.setPower(0.5);
             }
             else turnComplete=true;
         }
@@ -379,6 +384,7 @@ public abstract class Autonomous extends OpMode {
             FR.setPower(0);
             BR.setPower(0);
             v_state++;
+            loopCount=0;
         }
     }
 
