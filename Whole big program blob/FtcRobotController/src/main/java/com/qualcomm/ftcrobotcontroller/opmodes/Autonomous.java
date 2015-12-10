@@ -69,7 +69,6 @@ public abstract class Autonomous extends OpMode {
 
             case 0:
                 reset_drive_encoders();
-                //run_using_encoders();
                 sideArmL.setPosition(1);
                 sideArmR.setPosition(0);
                 climberDumper.setPosition(1);
@@ -80,18 +79,16 @@ public abstract class Autonomous extends OpMode {
             case 1:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                    encoders_have_reset= true;
-                    drive(2000, 0.7);
+                    drive(2000, 1);
                 }
                 break;
             case 2:
-                //resetGyro();
                 pause (100);
                 break;
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
                      turn(32 * turnChange, -0.5 * turnDirection);
-                    //turnWithGyro(20*turnChange);
                 }
                 break;
             case 4:
@@ -109,11 +106,11 @@ public abstract class Autonomous extends OpMode {
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(51  * turnChange, -0.5 * turnDirection);
-                    //turnWithGyro(55*turnChange);
+                    turn(50  * turnChange, -0.5 * turnDirection);
                 }
                 break;
             case 8:
+                collector.setPower(0);
                 pause(1);
                 break;
             case 9:
@@ -153,7 +150,8 @@ public abstract class Autonomous extends OpMode {
             case 13:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(2500, -0.5);
+                    collector.setPower(1);
+                    drive(500, -0.5);
                 }
                 break;
             case 14:
@@ -162,45 +160,55 @@ public abstract class Autonomous extends OpMode {
             case 15:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                   turn(90, 0.5);
-                   // turnWithGyro(-90);
+                   turn(83, -0.5);
                 }
                 break;
             case 16:
-                pause(1);
-                break;
-            case 17:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(2500, -0.5);
+                    drive(1600, 1);
                 }
+                break;
+            case 17:
+                pause (100);
                 break;
             case 18:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    pause(100);
+                    turn(30, -0.5);
                 }
                 break;
             case 19:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    sideArmL.setPosition(0);
-                    turn(36, 0.5);
-                   // turnWithGyro(36);
+                    drive(1700, 1);
                 }
                 break;
             case 20:
-                pause(1);
+                pause(100);
                 break;
             case 21:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(3000, -1);
+                    sideArmL.setPosition(0);
+                    turn(97, -0.5);
                 }
                 break;
             case 22:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
+                    encoders_have_reset = true;
+                    driveForever(-1);
+                    v_state++;
+                }
+                break;
+            case 23:
+                pause (300);
+                break;
+            case 24:
+                if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
+                    setLeftPower(0);
+                    setRightPower(0);
                     sideArmL.setPosition(1);
                 }
                 break;
@@ -236,6 +244,25 @@ public abstract class Autonomous extends OpMode {
             setLeftPower(speed);
             setRightPower(speed);
             collector.setPower(-1);
+        }
+    }
+
+    void driveRampDown(float distance, double speed) {
+        if (hasLeftReached(distance) || hasRightReached(distance)) {
+            setLeftPower(0);
+            setRightPower(0);
+            reset_drive_encoders();
+            v_state++;
+        }
+        else if (isLeftNear(distance) || isRightNear(distance)) {
+            run_using_encoders();
+            setLeftPower(speed*0.5);
+            setRightPower(speed*0.5);
+        }
+        else {
+            run_using_encoders();
+            setLeftPower(speed);
+            setRightPower(speed);
         }
     }
 
@@ -290,6 +317,18 @@ public abstract class Autonomous extends OpMode {
 
         return (Math.abs(FR.getCurrentPosition()) > rightd) &&
                 (Math.abs(BR.getCurrentPosition()) > rightd);
+    }
+
+    boolean isLeftNear(double leftd) {
+
+        return (Math.abs(FL.getCurrentPosition()) > leftd-500) &&
+                (Math.abs(BL.getCurrentPosition()) > leftd-500);
+    }
+
+    boolean isRightNear(double rightd) {
+
+        return (Math.abs(FR.getCurrentPosition()) > rightd-500) &&
+                (Math.abs(BR.getCurrentPosition()) > rightd-500);
     }
 
     boolean have_drive_encoders_reset() {
