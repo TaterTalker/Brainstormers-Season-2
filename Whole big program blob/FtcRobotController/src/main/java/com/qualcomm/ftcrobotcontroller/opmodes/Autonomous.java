@@ -27,6 +27,8 @@ public abstract class Autonomous extends OpMode {
     UltrasonicSensor ultra1;
     private final double TURNRATIO = 18.3;
     private int v_state = 0;
+    private double turnChange = 0;
+    private int turnDirection = 0;
     private int loopCount = 0;
     private double ultrastate = 0;
     private boolean encoders_have_reset=false;
@@ -58,8 +60,9 @@ public abstract class Autonomous extends OpMode {
     }
 
     //Loop through the state machine completing each task.
-    public void loop(int turnDirection, int turnChange) {
-
+    public void loop(int turnDirection, double turnChange) {
+        this.turnDirection=turnDirection;
+        this.turnChange=turnChange;
         switch (v_state) {
 
             //Reset Motors.
@@ -88,7 +91,7 @@ public abstract class Autonomous extends OpMode {
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                     turn(32 * turnChange, -0.5 * turnDirection);
+                     turn(32, -0.5);
                 }
                 break;
             case 4:
@@ -106,7 +109,7 @@ public abstract class Autonomous extends OpMode {
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(50  * turnChange, -0.5 * turnDirection);
+                    turn(50, -0.5);
                 }
                 break;
             case 8:
@@ -190,7 +193,10 @@ public abstract class Autonomous extends OpMode {
             case 21:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    sideArmL.setPosition(0);
+                    if (turnDirection==-1)
+                        sideArmR.setPosition(1);
+                    else
+                        sideArmL.setPosition(0);
                     turn(97, -0.5);
                 }
                 break;
@@ -210,6 +216,7 @@ public abstract class Autonomous extends OpMode {
                     setLeftPower(0);
                     setRightPower(0);
                     sideArmL.setPosition(1);
+                    sideArmR.setPosition(0);
                 }
                 break;
             default:
@@ -369,7 +376,7 @@ public abstract class Autonomous extends OpMode {
     void turn(double degrees, double power){
         if (power<0)
             degrees=degrees*1.05;
-        if(hasLeftReached(degrees*TURNRATIO)||hasRightReached(degrees * TURNRATIO)) {
+        if(hasLeftReached(degrees*TURNRATIO*turnChange)||hasRightReached(degrees * TURNRATIO*turnChange)) {
                 setLeftPower(0);
                 setRightPower(0);
                 reset_drive_encoders();
@@ -377,8 +384,8 @@ public abstract class Autonomous extends OpMode {
             }
             else{
                 run_using_encoders();
-            setLeftPower(power);
-            setRightPower(-power);
+            setLeftPower(power*turnDirection);
+            setRightPower(-power*turnDirection);
             }
         }
 

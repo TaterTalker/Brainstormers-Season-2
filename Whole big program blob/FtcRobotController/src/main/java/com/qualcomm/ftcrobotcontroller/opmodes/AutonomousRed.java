@@ -11,6 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutonomousRed extends Autonomous {
     @Override
     public void loop() {
-        super.loop(-1, 1);
+        super.loop(-1, 0.94);
     }
 }
