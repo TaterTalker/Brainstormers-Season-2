@@ -91,7 +91,7 @@ public abstract class Autonomous extends OpMode {
             case 3:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                     turn(32, -0.5);
+                     turn(36, -0.5);
                 }
                 break;
             case 4:
@@ -100,7 +100,7 @@ public abstract class Autonomous extends OpMode {
             case 5:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    drive(5700, 1);
+                    drive(5800, 1);
                 }
                 break;
             case 6:
@@ -109,7 +109,7 @@ public abstract class Autonomous extends OpMode {
             case 7:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                    turn(50, -0.5);
+                    turn(60, -0.5);
                 }
                 break;
             case 8:
@@ -121,6 +121,7 @@ public abstract class Autonomous extends OpMode {
                     encoders_have_reset=true;
                     ultrastate=ultra1.getUltrasonicLevel();
                     driveForever(0.2);
+                    telemetry.addData("Text", "Ultra: " + ultra1.getUltrasonicLevel());
                     if(ultrastate < 10 && ultrastate > 1)
                     {
                         setLeftPower(0);
@@ -163,7 +164,7 @@ public abstract class Autonomous extends OpMode {
             case 15:
                 if(encoders_have_reset || have_drive_encoders_reset()) {
                     encoders_have_reset=true;
-                   turn(83, -0.5);
+                   turn(90, -0.5);
                 }
                 break;
             case 16:
@@ -394,7 +395,7 @@ public abstract class Autonomous extends OpMode {
             loopCount ++;
             return;
         }
-        telemetry.addData("heading: ", "" + gyroSensor.getHeading());
+        //telemetry.addData("heading: ", "" + gyroSensor.getHeading());
         degrees=degrees-10;
         if (degrees<0){
             degrees+=360;
@@ -435,7 +436,7 @@ public abstract class Autonomous extends OpMode {
     }
 
     void resetGyro(){
-        telemetry.addData("heading: ", "" + gyroSensor.getHeading());
+        //telemetry.addData("heading: ", "" + gyroSensor.getHeading());
         gyroSensor.calibrate();
         if(gyroSensor.getHeading()==0) {
             v_state++;

@@ -184,16 +184,15 @@ public class TeleOp extends OpMode {
         else{
             climberDumper.setPosition(1);
         }
-
         if (gamepad2.right_trigger!=0){
 
             extendor1.setPower(-1);
             extendor2.setPower(1);
         }
-        else if (gamepad2.left_trigger!=0){
-            if(TOUCHSENSOR2.isPressed())extendor1.setPower(0);
+        else if (gamepad2.left_trigger!=0) {
+            if (TOUCHSENSOR2.isPressed() && !gamepad2.a) extendor1.setPower(0);
             else extendor1.setPower(1);
-            if(TOUCHSENSOR1.isPressed()) extendor2.setPower(0);
+            if (TOUCHSENSOR1.isPressed() && !gamepad2.a) extendor2.setPower(0);
             else extendor2.setPower(-1);
         }
         else {
