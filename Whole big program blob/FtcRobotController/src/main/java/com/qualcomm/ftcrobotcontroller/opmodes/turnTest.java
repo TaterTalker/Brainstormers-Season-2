@@ -27,13 +27,15 @@ public class turnTest extends LinearOpMode {
         BL = hardwareMap.dcMotor.get("BL");
         gyroSensor = hardwareMap.gyroSensor.get("G1");
         gyroSensor.calibrate();
-        sleep(5000);
+        sleep(7000);
         waitForStart();
-        turnWithGyro(90);
+        turnWithGyro(180);
+        sleep(1000);
+        turnWithGyro(-180);
         sleep(1000);
         turnWithGyro(180);
         sleep(1000);
-        turnWithGyro(-270);
+        turnWithGyro(-90);
     }
 
 
@@ -54,29 +56,28 @@ public class turnTest extends LinearOpMode {
             degrees-=10;
 
         if (degrees > 180) {
-            while (degrees < heading() || heading()<10) {
+            do {
                 telemetry.addData("heading ", "" + heading());
                 FR.setPower(-0.5);
                 BR.setPower(-0.5);
                 FL.setPower(-0.5);
                 BL.setPower(-0.5);
-                sleep(1);
-            }
-
+                sleep(5);
+            } while (heading()>degrees || heading()<20);
             FL.setPower(0);
             BL.setPower(0);
             FR.setPower(0);
             BR.setPower(0);
 
         } else {
-            while (degrees > heading() || heading()>350) {
+            do {
                 telemetry.addData("heading ", "" + heading());
                 FR.setPower(0.5);
                 BR.setPower(0.5);
                 FL.setPower(0.5);
                 BL.setPower(0.5);
-                sleep(1);
-            }
+                sleep(5);
+            } while (degrees > heading() || heading()>340);
             FL.setPower(0);
             BL.setPower(0);
             FR.setPower(0);
