@@ -92,14 +92,6 @@ public class turnTest extends LinearOpMode {
 
     }
 
-    void pause(float pauseAmount) {
-        if(loopCount>pauseAmount) {
-            loopCount = 0;
-            i++;
-        }
-        loopCount++;
-    }
-
     int heading(){
         int head;
         head=gyroSensor.getHeading()-lastgyro;

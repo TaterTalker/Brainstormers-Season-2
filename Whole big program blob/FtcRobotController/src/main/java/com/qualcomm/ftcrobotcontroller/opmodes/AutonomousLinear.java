@@ -22,6 +22,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     Servo debDumper;
     Servo door;
     UltrasonicSensor ultra1;
+    int lastgyro;
     double turnChange=1;
     int turnDirection=1;
     private final double TURNRATIO = 18.3;
@@ -36,51 +37,51 @@ public abstract class AutonomousLinear extends LinearOpMode {
         getRobotConfig();
         run_using_encoders();
         reset_drive_encoders();
-        waitForStart();
+        gyroSensor.calibrate();
+        waitForStart(); //everything before this happens when you press init
 
         drive(2000, 1);
-        sleep(100);
-        turn(36, -0.5);
-        sleep(1);
+        sleep(1000);
 
-        drive(5800, 1);
-        sleep(100);
-        turn(60, -0.5);
+        turnWithGyro(30);
+        sleep(1000);
+
+        drive(6500, 1);
+        sleep(1000);
+
+        turnWithGyro(60);
         collector.setPower(0);
-        sleep(1);
+        sleep(1000);
 
-        while(ultrastate > 10 || ultrastate < 1) {
-            ultrastate=ultra1.getUltrasonicLevel();
+        while(readFixedUltra(ultra1) > 10 || readFixedUltra(ultra1) < 1) {
             driveForever(.2);
-            telemetry.addData("Text", "Ultra: " + ultra1.getUltrasonicLevel());
         }
         setLeftPower(0);
         setRightPower(0);
-
-        while(climberDumper.getPosition() > 0.2);
-
-        sleep(200);
+        sleep(500);
+        gyroSensor.calibrate();
+        sleep(1000);
+        climberDumper.setPosition(0.15);
+        sleep(2000);
         climberDumper.setPosition(.92);
-        while (climberDumper.getPosition() < 0.72)
-            reset_drive_encoders();
-
+        sleep(1000);
         collector.setPower(1);
-        drive(500, -0.5);
-        sleep(100);
+        drive(1000, -0.5);
+        sleep(1000);
 
-        turn(90, -0.5);
+        turnWithGyro(90);
         drive(1600, 1);
-        sleep(100);
+        sleep(1000);
 
-        turn(30, -0.5);
+        turnWithGyro(30);
         drive(1700, 1);
-        sleep(100);
+        sleep(1000);
 
         if (turnDirection==-1)
             sideArmR.setPosition(1);
         else
             sideArmL.setPosition(0);
-        turn(97, -0.5);
+        turnWithGyro(90);
         driveForever(-1);
         sleep(300);
         setLeftPower(0);
@@ -91,6 +92,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
 
     void drive(float distance, double speed) {
+            reset_drive_encoders();
         // Start the drive wheel motors at full power
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
@@ -104,6 +106,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
     void drive(float distance, double speed, int withCollector) {
+        reset_drive_encoders();
         // Start the drive wheel motors at full power
         if(encoders_have_reset()) {
 
@@ -212,59 +215,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
     }
 
-    void turnWithGyro(int degrees){
-        /*if(encoders_have_reset()) {
-        if(loopCount<400) {
-            loopCount ++;
-            return;
-        }
-        //telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-        degrees=degrees-10;
-        if (degrees<0){
-            degrees+=360;
-        }
-
-        int curDegs = gyroSensor.getHeading();
-        if(turnComplete==false) {
-
-            if (degrees > 180) {
-                if (degrees<curDegs) {
-                    run_using_encoders();
-                    FR.setPower(-0.5);
-                    BR.setPower(-0.5);
-                    FL.setPower(-0.5);
-                    BL.setPower(-0.5);
-                }
-                else
-            } else if(degrees>curDegs){
-                run_using_encoders();
-                FR.setPower(0.5);
-                BR.setPower(0.5);
-                FL.setPower(0.5);
-                BL.setPower(0.5);
-            }
-            else turnComplete=true;
-        }
-
-        if(turnComplete==true){
-            turnComplete=false;
-            run_using_encoders();
-            FL.setPower(0);
-            BL.setPower(0);
-            FR.setPower(0);
-            BR.setPower(0);
-            loopCount=0;
-        }
-        }
-    }
-
-    void resetGyro(){
-        //telemetry.addData("heading: ", "" + gyroSensor.getHeading());
-        gyroSensor.calibrate();
-        while(gyroSensor.getHeading()!=0) {
-        }*/
-    }
-
     boolean encoders_have_reset() {
         if(didEncodersReset ||
                 FL.getCurrentPosition() == 0 &&
@@ -291,5 +241,79 @@ public abstract class AutonomousLinear extends LinearOpMode {
         ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
     }
 
+    void resetGyro() {
+        while(heading()!=0) {
+            lastgyro = gyroSensor.getHeading();
+        }
+    }
+
+    void turnWithGyro(int degrees) throws InterruptedException {
+        resetGyro();
+        degrees*=turnDirection;
+        telemetry.addData("heading ", "" + heading());
+        if (degrees < 0)
+            degrees += 370;
+
+
+        else
+            degrees-=10;
+
+        if (degrees > 180) {
+            do {
+                telemetry.addData("heading ", "" + heading());
+                run_using_encoders();
+                FR.setPower(-0.5);
+                BR.setPower(-0.5);
+                FL.setPower(-0.5);
+                BL.setPower(-0.5);
+                sleep(5);
+            } while (heading()>degrees || heading()<20);
+            run_using_encoders();
+            FL.setPower(0);
+            BL.setPower(0);
+            FR.setPower(0);
+            BR.setPower(0);
+
+        } else {
+            do {
+                telemetry.addData("heading ", "" + heading());
+                run_using_encoders();
+                FR.setPower(0.5);
+                BR.setPower(0.5);
+                FL.setPower(0.5);
+                BL.setPower(0.5);
+                sleep(5);
+            } while (degrees > heading() || heading()>340);
+            run_using_encoders();
+            FL.setPower(0);
+            BL.setPower(0);
+            FR.setPower(0);
+            BR.setPower(0);
+        }
+        run_using_encoders();
+        FL.setPower(0);
+        BL.setPower(0);
+        FR.setPower(0);
+        BR.setPower(0);
+        telemetry.addData("Done","");
+
+    }
+
+    int heading(){
+        int head;
+        head=gyroSensor.getHeading()-lastgyro;
+        if (head<0)
+            head+=360;
+        return (head);
+    }
+
+    double readFixedUltra(UltrasonicSensor sensor){
+        double val = 0;
+        for(int i=0;i<10;i++) {
+            val+=sensor.getUltrasonicLevel();
+        }
+        val/=10;
+        return val;
+    }
 }
 
