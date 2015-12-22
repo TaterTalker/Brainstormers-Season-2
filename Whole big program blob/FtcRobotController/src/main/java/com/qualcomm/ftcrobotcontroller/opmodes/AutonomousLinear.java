@@ -44,40 +44,48 @@ public abstract class AutonomousLinear extends LinearOpMode {
         //collector.setPower(-1);
 
         drive(2000, 1);
-        sleep(1000);
+        sleep(200);
 
         turnWithGyro(30);
-        sleep(1000);
+        sleep(200);
         reset_drive_encoders();
 
-        drive(4000, 1);
-        sleep(500);
-        turnWithGyro(25);
-        sleep(500);
+        drive(5050, 0.7);
+        sleep(200);
+
+        turnWithGyro(60);
+        sleep(200);
+
+        driveUntilUltra(25,0.2);
+        sleep(200);
+
+        squareUp();
+        sleep(200);
+
+        turnWithGyro(-90);
+        sleep(200);
 
         while(readFixedODM(odm)<900) {
-            driveForever(0.3);
+            driveForever(0.2);
         }
         stopMotors();
-        drive(200, 0.2);
-        sleep(1000);
+        sleep(200);
+        turnWithGyro(90);
+        sleep(200);
 
         squareUp();
         collector.setPower(0);
-        sleep(1000);
+        sleep(200);
 
-        while(readFixedUltra(ultra1) > 10 || readFixedUltra(ultra1) < 1) {
-            driveForever(.2);
-        }
+        driveUntilUltra(15,0.2);
+        sleep(200);
 
         stopMotors();
-        sleep(500);
-        gyroSensor.calibrate();
+        sleep(200);
+        climberDumper.setPosition(0);
         sleep(1000);
-        climberDumper.setPosition(0.15);
-        sleep(2000);
         climberDumper.setPosition(.92);
-        sleep(1000);
+        sleep(200);
     }
 
 
@@ -88,12 +96,12 @@ public abstract class AutonomousLinear extends LinearOpMode {
             sleep(1);
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             run_using_encoders();
             setLeftPower(speed);
             setRightPower(speed);
         }
-        setLeftPower(0);
-        setRightPower(0);
+        stopMotors();
         reset_drive_encoders();
     }
 
@@ -144,7 +152,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         return (Math.abs(FR.getCurrentPosition()) > rightd-500) &&
                 (Math.abs(BR.getCurrentPosition()) > rightd-500);
     }
-
 
     void setLeftPower(double power) {
         power=clip(power,-1,1);
@@ -315,6 +322,13 @@ public abstract class AutonomousLinear extends LinearOpMode {
             FL.setPower(0);
             BL.setPower(0);
         }
+    }
+
+    void driveUntilUltra(int target, double speed){
+        while(readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
+            driveForever(speed);
+        }
+        stopMotors();
     }
 }
 
