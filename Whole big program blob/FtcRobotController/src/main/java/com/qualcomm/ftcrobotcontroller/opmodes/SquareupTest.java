@@ -43,21 +43,23 @@ public class SquareupTest extends LinearOpMode {
         gyroSensor.calibrate();
         waitForStart(); //everything before this happens when you press init
 
-        squareup();
+        squareUp();
+        setRightPower(0);
+        setLeftPower(0);
 
 
     }
 
-    void squareup() {
+    void squareUp() {
 
-        double ultradifference = (readFixedUltra(ultra1) - readFixedUltra(ultra2));
-        while ( Math.abs(ultradifference)< 1) {
-         setLeftPower(ultradifference);
-            setRightPower(-ultradifference);
+        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) !=0 ) {
+            telemetry.addData("ultra1", readFixedUltra((ultra1)));
+            telemetry.addData("ultra2", readFixedUltra((ultra2)));
+            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2))/50);
+            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1))/50);
 
         }
-        setRightPower(0);
-        setLeftPower(0);
+        stopMotors();
     }
 
     boolean encoders_have_reset() {
@@ -115,14 +117,29 @@ public class SquareupTest extends LinearOpMode {
 
     void setLeftPower(double power) {
         power = clip(power, -1, 1);
+        run_using_encoders();
         FL.setPower(-power);
         BL.setPower(-power);
     }
 
     void setRightPower(double power) {
         power = clip(power, -1, 1);
+        run_using_encoders();
         FR.setPower(power);
         BR.setPower(power);
+    }
+
+    void stopMotors(){
+        while(FR.isBusy()==true ||
+                BR.isBusy()==true||
+                FL.isBusy()==true||
+                BL.isBusy()==true){
+            run_using_encoders();
+            FR.setPower(0);
+            BR.setPower(0);
+            FL.setPower(0);
+            BL.setPower(0);
+        }
     }
 
     double clip(double variable, double min, double max) {

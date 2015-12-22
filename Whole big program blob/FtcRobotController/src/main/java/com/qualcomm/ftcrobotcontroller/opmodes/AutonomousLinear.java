@@ -24,6 +24,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     OpticalDistanceSensor odm;
     Servo door;
     UltrasonicSensor ultra1;
+    UltrasonicSensor ultra2;
     int lastgyro;
     double turnChange=1;
     int turnDirection=1;
@@ -47,20 +48,21 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
         turnWithGyro(30);
         sleep(1000);
+        reset_drive_encoders();
 
-        drive(4000,1);
+        drive(4000, 1);
         sleep(500);
-        turnWithGyro(15);
+        turnWithGyro(25);
         sleep(500);
 
         while(readFixedODM(odm)<900) {
-            driveForever(0.5);
+            driveForever(0.3);
         }
-        driveForever(0);
+        stopMotors();
         drive(200, 0.2);
         sleep(1000);
 
-        turnWithGyro(45);
+        squareUp();
         collector.setPower(0);
         sleep(1000);
 
@@ -68,7 +70,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
             driveForever(.2);
         }
 
-        driveForever(0);
+        stopMotors();
         sleep(500);
         gyroSensor.calibrate();
         sleep(1000);
@@ -79,9 +81,11 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
 
-    void drive(float distance, double speed) {
+    void drive(float distance, double speed) throws InterruptedException {
             reset_drive_encoders();
         // Start the drive wheel motors at full power
+        while(!encoders_have_reset())
+            sleep(1);
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
             run_using_encoders();
@@ -91,24 +95,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         setLeftPower(0);
         setRightPower(0);
         reset_drive_encoders();
-    }
-
-    void drive(float distance, double speed, int withCollector) {
-        reset_drive_encoders();
-        // Start the drive wheel motors at full power
-        if(encoders_have_reset()) {
-
-            while (!hasLeftReached(distance) && !hasRightReached(distance)) {
-                run_using_encoders();
-                setLeftPower(speed);
-                setRightPower(speed);
-                collector.setPower(-1 * withCollector);
-            }
-            setLeftPower(0);
-            setRightPower(0);
-            collector.setPower(0);
-            reset_drive_encoders();
-        }
     }
 
     void driveForever(double speed) {
@@ -162,12 +148,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
     void setLeftPower(double power) {
         power=clip(power,-1,1);
+        run_using_encoders();
         FL.setPower(-power);
         BL.setPower(-power);
     }
 
     void setRightPower(double power) {
         power=clip(power,-1,1);
+        run_using_encoders();
         FR.setPower(power);
         BR.setPower(power);
     }
@@ -227,6 +215,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
+        ultra2 = hardwareMap.ultrasonicSensor.get("ultra2");
         odm = hardwareMap.opticalDistanceSensor.get("odm1");
     }
 
@@ -258,10 +247,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 sleep(5);
             } while (heading()>degrees || heading()<20);
             run_using_encoders();
-            FL.setPower(0);
-            BL.setPower(0);
-            FR.setPower(0);
-            BR.setPower(0);
+            stopMotors();
 
         } else {
             do {
@@ -274,16 +260,10 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 sleep(5);
             } while (degrees > heading() || heading()>340);
             run_using_encoders();
-            FL.setPower(0);
-            BL.setPower(0);
-            FR.setPower(0);
-            BR.setPower(0);
+            stopMotors();
         }
         run_using_encoders();
-        FL.setPower(0);
-        BL.setPower(0);
-        FR.setPower(0);
-        BR.setPower(0);
+        stopMotors();
         telemetry.addData("Done","");
 
     }
@@ -313,5 +293,28 @@ public abstract class AutonomousLinear extends LinearOpMode {
         val/=10;
         return val;
         }
+    void squareUp() {
+
+        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) !=0 ) {
+            telemetry.addData("ultra1", readFixedUltra((ultra1)));
+            telemetry.addData("ultra2", readFixedUltra((ultra2)));
+            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2))/50);
+            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1))/50);
+
+        }
+        stopMotors();
     }
+    void stopMotors(){
+        while(FR.isBusy()==true ||
+                BR.isBusy()==true||
+                FL.isBusy()==true||
+                BL.isBusy()==true){
+            run_using_encoders();
+            FR.setPower(0);
+            BR.setPower(0);
+            FL.setPower(0);
+            BL.setPower(0);
+        }
+    }
+}
 
