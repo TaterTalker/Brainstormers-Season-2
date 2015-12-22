@@ -100,5 +100,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Turn Test", turnTest.class);
       manager.register("Autonomous Blue", AutonomousBlue.class);
       manager.register("ultraTest", ultraTest.class);
+      manager.register("ODM Test", OdmTest.class);
   }
 }

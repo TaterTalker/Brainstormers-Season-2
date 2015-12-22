@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -20,14 +21,13 @@ public abstract class AutonomousLinear extends LinearOpMode {
     Servo sideArmR;
     boolean turnComplete = false;
     Servo debDumper;
+    OpticalDistanceSensor odm;
     Servo door;
     UltrasonicSensor ultra1;
     int lastgyro;
     double turnChange=1;
     int turnDirection=1;
     private final double TURNRATIO = 18.3;
-    private int loopCount = 0;
-    private double ultrastate = 0;
     private boolean didEncodersReset=false;
 
 
@@ -38,7 +38,9 @@ public abstract class AutonomousLinear extends LinearOpMode {
         run_using_encoders();
         reset_drive_encoders();
         gyroSensor.calibrate();
+        sleep(5000);
         waitForStart(); //everything before this happens when you press init
+        //collector.setPower(-1);
 
         drive(2000, 1);
         sleep(1000);
@@ -46,18 +48,27 @@ public abstract class AutonomousLinear extends LinearOpMode {
         turnWithGyro(30);
         sleep(1000);
 
-        drive(6500, 1);
+        drive(4000,1);
+        sleep(500);
+        turnWithGyro(15);
+        sleep(500);
+
+        while(readFixedODM(odm)<900) {
+            driveForever(0.5);
+        }
+        driveForever(0);
+        drive(200, 0.2);
         sleep(1000);
 
-        turnWithGyro(60);
+        turnWithGyro(45);
         collector.setPower(0);
         sleep(1000);
 
         while(readFixedUltra(ultra1) > 10 || readFixedUltra(ultra1) < 1) {
             driveForever(.2);
         }
-        setLeftPower(0);
-        setRightPower(0);
+
+        driveForever(0);
         sleep(500);
         gyroSensor.calibrate();
         sleep(1000);
@@ -65,29 +76,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(2000);
         climberDumper.setPosition(.92);
         sleep(1000);
-        collector.setPower(1);
-        drive(1000, -0.5);
-        sleep(1000);
-
-        turnWithGyro(90);
-        drive(1600, 1);
-        sleep(1000);
-
-        turnWithGyro(30);
-        drive(1700, 1);
-        sleep(1000);
-
-        if (turnDirection==-1)
-            sideArmR.setPosition(1);
-        else
-            sideArmL.setPosition(0);
-        turnWithGyro(90);
-        driveForever(-1);
-        sleep(300);
-        setLeftPower(0);
-        setRightPower(0);
-        sideArmL.setPosition(1);
-        sideArmR.setPosition(0);
     }
 
 
@@ -239,6 +227,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
+        odm = hardwareMap.opticalDistanceSensor.get("odm1");
     }
 
     void resetGyro() {
@@ -315,5 +304,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
         val/=10;
         return val;
     }
-}
+
+    int readFixedODM(OpticalDistanceSensor odm){
+        int val = 0;
+        for(int i=0;i<10;i++) {
+            val+=odm.getLightDetectedRaw();
+        }
+        val/=10;
+        return val;
+        }
+    }
 

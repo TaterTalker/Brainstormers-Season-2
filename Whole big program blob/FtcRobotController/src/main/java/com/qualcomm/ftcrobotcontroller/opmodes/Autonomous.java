@@ -29,7 +29,7 @@ public abstract class Autonomous extends OpMode {
     boolean didEncodersReset = true;
     int lastgyro;
     private final double TURNRATIO = 18.3;
-    private int v_state = 0;
+    int v_state = 0;
     private double turnChange = 0;
     private int turnDirection = 0;
     private int loopCount = 0;
