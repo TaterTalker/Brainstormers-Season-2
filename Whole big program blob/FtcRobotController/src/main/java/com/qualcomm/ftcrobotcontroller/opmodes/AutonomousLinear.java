@@ -43,14 +43,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
         waitForStart(); //everything before this happens when you press init
         //collector.setPower(-1);
 
-        drive(2000, 1);
+        driveStraight(2000, 1);
         sleep(200);
 
         turnWithGyro(30);
         sleep(200);
         reset_drive_encoders();
 
-        drive(5050, 0.7);
+        driveStraight(5000, 1);
         sleep(200);
 
         turnWithGyro(60);
@@ -329,6 +329,33 @@ public abstract class AutonomousLinear extends LinearOpMode {
             driveForever(speed);
         }
         stopMotors();
+    }
+
+    void driveStraight(float distance, double speed) throws InterruptedException {
+        reset_drive_encoders();
+        resetGyro();
+        // Start the drive wheel motors at full power
+        while(!encoders_have_reset())
+            sleep(1);
+
+        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            double turnheading = heading();
+            if(turnheading>180)
+                turnheading-=360;
+            turnheading/=15;
+
+            if(Math.abs(turnheading)>1)
+                clip(speed,-0.7,0.7);
+            else if (turnheading!=0)
+                clip(speed,-0.9,0.9);
+
+            telemetry.addData("heading ", "" + heading());
+            run_using_encoders();
+            setLeftPower(speed +turnheading);
+            setRightPower(speed - turnheading);
+        }
+        stopMotors();
+        reset_drive_encoders();
     }
 }
 

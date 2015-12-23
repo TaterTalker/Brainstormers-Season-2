@@ -43,7 +43,7 @@ public class DriveStraightTest extends LinearOpMode {
         gyroSensor.calibrate();
         sleep(5000);
         waitForStart(); //everything before this happens when you press init
-        drivestraight(5000, .5);
+        driveStraight(5000, 1);
 
     }
 
@@ -56,7 +56,7 @@ public class DriveStraightTest extends LinearOpMode {
             didEncodersReset = true;
         return true;
     }
-    void drivestraight(float distance, double speed) throws InterruptedException {
+    void driveStraight(float distance, double speed) throws InterruptedException {
         reset_drive_encoders();
         resetGyro();
         // Start the drive wheel motors at full power
@@ -64,10 +64,16 @@ public class DriveStraightTest extends LinearOpMode {
             sleep(1);
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
            double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
             turnheading/=15;
+
+            if(Math.abs(turnheading)>1)
+                clip(speed,-0.7,0.7);
+            else if (turnheading!=0)
+                clip(speed,-0.9,0.9);
 
             telemetry.addData("heading ", "" + heading());
             run_using_encoders();
