@@ -1,7 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -9,9 +8,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
- * Created by ethan on 12/22/2015.
+ * Created by August on 12/23/2015.
  */
-public class DriveStraightTest extends LinearOpMode {
+public class collisionAvoidanceTest extends LinearOpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
@@ -22,29 +21,19 @@ public class DriveStraightTest extends LinearOpMode {
     Servo sideArmL;
     Servo lock;
     Servo sideArmR;
-    boolean turnComplete = false;
     Servo debDumper;
     Servo door;
     UltrasonicSensor ultra1;
     UltrasonicSensor ultra2;
     int lastgyro;
-    double turnChange = 1;
-    int turnDirection = 1;
-    private final double TURNRATIO = 18.3;
-    private int loopCount = 0;
-    private double ultrastate = 0;
     private boolean didEncodersReset = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
-        run_using_encoders();
-        reset_drive_encoders();
         gyroSensor.calibrate();
-        sleep(5000);
-        waitForStart(); //everything before this happens when you press init
-        driveStraight(5000, 1);
-
+        waitForStart();
+        driveStraightAvoidance(2000,1);
     }
 
     boolean encoders_have_reset() {
@@ -57,7 +46,7 @@ public class DriveStraightTest extends LinearOpMode {
         return true;
     }
 
-    void driveStraight(float distance, double speed) throws InterruptedException {
+    void driveStraightAvoidance(float distance, double speed) throws InterruptedException {
         reset_drive_encoders();
         resetGyro();
         // Start the drive wheel motors at full power
@@ -72,7 +61,10 @@ public class DriveStraightTest extends LinearOpMode {
                 turnheading-=360;
             turnheading/=15;
 
-            if(Math.abs(turnheading)>1)
+            if (blocked()&&speed>0)
+                activeSpeed=0;
+
+            else if(Math.abs(turnheading)>1)
                 activeSpeed=clip(activeSpeed,-0.7,0.7);
             else if (turnheading!=0)
                 activeSpeed=clip(activeSpeed,-0.9,0.9);
@@ -97,6 +89,7 @@ public class DriveStraightTest extends LinearOpMode {
         return (Math.abs(FR.getCurrentPosition()) > rightd) &&
                 (Math.abs(BR.getCurrentPosition()) > rightd);
     }
+
     double readFixedUltra(UltrasonicSensor sensor) {
         double val = 0;
         for (int i = 0; i < 10; i++) {
@@ -189,5 +182,7 @@ public class DriveStraightTest extends LinearOpMode {
             lastgyro = gyroSensor.getHeading();
         }
     }
-
+    boolean blocked(){
+        return (readFixedUltra(ultra1)<60||readFixedUltra(ultra1)<60);
+    }
 }

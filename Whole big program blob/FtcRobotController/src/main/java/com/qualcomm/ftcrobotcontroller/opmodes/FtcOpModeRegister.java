@@ -105,6 +105,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
         manager.register("str8drive", DriveStraightTest.class);
         manager.register("Drive", DriveTest.class);
+        manager.register("collision Avoidance", collisionAvoidanceTest.class);
 
     }
 }
