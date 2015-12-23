@@ -43,20 +43,20 @@ public abstract class AutonomousLinear extends LinearOpMode {
         waitForStart(); //everything before this happens when you press init
         //collector.setPower(-1);
 
-        driveStraight(2000, 1);
+        driveStraightAvoidance(2000, 1);
         sleep(200);
 
         turnWithGyro(30);
         sleep(200);
         reset_drive_encoders();
 
-        driveStraight(5000, 1);
+        driveStraightAvoidance(5000, 1);
         sleep(200);
 
-        turnWithGyro(60);
+        turnWithGyro(70);
         sleep(200);
 
-        driveUntilUltra(25,0.2);
+        driveUntilUltra(25, 0.2);
         sleep(200);
 
         squareUp();
@@ -77,7 +77,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         collector.setPower(0);
         sleep(200);
 
-        driveUntilUltra(15,0.2);
+        driveUntilUltra(15, 0.2);
         sleep(200);
 
         stopMotors();
@@ -86,6 +86,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(1000);
         climberDumper.setPosition(.92);
         sleep(200);
+<<<<<<< HEAD
 
         driveStraight(1000, -1);
         sleep(200);
@@ -93,7 +94,10 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(200);
         driveStraight(400, -1);
     }
+=======
+>>>>>>> origin/master
 
+    }
 
     void drive(float distance, double speed) throws InterruptedException {
             reset_drive_encoders();
@@ -345,14 +349,20 @@ public abstract class AutonomousLinear extends LinearOpMode {
             sleep(1);
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+<<<<<<< HEAD
             double currSpeed=speed;
 
+=======
+            double activeSpeed=speed;
+            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+>>>>>>> origin/master
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
             turnheading/=15;
 
             if(Math.abs(turnheading)>1)
+<<<<<<< HEAD
               currSpeed=   clip(currSpeed,-0.7,0.7);
             else if (turnheading!=0)
               currSpeed =  clip(currSpeed,-0.9,0.9);
@@ -361,9 +371,55 @@ public abstract class AutonomousLinear extends LinearOpMode {
             run_using_encoders();
             setLeftPower(currSpeed +turnheading);
             setRightPower(currSpeed - turnheading);
+=======
+                activeSpeed=clip(activeSpeed,-0.7,0.7);
+            else if (turnheading!=0)
+                activeSpeed=clip(activeSpeed,-0.9,0.9);
+
+            telemetry.addData("heading ", "" + heading());
+            run_using_encoders();
+            setLeftPower(activeSpeed +turnheading);
+            setRightPower(activeSpeed - turnheading);
         }
         stopMotors();
         reset_drive_encoders();
+    }
+
+    void driveStraightAvoidance(float distance, double speed) throws InterruptedException {
+        reset_drive_encoders();
+        resetGyro();
+        // Start the drive wheel motors at full power
+        while(!encoders_have_reset())
+            sleep(1);
+
+        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            double activeSpeed=speed;
+            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+            double turnheading = heading();
+            if(turnheading>180)
+                turnheading-=360;
+            turnheading/=15;
+
+            if (blocked()&&speed>0)
+                activeSpeed=0;
+
+            else if(Math.abs(turnheading)>1)
+                activeSpeed=clip(activeSpeed,-0.7,0.7);
+            else if (turnheading!=0)
+                activeSpeed=clip(activeSpeed,-0.9,0.9);
+
+            telemetry.addData("heading ", "" + heading());
+            run_using_encoders();
+            setLeftPower(activeSpeed +turnheading);
+            setRightPower(activeSpeed -turnheading);
+>>>>>>> origin/master
+        }
+        stopMotors();
+        reset_drive_encoders();
+    }
+
+    boolean blocked(){
+        return (readFixedUltra(ultra1)<60||readFixedUltra(ultra1)<60);
     }
 }
 
