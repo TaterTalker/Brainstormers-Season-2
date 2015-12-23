@@ -87,13 +87,13 @@ public abstract class AutonomousLinear extends LinearOpMode {
         climberDumper.setPosition(.92);
         sleep(200);
 
-        driveStraight(1000, -1);
+        driveStraightAvoidance(1000, -1);
         sleep(200);
 
         turnWithGyro(-45);
         sleep(200);
 
-        driveStraight(400, -1);
+        driveStraightAvoidance(400, -1);
     }
 
     void drive(float distance, double speed) throws InterruptedException {
