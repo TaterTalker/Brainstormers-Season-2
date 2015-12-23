@@ -86,6 +86,12 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(1000);
         climberDumper.setPosition(.92);
         sleep(200);
+
+        driveStraight(1000, -1);
+        sleep(200);
+        turnWithGyro(-45);
+        sleep(200);
+        driveStraight(400, -1);
     }
 
 
@@ -339,20 +345,22 @@ public abstract class AutonomousLinear extends LinearOpMode {
             sleep(1);
 
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            double currSpeed=speed;
+
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
             turnheading/=15;
 
             if(Math.abs(turnheading)>1)
-                clip(speed,-0.7,0.7);
+              currSpeed=   clip(currSpeed,-0.7,0.7);
             else if (turnheading!=0)
-                clip(speed,-0.9,0.9);
+              currSpeed =  clip(currSpeed,-0.9,0.9);
 
             telemetry.addData("heading ", "" + heading());
             run_using_encoders();
-            setLeftPower(speed +turnheading);
-            setRightPower(speed - turnheading);
+            setLeftPower(currSpeed +turnheading);
+            setRightPower(currSpeed - turnheading);
         }
         stopMotors();
         reset_drive_encoders();

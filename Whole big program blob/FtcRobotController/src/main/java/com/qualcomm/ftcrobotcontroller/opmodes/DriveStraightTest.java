@@ -43,7 +43,7 @@ public class DriveStraightTest extends LinearOpMode {
         gyroSensor.calibrate();
         sleep(5000);
         waitForStart(); //everything before this happens when you press init
-        driveStraight(5000, 1);
+        driveStraight(5000, -1);
 
     }
 
@@ -56,33 +56,7 @@ public class DriveStraightTest extends LinearOpMode {
             didEncodersReset = true;
         return true;
     }
-    void driveStraight(float distance, double speed) throws InterruptedException {
-        reset_drive_encoders();
-        resetGyro();
-        // Start the drive wheel motors at full power
-        while(!encoders_have_reset())
-            sleep(1);
 
-        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
-            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
-           double turnheading = heading();
-            if(turnheading>180)
-                turnheading-=360;
-            turnheading/=15;
-
-            if(Math.abs(turnheading)>1)
-                clip(speed,-0.7,0.7);
-            else if (turnheading!=0)
-                clip(speed,-0.9,0.9);
-
-            telemetry.addData("heading ", "" + heading());
-            run_using_encoders();
-            setLeftPower(speed +turnheading);
-            setRightPower(speed -turnheading);
-        }
-        stopMotors();
-        reset_drive_encoders();
-    }
     boolean hasLeftReached(double leftd) {
 
         return (Math.abs(FL.getCurrentPosition()) > leftd) &&
@@ -102,7 +76,34 @@ public class DriveStraightTest extends LinearOpMode {
         val /= 10;
         return val;
     }
+    void driveStraight(float distance, double speed) throws InterruptedException {
+        reset_drive_encoders();
+        resetGyro();
+        // Start the drive wheel motors at full power
+        while(!encoders_have_reset())
+            sleep(1);
 
+        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            double currSpeed=speed;
+
+            double turnheading = heading();
+            if(turnheading>180)
+                turnheading-=360;
+            turnheading/=15;
+
+            if(Math.abs(turnheading)>1)
+                currSpeed=   clip(currSpeed,-0.7,0.7);
+            else if (turnheading!=0)
+                currSpeed =  clip(currSpeed,-0.9,0.9);
+
+            telemetry.addData("heading ", "" + heading());
+            run_using_encoders();
+            setLeftPower(currSpeed +turnheading);
+            setRightPower(currSpeed - turnheading);
+        }
+        stopMotors();
+        reset_drive_encoders();
+    }
     void reset_drive_encoders() {
 
         FL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
