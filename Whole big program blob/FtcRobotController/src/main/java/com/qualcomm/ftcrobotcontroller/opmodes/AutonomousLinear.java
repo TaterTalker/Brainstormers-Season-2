@@ -61,18 +61,19 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(100);
         reset_drive_encoders();
 
-        drive(5000, 1);
+        drive(4700, 1);
         sleep(300);
 
-        turn(70);
+        turn(50);
         sleep(100);
 
         driveUntilUltra(30, 0.2);
+        squareUp();
         sleep(100);
         driveUntilUltra(30, 0.2);
         sleep(100);
 
-        turn(-90);
+        turn(-70);
         sleep(100);
 
         while(readFixedODM(odm)<900) {
@@ -118,9 +119,9 @@ public abstract class AutonomousLinear extends LinearOpMode {
         turn(-45);
         sleep(200);
 
-        drive(2700, -1);
+        drive(2600, -1);
         sleep(500);
-        turn(-95);
+        turn(-50);
 
         if(turnDirection==1)
             sideArmL.setPosition(0);
@@ -225,7 +226,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         degrees*=turnDirection;
         telemetry.addData("heading ", "" + heading());
         if (degrees < 0)
-            degrees += 370;
+            degrees += 350;
 
 
         else
@@ -347,6 +348,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 turnheading-=360;
             turnheading/=15;
 
+            if (
+                    Math.abs(FRposition()) < 200 &&
+                            Math.abs(BRposition()) < 200 &&
+                            Math.abs(FLposition()) < 200 &&
+                            Math.abs(BLposition()) < 200
+                    )
+                currSpeed=clip(currSpeed,-0.3,0.3);
+
             if(Math.abs(turnheading)>1)
               currSpeed=   clip(currSpeed,-0.7,0.7);
             else if (turnheading!=0)
@@ -374,8 +383,16 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 turnheading-=360;
             turnheading/=15;
 
-            if (blocked()&&speed>0)
-                activeSpeed=0;
+            if (blocked()&&speed>0) {
+                activeSpeed = 0;
+                distance-=(
+                        Math.abs(FRposition()) +
+                        Math.abs(BRposition()) +
+                        Math.abs(FLposition()) +
+                        Math.abs(BLposition())
+                        ) / 4;
+                resetEncoderDelta();
+            }
 
             else if(Math.abs(turnheading)>1)
                 activeSpeed=clip(activeSpeed,-0.7,0.7);
@@ -383,9 +400,16 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 activeSpeed=clip(activeSpeed,-0.9,0.9);
 
             telemetry.addData("heading ", "" + heading());
-            run_using_encoders();
+            if (Math.abs(FRposition()) < 200 &&
+                    Math.abs(BRposition()) < 200 &&
+                    Math.abs(FLposition()) < 200 &&
+                    Math.abs(BLposition()) < 200
+                    )
+                activeSpeed=clip(activeSpeed,-0.3,0.3);
+
+                    run_using_encoders();
             setLeftPower(activeSpeed +turnheading);
-            setRightPower(activeSpeed -turnheading);
+            setRightPower(activeSpeed - turnheading);
             waitOneFullHardwareCycle();
         }
         stopMotors();
@@ -424,6 +448,5 @@ public abstract class AutonomousLinear extends LinearOpMode {
             waitOneFullHardwareCycle();
         }
     }
-
 }
 
