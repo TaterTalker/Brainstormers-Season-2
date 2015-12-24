@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -14,6 +15,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     DcMotor BL;
     GyroSensor gyroSensor;
     DcMotor FR;
+    ColorSensor colorSensor;
     int FRold, BRold, FLold, BLold;
     DcMotor collector;
     Servo climberDumper;
@@ -33,8 +35,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     private boolean didEncodersReset=false;
 
 
-    public void runOpMode(int turnDirectionInput, double turnChangeInput) throws InterruptedException {
-        turnChange=turnChangeInput;
+    public void runOpMode(int turnDirectionInput) throws InterruptedException {
         turnDirection=turnDirectionInput;
         getRobotConfig();
         run_using_encoders();
@@ -44,77 +45,90 @@ public abstract class AutonomousLinear extends LinearOpMode {
         climberDumper.setPosition(.92);
         sideArmL.setPosition(1);
         sideArmR.setPosition(0);
-        sleep(5000);
+        while(gyroSensor.isCalibrating())
+            waitOneFullHardwareCycle();
+        pause(500);
+        colorSensor.enableLed(false);
 
         waitForStart(); //everything before this happens when you press init
         collector.setPower(1);
+        colorSensor.enableLed(false);
 
         drive(2000, 1);
-        sleep(200);
+        sleep(300);
 
         turn(30);
-        sleep(200);
+        sleep(100);
         reset_drive_encoders();
 
         drive(5000, 1);
-        sleep(500);
+        sleep(300);
 
         turn(70);
-        sleep(200);
+        sleep(100);
 
-        driveUntilUltra(25, 0.2);
-        sleep(200);
-
-        squareUp();
-        sleep(200);
+        driveUntilUltra(30, 0.2);
+        sleep(100);
+        driveUntilUltra(30, 0.2);
+        sleep(100);
 
         turn(-90);
-        sleep(200);
+        sleep(100);
 
         while(readFixedODM(odm)<900) {
             driveForever(0.2);
             waitOneFullHardwareCycle();
         }
         stopMotors();
-        sleep(200);
+        sleep(100);
         turn(90);
-        sleep(200);
+        sleep(100);
 
         squareUp();
         collector.setPower(0);
-        sleep(200);
+        sleep(100);
 
         driveUntilUltra(15, 0.2);
-        sleep(200);
+        sleep(100);
+        driveUntilUltra(15, 0.2);
+        sleep(100);
 
-        stopMotors();
-        sleep(200);
         climberDumper.setPosition(0);
-        sleep(1000);
+        sleep(500);
         climberDumper.setPosition(.92);
-        sleep(200);
+        sleep(100);
+        /*telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
+        sleep(2000);
+        if(colorSensor.blue()>colorSensor.red())
+            turn(20);
+        else
+            turn(-20);
+        drive(100, 0.5, true);
+        sleep(200);*/
 
-        drive(1000, -1);
-        sleep(200);
+        drive(200, -1);
+        sleep(100);
 
         squareUp();
+        sleep(50);
+
+        drive(800, -1);
         sleep(200);
 
         turn(-45);
         sleep(200);
 
-        drive(3000, -1);
-        sleep(200);
-
+        drive(2700, -1);
+        sleep(500);
         turn(-95);
-        if(turnDirectionInput==1)
+
+        if(turnDirection==1)
             sideArmL.setPosition(0);
         else
             sideArmR.setPosition(1);
-        sleep(200);
+        sleep(700);
 
-        drive(5000,-0.5);
-        lock.setPosition(0.6);
+        drive(5000, -0.5);
 
     }
 
@@ -185,6 +199,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         lock = hardwareMap.servo.get("lock");
         gyroSensor = hardwareMap.gyroSensor.get("G1");
+        colorSensor=hardwareMap.colorSensor.get("cs1");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
         door = hardwareMap.servo.get("door");
@@ -256,33 +271,44 @@ public abstract class AutonomousLinear extends LinearOpMode {
         return (head);
     }
 
-    double readFixedUltra(UltrasonicSensor sensor){
+    double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
         double val = 0;
-        for(int i=0;i<10;i++) {
-            val+=sensor.getUltrasonicLevel();
+        double maxVal=0;
+        double minVal=255;
+        double tmpVal;
+        for(int i=0;i<4;i++) {
+            tmpVal=sensor.getUltrasonicLevel();
+            if(tmpVal<minVal)
+                minVal=tmpVal;
+            if(tmpVal>maxVal)
+                maxVal=tmpVal;
+            val+=tmpVal;
+            waitOneFullHardwareCycle();
         }
-        val/=10;
+        val-=(minVal+maxVal);
+        val/=2;
         return val;
     }
 
-    int readFixedODM(OpticalDistanceSensor odm){
+    int readFixedODM(OpticalDistanceSensor odm) throws InterruptedException {
         int val = 0;
-        for(int i=0;i<10;i++) {
+        for(int i=0;i<2;i++) {
             val+=odm.getLightDetectedRaw();
+            waitOneFullHardwareCycle();
         }
-        val/=10;
+        val/=2;
         return val;
         }
 
     void squareUp() throws InterruptedException {
 
-        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) !=0 ) {
+        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 50);
-            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1)) / 50);
+            double turnPower=(readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 35;
+            setLeftPower(turnPower);
+            setRightPower(-turnPower);
             waitOneFullHardwareCycle();
-
         }
         stopMotors();
     }
@@ -302,7 +328,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
     void driveUntilUltra(int target, double speed) throws InterruptedException {
-        while(readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
+        while(readFixedUltra(ultra1)+readFixedUltra(ultra2) > 2*target) {
             driveForever(speed);
             waitOneFullHardwareCycle();
         }
@@ -315,7 +341,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         // Start the drive wheel motors at full power
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
             double currSpeed=speed;
-            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+            telemetry.addData("encoder values", "right:" + FRposition() + " left:" + FRposition());
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
@@ -342,7 +368,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         // Start the drive wheel motors at full power
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
             double activeSpeed=speed;
-            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+            telemetry.addData("encoder values", "right:" + FRposition() + " left:" + FRposition());
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
@@ -366,8 +392,8 @@ public abstract class AutonomousLinear extends LinearOpMode {
         reset_drive_encoders();
     }
 
-    boolean blocked(){
-        return (readFixedUltra(ultra1)<20||readFixedUltra(ultra2)<20);
+    boolean blocked() throws InterruptedException {
+        return (readFixedUltra(ultra1)<30||readFixedUltra(ultra2)<30);
     }
 
     int FRposition(){
@@ -391,6 +417,12 @@ public abstract class AutonomousLinear extends LinearOpMode {
         BRold=BR.getCurrentPosition();
         FLold=FL.getCurrentPosition();
         BLold=BL.getCurrentPosition();
+    }
+
+    void pause(int cycles) throws InterruptedException {
+        for(;cycles>0;cycles--){
+            waitOneFullHardwareCycle();
+        }
     }
 
 }

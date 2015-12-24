@@ -21,10 +21,11 @@ public class ColorTest extends OpMode {
     @Override
     public void loop() {
         colorSensor.enableLed(true);
-        telemetry.addData("color", "Green: " + colorSensor.green());
-        telemetry.addData("Red: " , colorSensor.red());
-        telemetry.addData("BLue: ", colorSensor.blue());
-
+        telemetry.addData("Green ", colorSensor.green());
+        telemetry.addData("Red " , colorSensor.red());
+        telemetry.addData("BLue ", colorSensor.blue());
+        telemetry.addData("Alpha", colorSensor.alpha());
+        telemetry.addData("argb", colorSensor.argb());
     }
     public void stop() {
         colorSensor.enableLed(false);

@@ -50,34 +50,35 @@ public class SquareupTest extends LinearOpMode {
 
     }
 
-    void squareUp() {
+    void squareUp() throws InterruptedException {
 
-        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) !=0 ) {
+        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2))/50);
-            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1))/50);
-
+            double turnPower=(readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 100;
+            setLeftPower(turnPower);
+            setRightPower(-turnPower);
+            waitOneFullHardwareCycle();
         }
         stopMotors();
     }
 
-    boolean encoders_have_reset() {
-        if (didEncodersReset ||
-                FL.getCurrentPosition() == 0 &&
-                        FR.getCurrentPosition() == 0 &&
-                        BL.getCurrentPosition() == 0 &&
-                        BR.getCurrentPosition() == 0)
-            didEncodersReset = true;
-        return true;
-    }
-
-    double readFixedUltra(UltrasonicSensor sensor) {
+    double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
         double val = 0;
-        for (int i = 0; i < 10; i++) {
-            val += sensor.getUltrasonicLevel();
+        double maxVal=0;
+        double minVal=255;
+        double tmpVal;
+        for(int i=0;i<5;i++) {
+            tmpVal=sensor.getUltrasonicLevel();
+            if(tmpVal<minVal)
+                minVal=tmpVal;
+            if(tmpVal>maxVal)
+                maxVal=tmpVal;
+            val+=tmpVal;
+            waitOneFullHardwareCycle();
         }
-        val /= 10;
+        val-=(minVal+maxVal);
+        val/=3;
         return val;
     }
 
@@ -151,5 +152,4 @@ public class SquareupTest extends LinearOpMode {
 
         return variable;
     }
-
 }

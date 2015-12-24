@@ -11,6 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutonomousRed extends AutonomousLinear {
     @Override
     public void runOpMode() throws InterruptedException {
-        super.runOpMode(-1, 0.94);
+        super.runOpMode(-1);
     }
 }
