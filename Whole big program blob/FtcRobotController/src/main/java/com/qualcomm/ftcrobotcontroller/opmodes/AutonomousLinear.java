@@ -95,10 +95,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(200);
 
         drive(1000, -1);
-        if(turnDirectionInput==1)
-            sideArmL.setPosition(0);
-        else
-            sideArmR.setPosition(1);
         sleep(200);
 
         squareUp();
@@ -111,6 +107,10 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(200);
 
         turn(-95);
+        if(turnDirectionInput==1)
+            sideArmL.setPosition(0);
+        else
+            sideArmR.setPosition(1);
         sleep(200);
 
         drive(5000,-0.5);
