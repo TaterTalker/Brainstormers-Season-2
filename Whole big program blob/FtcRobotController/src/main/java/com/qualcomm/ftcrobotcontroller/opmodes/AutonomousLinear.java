@@ -43,14 +43,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
         waitForStart(); //everything before this happens when you press init
         //collector.setPower(-1);
 
-        driveStraightAvoidance(2000, 1);
+        drive(2000, 1);
         sleep(200);
 
         turnWithGyro(30);
         sleep(200);
         reset_drive_encoders();
 
-        driveStraightAvoidance(5000, 1);
+        drive(5000, 1);
         sleep(200);
 
         turnWithGyro(70);
@@ -67,6 +67,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
         while(readFixedODM(odm)<900) {
             driveForever(0.2);
+            waitOneFullHardwareCycle();
         }
         stopMotors();
         sleep(200);
@@ -87,29 +88,13 @@ public abstract class AutonomousLinear extends LinearOpMode {
         climberDumper.setPosition(.92);
         sleep(200);
 
-        driveStraightAvoidance(1000, -1);
+        drive(1000, -1);
         sleep(200);
 
         turnWithGyro(-45);
         sleep(200);
 
-        driveStraightAvoidance(400, -1);
-    }
-
-    void drive(float distance, double speed) throws InterruptedException {
-            reset_drive_encoders();
-        // Start the drive wheel motors at full power
-        while(!encoders_have_reset())
-            sleep(1);
-
-        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
-            telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
-            run_using_encoders();
-            setLeftPower(speed);
-            setRightPower(speed);
-        }
-        stopMotors();
-        reset_drive_encoders();
+        drive(400, -1);
     }
 
     void driveForever(double speed) {
@@ -125,6 +110,8 @@ public abstract class AutonomousLinear extends LinearOpMode {
         FR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         BL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         BR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+
         didEncodersReset=false;
     }
 
@@ -146,18 +133,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
         return (Math.abs(FR.getCurrentPosition()) > rightd) &&
                 (Math.abs(BR.getCurrentPosition()) > rightd);
-    }
-
-    boolean isLeftNear(double leftd) {
-
-        return (Math.abs(FL.getCurrentPosition()) > leftd-500) &&
-                (Math.abs(BL.getCurrentPosition()) > leftd-500);
-    }
-
-    boolean isRightNear(double rightd) {
-
-        return (Math.abs(FR.getCurrentPosition()) > rightd-500) &&
-                (Math.abs(BR.getCurrentPosition()) > rightd-500);
     }
 
     void setLeftPower(double power) {
@@ -189,22 +164,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         run_using_encoders();
     }
 
-    void turn(double degrees, double power){
-        if(encoders_have_reset()) {
-            if (power < 0)
-                degrees = degrees * 1.05;
-            run_using_encoders();
-            while (!hasLeftReached(degrees * TURNRATIO * turnChange) && !hasRightReached(degrees * TURNRATIO * turnChange)) {
-                setLeftPower(power * turnDirection);
-                setRightPower(-power * turnDirection);
-            }
-            setLeftPower(0);
-            setRightPower(0);
-            reset_drive_encoders();
-        }
-
-    }
-
     boolean encoders_have_reset() {
         if(didEncodersReset ||
                 FL.getCurrentPosition() == 0 &&
@@ -233,9 +192,10 @@ public abstract class AutonomousLinear extends LinearOpMode {
         odm = hardwareMap.opticalDistanceSensor.get("odm1");
     }
 
-    void resetGyro() {
+    void resetGyro() throws InterruptedException {
         while(heading()!=0) {
             lastgyro = gyroSensor.getHeading();
+            waitOneFullHardwareCycle();
         }
     }
 
@@ -258,7 +218,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 BR.setPower(-0.5);
                 FL.setPower(-0.5);
                 BL.setPower(-0.5);
-                sleep(5);
+                waitOneFullHardwareCycle();
             } while (heading()>degrees || heading()<20);
             run_using_encoders();
             stopMotors();
@@ -271,7 +231,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 BR.setPower(0.5);
                 FL.setPower(0.5);
                 BL.setPower(0.5);
-                sleep(5);
+                waitOneFullHardwareCycle();
             } while (degrees > heading() || heading()>340);
             run_using_encoders();
             stopMotors();
@@ -307,18 +267,19 @@ public abstract class AutonomousLinear extends LinearOpMode {
         val/=10;
         return val;
         }
-    void squareUp() {
+    void squareUp() throws InterruptedException {
 
         while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) !=0 ) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2))/50);
-            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1))/50);
+            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 50);
+            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1)) / 50);
+            waitOneFullHardwareCycle();
 
         }
         stopMotors();
     }
-    void stopMotors(){
+    void stopMotors() throws InterruptedException {
         while(FR.isBusy()==true ||
                 BR.isBusy()==true||
                 FL.isBusy()==true||
@@ -328,17 +289,19 @@ public abstract class AutonomousLinear extends LinearOpMode {
             BR.setPower(0);
             FL.setPower(0);
             BL.setPower(0);
+            waitOneFullHardwareCycle();
         }
     }
 
-    void driveUntilUltra(int target, double speed){
+    void driveUntilUltra(int target, double speed) throws InterruptedException {
         while(readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
             driveForever(speed);
+            waitOneFullHardwareCycle();
         }
         stopMotors();
     }
 
-    void driveStraight(float distance, double speed) throws InterruptedException {
+    void drive(float distance, double speed, boolean noAvoidance) throws InterruptedException {
         reset_drive_encoders();
         resetGyro();
         // Start the drive wheel motors at full power
@@ -362,12 +325,13 @@ public abstract class AutonomousLinear extends LinearOpMode {
             run_using_encoders();
             setLeftPower(currSpeed +turnheading);
             setRightPower(currSpeed - turnheading);
+            waitOneFullHardwareCycle();
         }
         stopMotors();
         reset_drive_encoders();
     }
 
-    void driveStraightAvoidance(float distance, double speed) throws InterruptedException {
+    void drive(float distance, double speed) throws InterruptedException {
         reset_drive_encoders();
         resetGyro();
         // Start the drive wheel motors at full power
@@ -394,13 +358,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
             run_using_encoders();
             setLeftPower(activeSpeed +turnheading);
             setRightPower(activeSpeed -turnheading);
+            waitOneFullHardwareCycle();
         }
         stopMotors();
         reset_drive_encoders();
     }
 
     boolean blocked(){
-        return (readFixedUltra(ultra1)<60||readFixedUltra(ultra1)<60);
+        return (readFixedUltra(ultra1)<60||readFixedUltra(ultra2)<60);
     }
 }
 
