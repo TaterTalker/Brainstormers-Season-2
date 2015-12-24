@@ -47,7 +47,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sleep(5000);
 
         waitForStart(); //everything before this happens when you press init
-        //collector.setPower(-1);
+        collector.setPower(1);
 
         drive(2000, 1);
         sleep(200);
@@ -99,6 +99,9 @@ public abstract class AutonomousLinear extends LinearOpMode {
             sideArmL.setPosition(0);
         else
             sideArmR.setPosition(1);
+        sleep(200);
+
+        squareUp();
         sleep(200);
 
         turn(-45);
@@ -364,7 +367,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
     boolean blocked(){
-        return (readFixedUltra(ultra1)<60||readFixedUltra(ultra2)<60);
+        return (readFixedUltra(ultra1)<20||readFixedUltra(ultra2)<20);
     }
 
     int FRposition(){
