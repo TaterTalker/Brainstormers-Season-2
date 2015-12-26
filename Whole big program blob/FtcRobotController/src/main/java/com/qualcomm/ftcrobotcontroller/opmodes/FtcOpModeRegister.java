@@ -46,6 +46,8 @@ public class FtcOpModeRegister implements OpModeRegister {
      * @param manager op mode manager
      */
     public void register(OpModeManager manager) {
+        //manager.register("sensorTest", sensorTest.class);
+        //manager.register("TeleOpOctopus2", TeleOpOctopus2.class);
         //manager.register("Turn Test", turnTest.class);
         //manager.register("ultraTest", ultraTest.class);
         //manager.register("ODM Test", OdmTest.class);
@@ -58,6 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("teleOp", TeleOp.class);
         manager.register("Autonomous Red", AutonomousRed.class);
         manager.register("Autonomous Blue", AutonomousBlue.class);
+
 
     }
 }
