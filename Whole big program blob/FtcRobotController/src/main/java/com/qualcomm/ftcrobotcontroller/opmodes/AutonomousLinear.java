@@ -1,7 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -15,7 +14,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
     DcMotor BL;
     GyroSensor gyroSensor;
     DcMotor FR;
-    ColorSensor colorSensor;
     int FRold, BRold, FLold, BLold;
     DcMotor collector;
     Servo climberDumper;
@@ -35,7 +33,8 @@ public abstract class AutonomousLinear extends LinearOpMode {
     private boolean didEncodersReset=false;
 
 
-    public void runOpMode(int turnDirectionInput) throws InterruptedException {
+    public void runOpMode(int turnDirectionInput, double turnChangeInput) throws InterruptedException {
+        turnChange=turnChangeInput;
         turnDirection=turnDirectionInput;
         getRobotConfig();
         run_using_encoders();
@@ -45,93 +44,88 @@ public abstract class AutonomousLinear extends LinearOpMode {
         climberDumper.setPosition(.92);
         sideArmL.setPosition(1);
         sideArmR.setPosition(0);
-        while(gyroSensor.isCalibrating())
-            waitOneFullHardwareCycle();
-        pause(500);
-        colorSensor.enableLed(false);
+        sleep(5000);
 
         waitForStart(); //everything before this happens when you press init
-        collector.setPower(1);
-        colorSensor.enableLed(false);
+      //  collector.setPower(1);
 
         drive(2000, 1);
-        sleep(300);
+        sleep(200);
 
         turn(30);
-        sleep(100);
+        sleep(200);
         reset_drive_encoders();
 
-        drive(4700, 1);
-        sleep(300);
+        drive(5000, 1);
+        sleep(500);
 
-        turn(50);
-        sleep(100);
+        turn(70);
+        sleep(200);
 
-        driveUntilUltra(30, 0.2);
+        driveUntilUltra(25, 0.2);
+        sleep(200);
+
         squareUp();
-        sleep(100);
-        driveUntilUltra(30, 0.2);
-        sleep(100);
+        sleep(200);
 
-        turn(-70);
-        sleep(100);
+        turn(-90);
+        sleep(200);
 
         while(readFixedODM(odm)<900) {
             driveForever(0.2);
             waitOneFullHardwareCycle();
         }
         stopMotors();
-        sleep(100);
+        sleep(200);
         turn(90);
-        sleep(100);
+        sleep(200);
 
         squareUp();
         collector.setPower(0);
-        sleep(100);
+        sleep(200);
 
         driveUntilUltra(15, 0.2);
-        sleep(100);
-        driveUntilUltra(15, 0.2);
-        sleep(100);
+        sleep(200);
 
+        stopMotors();
+        sleep(200);
         climberDumper.setPosition(0);
-        sleep(500);
+        sleep(1000);
         climberDumper.setPosition(.92);
-        sleep(100);
-        /*telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
-        sleep(2000);
-        if(colorSensor.blue()>colorSensor.red())
-            turn(20);
-        else
-            turn(-20);
-        drive(100, 0.5, true);
-        sleep(200);*/
-
-        drive(200, -1);
-        sleep(100);
-
-        squareUp();
-        sleep(50);
-
-        drive(800, -1);
         sleep(200);
 
-        turn(-45);
+        drive(100, -0.5);
         sleep(200);
 
-        drive(2600, -1);
-        sleep(500);
-        turn(-50);
+        turn(-90);
+        sleep(200);
 
-        if(turnDirection==1)
+        drive(500, -0.5);
+        sleep(200);
+
+        turn(45);
+        sleep(200);
+
+        drive(2400, -0.5);
+        sleep(200);
+
+        turn(-80);
+        sleep(200);
+
+
+        if(turnDirectionInput==1)
             sideArmL.setPosition(0);
         else
             sideArmR.setPosition(1);
-        sleep(700);
+        sleep(200);
 
-        drive(5000, -0.5);
+        drive(5000, -1);
+        sleep(200);
+
+        lock.setPosition(0.6);
 
     }
+
 
     void driveForever(double speed) {
         // Start the drive wheel motors at full power
@@ -200,7 +194,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         lock = hardwareMap.servo.get("lock");
         gyroSensor = hardwareMap.gyroSensor.get("G1");
-        colorSensor=hardwareMap.colorSensor.get("cs1");
         climberDumper = hardwareMap.servo.get("climberdumper");
         debDumper = hardwareMap.servo.get("debDumper");
         door = hardwareMap.servo.get("door");
@@ -226,7 +219,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         degrees*=turnDirection;
         telemetry.addData("heading ", "" + heading());
         if (degrees < 0)
-            degrees += 350;
+            degrees += 370;
 
 
         else
@@ -272,44 +265,33 @@ public abstract class AutonomousLinear extends LinearOpMode {
         return (head);
     }
 
-    double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
+    double readFixedUltra(UltrasonicSensor sensor){
         double val = 0;
-        double maxVal=0;
-        double minVal=255;
-        double tmpVal;
-        for(int i=0;i<4;i++) {
-            tmpVal=sensor.getUltrasonicLevel();
-            if(tmpVal<minVal)
-                minVal=tmpVal;
-            if(tmpVal>maxVal)
-                maxVal=tmpVal;
-            val+=tmpVal;
-            waitOneFullHardwareCycle();
+        for(int i=0;i<10;i++) {
+            val+=sensor.getUltrasonicLevel();
         }
-        val-=(minVal+maxVal);
-        val/=2;
+        val/=10;
         return val;
     }
 
-    int readFixedODM(OpticalDistanceSensor odm) throws InterruptedException {
+    int readFixedODM(OpticalDistanceSensor odm){
         int val = 0;
-        for(int i=0;i<2;i++) {
+        for(int i=0;i<10;i++) {
             val+=odm.getLightDetectedRaw();
-            waitOneFullHardwareCycle();
         }
-        val/=2;
+        val/=10;
         return val;
-        }
+    }
 
     void squareUp() throws InterruptedException {
 
-        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
+        while ( Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) != 0) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            double turnPower=(readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 35;
-            setLeftPower(turnPower);
-            setRightPower(-turnPower);
+            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 50);
+            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1)) / 50);
             waitOneFullHardwareCycle();
+
         }
         stopMotors();
     }
@@ -329,7 +311,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
     void driveUntilUltra(int target, double speed) throws InterruptedException {
-        while(readFixedUltra(ultra1)+readFixedUltra(ultra2) > 2*target) {
+        while(readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
             driveForever(speed);
             waitOneFullHardwareCycle();
         }
@@ -342,24 +324,16 @@ public abstract class AutonomousLinear extends LinearOpMode {
         // Start the drive wheel motors at full power
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
             double currSpeed=speed;
-            telemetry.addData("encoder values", "right:" + FRposition() + " left:" + FRposition());
+           // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
             turnheading/=15;
 
-            if (
-                    Math.abs(FRposition()) < 200 &&
-                            Math.abs(BRposition()) < 200 &&
-                            Math.abs(FLposition()) < 200 &&
-                            Math.abs(BLposition()) < 200
-                    )
-                currSpeed=clip(currSpeed,-0.3,0.3);
-
             if(Math.abs(turnheading)>1)
-              currSpeed=   clip(currSpeed,-0.7,0.7);
+                currSpeed=   clip(currSpeed,-0.7,0.7);
             else if (turnheading!=0)
-              currSpeed =  clip(currSpeed,-0.9,0.9);
+                currSpeed =  clip(currSpeed,-0.9,0.9);
 
             telemetry.addData("heading ", "" + heading());
             run_using_encoders();
@@ -377,22 +351,14 @@ public abstract class AutonomousLinear extends LinearOpMode {
         // Start the drive wheel motors at full power
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
             double activeSpeed=speed;
-            telemetry.addData("encoder values", "right:" + FRposition() + " left:" + FRposition());
+           // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             double turnheading = heading();
             if(turnheading>180)
                 turnheading-=360;
             turnheading/=15;
 
-            if (blocked()&&speed>0) {
-                activeSpeed = 0;
-                distance-=(
-                        Math.abs(FRposition()) +
-                        Math.abs(BRposition()) +
-                        Math.abs(FLposition()) +
-                        Math.abs(BLposition())
-                        ) / 4;
-                resetEncoderDelta();
-            }
+            if (blocked()&&speed>0)
+                activeSpeed=0;
 
             else if(Math.abs(turnheading)>1)
                 activeSpeed=clip(activeSpeed,-0.7,0.7);
@@ -400,24 +366,17 @@ public abstract class AutonomousLinear extends LinearOpMode {
                 activeSpeed=clip(activeSpeed,-0.9,0.9);
 
             telemetry.addData("heading ", "" + heading());
-            if (Math.abs(FRposition()) < 200 &&
-                    Math.abs(BRposition()) < 200 &&
-                    Math.abs(FLposition()) < 200 &&
-                    Math.abs(BLposition()) < 200
-                    )
-                activeSpeed=clip(activeSpeed,-0.3,0.3);
-
-                    run_using_encoders();
+            run_using_encoders();
             setLeftPower(activeSpeed +turnheading);
-            setRightPower(activeSpeed - turnheading);
+            setRightPower(activeSpeed -turnheading);
             waitOneFullHardwareCycle();
         }
         stopMotors();
         reset_drive_encoders();
     }
 
-    boolean blocked() throws InterruptedException {
-        return (readFixedUltra(ultra1)<30||readFixedUltra(ultra2)<30);
+    boolean blocked(){
+        return (readFixedUltra(ultra1)<20||readFixedUltra(ultra2)<20);
     }
 
     int FRposition(){
@@ -443,10 +402,4 @@ public abstract class AutonomousLinear extends LinearOpMode {
         BLold=BL.getCurrentPosition();
     }
 
-    void pause(int cycles) throws InterruptedException {
-        for(;cycles>0;cycles--){
-            waitOneFullHardwareCycle();
-        }
-    }
 }
-
