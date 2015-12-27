@@ -18,18 +18,19 @@ public class TeleOpOctopus2 extends OpMode {
     DcMotor br;
     DcMotor bl;
     DcMotor fr;
-    DcMotor octr;
-    DcMotor octl;
-    float YPower1, XPower1, rotPower, YPower2, XPower2 ;
+    float YPower, rotPower, YPower2;
 
     //scoring
     DcMotor collect;
     Servo armAngle;
-    DcMotor pullUp;
+    DcMotor pullUp1;
+    DcMotor pullUp2;
     DcMotor ext;
     Servo climberDumper;
     Servo sideArmL;
     Servo sideArmR;
+
+    //Sensing
     TouchSensor extStop;
 
 
@@ -42,12 +43,10 @@ public class TeleOpOctopus2 extends OpMode {
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
 
-        octl = hardwareMap.dcMotor.get("octl");
-        octr = hardwareMap.dcMotor.get("octr");
-
         collect = hardwareMap.dcMotor.get("collect");
         armAngle = hardwareMap.servo.get("armAngle");
-        pullUp = hardwareMap.dcMotor.get("pullUp");
+        pullUp1 = hardwareMap.dcMotor.get("pullUp1");
+        pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         ext = hardwareMap.dcMotor.get("ext");
         climberDumper = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
@@ -69,17 +68,17 @@ public class TeleOpOctopus2 extends OpMode {
     }
 
     private void drive() {
-        float YVal1 = gamepad1.left_stick_y;
+        float YVal = gamepad1.left_stick_y;
         float RotVal = gamepad1.left_stick_x;
 
         // clip the right/left values so that the values never exceed +/- 1
-        YPower1 = Range.clip(YVal1, -1, 1);
+        YPower = Range.clip(YVal, -1, 1);
         rotPower = Range.clip(RotVal, -1, 1);
 
-        float FRpower = -YPower1 + rotPower;
-        float BRpower = -YPower1 + rotPower;
-        float FLpower = YPower1 + rotPower;
-        float BLpower = YPower1 + rotPower;
+        float FRpower = -YPower + rotPower;
+        float BRpower = -YPower + rotPower;
+        float FLpower = YPower + rotPower;
+        float BLpower = YPower + rotPower;
 
         FRpower = Range.clip(FRpower, -1, 1);
         FLpower = Range.clip(FLpower, -1, 1);
@@ -95,22 +94,19 @@ public class TeleOpOctopus2 extends OpMode {
     }
 
     public void attachments() {
-        int collectorval;
+
         //collection in
         if (gamepad2.right_bumper) {
-            collectorval = -1;
+            collect.setPower(-1);
             //collection out
         }
-
         else if (gamepad2.left_bumper) {
-            collectorval = 1;
+            collect.setPower(1);
             //resting
         }
+        else collect.setPower(0);
 
-        else collectorval = 0;
-
-        collect.setPower(collectorval);
-
+        //mountain climber release
         if(gamepad2.b){
             sideArmR.setPosition(1);
         }
@@ -124,7 +120,7 @@ public class TeleOpOctopus2 extends OpMode {
         else{
             sideArmL.setPosition(1);
         }
-
+        // climber dumper
         if (gamepad2.y){
             climberDumper.setPosition(0);
         }
@@ -132,26 +128,30 @@ public class TeleOpOctopus2 extends OpMode {
             climberDumper.setPosition(1);
         }
 
+        //arm
         if (gamepad2.right_trigger!=0){
-            ext.setPower(-1);
-            pullUp.setPower(1);
+            ext.setPower(-gamepad2.right_trigger);
+            pullUp1.setPower(gamepad2.right_trigger);
+            pullUp2.setPower(-gamepad2.right_trigger);
         }
-
         else if (gamepad2.left_trigger!=0) {
             if (extStop.isPressed()) {
                 ext.setPower(0);
-                pullUp.setPower(0);
+                pullUp1.setPower(0);
+                pullUp2.setPower(0);
             }
             else {
-                ext.setPower(1);
-                pullUp.setPower(-1);
+                ext.setPower(gamepad1.right_trigger);
+                pullUp1.setPower(-gamepad2.right_trigger);
+                pullUp2.setPower(gamepad2.right_trigger);
             }
         }
-
         else {
             ext.setPower(0);
-            pullUp.setPower(0);
+            pullUp1.setPower(0);
+            pullUp2.setPower(0);
         }
+        //arm angle
 
         float YVal2 = gamepad2.left_stick_y;
 
