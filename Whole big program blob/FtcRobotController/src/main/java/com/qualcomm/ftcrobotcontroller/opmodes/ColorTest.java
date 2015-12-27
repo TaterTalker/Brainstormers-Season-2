@@ -62,7 +62,7 @@ public class ColorTest extends LinearOpMode {
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
-        sensorRGB = hardwareMap.colorSensor.get("color");
+        sensorRGB = hardwareMap.colorSensor.get("cs1");
 
         // bEnabled represents the state of the LED.
         boolean bEnabled = true;
