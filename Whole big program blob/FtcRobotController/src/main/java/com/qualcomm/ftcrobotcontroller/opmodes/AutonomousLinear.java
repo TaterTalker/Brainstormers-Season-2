@@ -65,6 +65,11 @@ public abstract class AutonomousLinear extends LinearOpMode {
 //        turn(50);
 //        sleep(200);
 //        turn(-50);
+        final boolean SLEEP = false;
+        if (SLEEP) {
+
+        sleep(5000);
+        }
 
         drive(2000, 1);
         sleep(200);
@@ -111,7 +116,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         climberDumper.setPosition(.92);
         sleep(200);
 
-        drive(50  , 0.5, true);
+        drive(50, 0.5, true);
         sleep(200);
 
         telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
@@ -270,7 +275,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         telemetry.addData("heading ", "" + heading());
         if (degrees < 0)
             degrees += 360;
-        if (Math.abs(degrees - heading())<20){
+        if (Math.abs(degrees - heading()) < 20) {
             speed = 0.1;
         }
 
@@ -316,23 +321,36 @@ public abstract class AutonomousLinear extends LinearOpMode {
         return (head);
     }
 
-    double readFixedUltra(UltrasonicSensor sensor) {
+    double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
         double val = 0;
-        for (int i = 0; i < 10; i++) {
-            val += sensor.getUltrasonicLevel();
+        double maxVal = 0;
+        double minVal = 255;
+        double tmpVal;
+        for (int i = 0; i < 4; i++) {
+            tmpVal = sensor.getUltrasonicLevel();
+            if (tmpVal < minVal)
+                minVal = tmpVal;
+            if (tmpVal > maxVal)
+                maxVal = tmpVal;
+            val += tmpVal;
+            waitOneFullHardwareCycle();
         }
-        val /= 10;
+        val -= (minVal + maxVal);
+        val /= 2;
         return val;
     }
 
-    int readFixedODM(OpticalDistanceSensor odm) {
+
+    int readFixedODM(OpticalDistanceSensor odm) throws InterruptedException {
         int val = 0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             val += odm.getLightDetectedRaw();
+            waitOneFullHardwareCycle();
         }
-        val /= 10;
+        val /= 2;
         return val;
     }
+
 
     void squareUp() throws InterruptedException {
 
@@ -348,10 +366,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
     }
 
     void stopMotors() throws InterruptedException {
-        while (FR.isBusy() == true ||
-                BR.isBusy() == true ||
-                FL.isBusy() == true ||
-                BL.isBusy() == true) {
+        while (FR.isBusy() || BR.isBusy() || FL.isBusy() || BL.isBusy()) {
             run_using_encoders();
             FR.setPower(0);
             BR.setPower(0);
@@ -426,7 +441,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         reset_drive_encoders();
     }
 
-    boolean blocked() {
+    boolean blocked() throws InterruptedException {
         return (readFixedUltra(ultra1) < 20 || readFixedUltra(ultra2) < 20);
     }
 
