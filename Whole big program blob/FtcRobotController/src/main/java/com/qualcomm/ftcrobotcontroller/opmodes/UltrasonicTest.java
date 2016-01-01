@@ -26,6 +26,6 @@ public class UltrasonicTest extends OpMode {
     public void loop() {
         ultra.getValue();
         telemetry.addData("ultra1", "Sensor1: " + ultra.getValue());
-
+        telemetry.addData("device name", "Sensor1: " + ultra.getDeviceName());
     }
 }
