@@ -29,9 +29,6 @@ public class TeleOpOctopus extends OpMode {
         fl = hardwareMap.dcMotor.get("fl");
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
-
-        octl = hardwareMap.dcMotor.get("octl");
-        octr = hardwareMap.dcMotor.get("octr");
     }
 
     @Override

@@ -22,7 +22,8 @@ public class TeleOpOctopus2 extends OpMode {
 
     //scoring
     DcMotor collect;
-    Servo armAngle;
+    Servo armAngle1;
+    Servo armAngle2;
     DcMotor pullUp1;
     DcMotor pullUp2;
     DcMotor ext;
@@ -44,7 +45,8 @@ public class TeleOpOctopus2 extends OpMode {
         bl = hardwareMap.dcMotor.get("bl");
 
         collect = hardwareMap.dcMotor.get("collect");
-        armAngle = hardwareMap.servo.get("armAngle");
+        armAngle1 = hardwareMap.servo.get("armAngle1");
+        armAngle2 = hardwareMap.servo.get("armAngle2");
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         ext = hardwareMap.dcMotor.get("ext");
@@ -87,8 +89,8 @@ public class TeleOpOctopus2 extends OpMode {
 
         // write the values to the motors
         fr.setPower(FRpower);
-        br.setPower(FLpower);
-        fl.setPower(BRpower);
+        br.setPower(BRpower);
+        fl.setPower(FLpower);
         bl.setPower(BLpower);
 
     }
@@ -97,11 +99,11 @@ public class TeleOpOctopus2 extends OpMode {
 
         //collection in
         if (gamepad2.right_bumper) {
-            collect.setPower(-1);
+            collect.setPower(1);
             //collection out
         }
         else if (gamepad2.left_bumper) {
-            collect.setPower(1);
+            collect.setPower(-1);
             //resting
         }
         else collect.setPower(0);
@@ -131,22 +133,21 @@ public class TeleOpOctopus2 extends OpMode {
         //arm
         if (gamepad2.right_trigger!=0){
             ext.setPower(-gamepad2.right_trigger);
-            pullUp1.setPower(gamepad2.right_trigger);
-            pullUp2.setPower(-gamepad2.right_trigger);
+            pullUp1.setPower(-gamepad2.right_trigger);
+            pullUp2.setPower(gamepad2.right_trigger);
         }
         else if (gamepad2.left_trigger!=0) {
-            if (extStop.isPressed()) {
-                ext.setPower(0);
-                pullUp1.setPower(0);
-                pullUp2.setPower(0);
-            }
-            else {
-                ext.setPower(gamepad1.right_trigger);
-                pullUp1.setPower(-gamepad2.right_trigger);
-                pullUp2.setPower(gamepad2.right_trigger);
-            }
+            ext.setPower(gamepad2.left_trigger);
+            pullUp1.setPower(gamepad2.left_trigger);
+            pullUp2.setPower(-gamepad2.left_trigger);
         }
         else {
+            ext.setPower(0);
+            pullUp1.setPower(0);
+            pullUp2.setPower(0);
+        }
+
+        if (extStop.isPressed()) {
             ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
@@ -157,7 +158,8 @@ public class TeleOpOctopus2 extends OpMode {
 
         YPower2 = Range.clip(YVal2, -1, 1);
 
-        armAngle.setPosition(YPower2);
+        armAngle2.setPosition(0.5);
+        armAngle1.setPosition(0.5);
 
 
     }
