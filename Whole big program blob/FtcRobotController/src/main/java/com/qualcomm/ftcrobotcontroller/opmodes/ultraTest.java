@@ -16,6 +16,7 @@ public class ultraTest extends OpMode {
     double lowestval=255;
     double highestval=0;
     double currVal;
+    const ULTRASONIC = "ultra1";
 
     @Override
     public void init() {
@@ -23,7 +24,13 @@ public class ultraTest extends OpMode {
         FL = hardwareMap.dcMotor.get("FL");
         BR = hardwareMap.dcMotor.get("BR");
         BL = hardwareMap.dcMotor.get("BL");
-        ultra1 = hardwareMap.ultrasonicSensor.get("ultra1");
+        ultra1 = hardwareMap.ultrasonicSensor.get(ULTRASONIC);
+        if (ultra1 != null) {
+            telemetry.addData("Sensor works:" + ULTRASONIC);
+        }
+        else {
+            telemetry.addData("sensor sux" + ULTRASONIC);
+        }
     }
 
     @Override
