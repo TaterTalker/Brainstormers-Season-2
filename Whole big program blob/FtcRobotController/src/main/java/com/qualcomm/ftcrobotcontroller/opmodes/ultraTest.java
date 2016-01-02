@@ -32,7 +32,7 @@ public class ultraTest extends OpMode {
 
     @Override
     public void loop() {
-        currVal=hardwareMap.analogInput.get(ULTRASONIC);
+        currVal=ultra1.getValue();
         if(currVal!=0 && currVal<lowestval)
             lowestval=currVal;
         else if(currVal!=255 && currVal>highestval) {
@@ -40,7 +40,7 @@ public class ultraTest extends OpMode {
         }
         telemetry.addData("Highest Value", ""+highestval);
         telemetry.addData("Lowest Value", ""+lowestval);
-        telemetry.addData("Ultra Value: ", currVal)
+        telemetry.addData("Ultra Value: ", currVal);
     }
 
     double readFixedUltra(UltrasonicSensor sensor){

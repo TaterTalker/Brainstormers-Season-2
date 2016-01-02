@@ -57,7 +57,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
 
         waitForStart(); //everything before this happens when you press init
 
-        //  collector.setPower(1);
+        collector.setPower(1);
 //        turn(90);
 //        sleep(200);
 //        turn(-90);
@@ -142,7 +142,6 @@ public abstract class AutonomousLinear extends LinearOpMode {
             turn(5);
             sleep(200);
         }
-
         squareUp();
         sleep(200);
 
@@ -271,46 +270,31 @@ public abstract class AutonomousLinear extends LinearOpMode {
     void turn(int degrees) throws InterruptedException {
         resetGyro();
         degrees *= turnDirection;
-        double speed = 0.5;
-        telemetry.addData("heading ", "" + heading());
-        if (degrees < 0)
-            degrees += 360;
-        if (Math.abs(degrees - heading()) < 20) {
-            speed = 0.1;
+        int dir;
+        dir=heading();
+        while(Math.abs(degrees-dir)>1) {
+            telemetry.addData("difference", " " + Math.abs(degrees-dir));
+            dir = heading();
+            if (dir > 180)
+                dir -= 360;
+
+            double power=(degrees-dir)/30;
+            telemetry.addData("initial power", " " + power);
+            power=clip(power,-1,1);
+            if(Math.abs(power)<0.05){
+                if((degrees-dir)>0)
+                    power= 0.05;
+                else
+                    power= -0.05;
+            }
+
+            telemetry.addData("power", " " + power);
+
+            setLeftPower(-power);
+            setRightPower(power);
+            waitOneFullHardwareCycle();
         }
-
-        if (degrees > 180) {
-            do {
-                telemetry.addData("heading ", "" + heading());
-                run_using_encoders();
-
-
-                FR.setPower(-speed);
-                BR.setPower(-speed);
-                FL.setPower(-speed);
-                BL.setPower(-speed);
-                waitOneFullHardwareCycle();
-            } while (heading() > degrees || heading() < 20);
-            run_using_encoders();
-            stopMotors();
-
-        } else {
-            do {
-                telemetry.addData("heading ", "" + heading());
-                run_using_encoders();
-                FR.setPower(speed);
-                BR.setPower(speed);
-                FL.setPower(speed);
-                BL.setPower(speed);
-                waitOneFullHardwareCycle();
-            } while (degrees > heading() || heading() > 340);
-            run_using_encoders();
-            stopMotors();
-        }
-        run_using_encoders();
         stopMotors();
-        telemetry.addData("Done", "");
-
     }
 
     int heading() {
@@ -357,10 +341,10 @@ public abstract class AutonomousLinear extends LinearOpMode {
         while (Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) != 0) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            setLeftPower((readFixedUltra(ultra1) - readFixedUltra(ultra2)) / 50);
-            setRightPower((readFixedUltra(ultra2) - readFixedUltra(ultra1)) / 50);
+            double power = (ultra1.getUltrasonicLevel() - ultra2.getUltrasonicLevel()) / 100;
+            setLeftPower(power);
+            setRightPower(-power);
             waitOneFullHardwareCycle();
-
         }
         stopMotors();
     }
@@ -466,6 +450,20 @@ public abstract class AutonomousLinear extends LinearOpMode {
         BRold = BR.getCurrentPosition();
         FLold = FL.getCurrentPosition();
         BLold = BL.getCurrentPosition();
+    }
+
+    void gyroSquareUp(int degreesFromStart) throws InterruptedException {
+        while(degreesFromStart!=gyroSensor.getHeading()){
+            int degs=gyroSensor.getHeading();
+            if(degs>180)
+                degs-=360;
+            double power=(degs-degreesFromStart)/50;
+            power=clip(power,-1,1);
+            setLeftPower(power);
+            setRightPower(-power);
+            waitOneFullHardwareCycle();
+        }
+        stopMotors();
     }
 
 }

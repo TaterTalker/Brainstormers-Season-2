@@ -15,6 +15,7 @@ public class OdmTest extends OpMode {
     public void init() {
 
         odmtry1 = hardwareMap.opticalDistanceSensor.get("odm1");
+        odmtry2 = hardwareMap.opticalDistanceSensor.get("odm2");
 
     }
 
@@ -27,7 +28,8 @@ public class OdmTest extends OpMode {
     @Override
     public void loop() {
 
-        telemetry.addData("sav1", "Sensor1: " + odmtry1.getLightDetectedRaw());
+        telemetry.addData("1", " " + odmtry1.getLightDetectedRaw());
+        telemetry.addData("2", " " + odmtry2.getLightDetectedRaw());
 
 
     }

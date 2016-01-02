@@ -121,7 +121,7 @@ public class TeleOp extends OpMode {
 
     public void speedControl(){
         if(gamepad1.right_trigger==1){
-            driveMod=2;
+            driveMod=5;
         }
         else{
             driveMod=1;
