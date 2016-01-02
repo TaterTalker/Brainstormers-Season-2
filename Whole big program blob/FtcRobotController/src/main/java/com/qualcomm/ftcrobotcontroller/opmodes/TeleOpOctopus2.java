@@ -24,6 +24,7 @@ public class TeleOpOctopus2 extends OpMode {
     DcMotor collect;
     Servo armAngle1;
     Servo armAngle2;
+    Servo dumper;
     DcMotor pullUp1;
     DcMotor pullUp2;
     DcMotor ext;
@@ -47,6 +48,7 @@ public class TeleOpOctopus2 extends OpMode {
         collect = hardwareMap.dcMotor.get("collect");
         armAngle1 = hardwareMap.servo.get("armAngle1");
         armAngle2 = hardwareMap.servo.get("armAngle2");
+        dumper = hardwareMap.servo.get("dumper");
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         ext = hardwareMap.dcMotor.get("ext");
@@ -108,6 +110,19 @@ public class TeleOpOctopus2 extends OpMode {
         }
         else collect.setPower(0);
 
+
+        //dumping
+
+        if (gamepad2.dpad_right) {
+            dumper.setPosition(1);
+            //collection out
+        }
+        else if (gamepad2.dpad_left) {
+            dumper.setPosition(1);
+            //resting
+        }
+        else dumper.setPosition(0);
+
         //mountain climber release
         if(gamepad2.b){
             sideArmR.setPosition(1);
@@ -132,14 +147,14 @@ public class TeleOpOctopus2 extends OpMode {
 
         //arm
         if (gamepad2.right_trigger!=0){
-            ext.setPower(-gamepad2.right_trigger);
-            pullUp1.setPower(-gamepad2.right_trigger);
-            pullUp2.setPower(gamepad2.right_trigger);
+            ext.setPower(-1);
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
         }
         else if (gamepad2.left_trigger!=0) {
-            ext.setPower(gamepad2.left_trigger);
-            pullUp1.setPower(gamepad2.left_trigger);
-            pullUp2.setPower(-gamepad2.left_trigger);
+            ext.setPower(1);
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
         }
         else {
             ext.setPower(0);
@@ -154,12 +169,8 @@ public class TeleOpOctopus2 extends OpMode {
         }
         //arm angle
 
-        float YVal2 = gamepad2.left_stick_y;
-
-        YPower2 = Range.clip(YVal2, -1, 1);
-
-        armAngle2.setPosition(0.5);
-        armAngle1.setPosition(0.5);
+        armAngle2.setPosition(gamepad2.left_stick_y/2+0.5);
+        armAngle1.setPosition(gamepad2.left_stick_y/2+0.5);
 
 
     }
