@@ -47,7 +47,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     public void register(OpModeManager manager) {
         //manager.register("sensorTest", sensorTest.class);
-        //manager.register("TeleOpOctopus2", TeleOpOctopus2.class);
+        //manager.register("TeleOpOctopusBlue", TeleOpOctopusBlue.class);
         //manager.register("Turn Test", turnTest.class);
         //manager.register("ultraTest", ultraTest.class);
         //manager.register("ODM Test", OdmTest.class);
@@ -56,11 +56,15 @@ public class FtcOpModeRegister implements OpModeRegister {
         //manager.register("Drive", DriveTest.class);
         //manager.register("collision Avoidance", collisionAvoidanceTest.class);
         manager.register("Sensor Test", sensorTest.class);
-        manager.register("TeleOp Octopus", TeleOpOctopus2.class);
+        manager.register("TeleOp Octopus Blue", TeleOpOctopusBlue.class);
+        manager.register("TeleOp Octopus Red", TeleOpOctopusRed.class);
         manager.register("teleOp", TeleOp.class);
         manager.register("odm test", OdmTest.class);
+        manager.register("color test", ColorTest.class);
         manager.register("Autonomous Red", AutonomousRed.class);
         manager.register("Autonomous Blue", AutonomousBlue.class);
+        manager.register("Blue mk2", AutonomousBlueBotmk2.class);
+        manager.register("R2", AutonomousRedBotmk2.class);
 
 
     }

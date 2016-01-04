@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p/>
  * Enables control of the robot via the gamepad
  */
-public class TeleOpOctopus2 extends OpMode {
+public class TeleOpOctopusBlue extends OpMode {
 
 
     //drive
@@ -120,14 +120,8 @@ public class TeleOpOctopus2 extends OpMode {
 
         //dumping
 
-        if (gamepad2.b) {
-            dumper.setPosition(0.5);
-            //collection out
-        }
-        else if (gamepad2.x) {
+        if (gamepad2.b)
             dumper.setPosition(0);
-            //resting
-        }
         else
             dumper.setPosition(0.25);
 
@@ -155,14 +149,24 @@ public class TeleOpOctopus2 extends OpMode {
 
         //arm
         if (gamepad2.left_trigger!=0){
-            ext.setPower(-1);
-            pullUp1.setPower(-0.7);
-            pullUp2.setPower(0.7);
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
+            double extPower=clip(
+                    (pullUp1.getCurrentPosition()-ext.getCurrentPosition()),
+                    -1,
+                    1
+            );
+            ext.setPower(extPower);
         }
         else if (gamepad2.right_trigger!=0) {
             ext.setPower(1);
-            pullUp1.setPower(0.15);
-            pullUp2.setPower(-0.15);
+            double pullPower=clip(
+                    (ext.getCurrentPosition()-pullUp1.getCurrentPosition()),
+                    -1,
+                    1
+            );
+            pullUp1.setPower(pullPower);
+            pullUp2.setPower(-pullPower);
         }
         else {
             ext.setPower(0);
@@ -175,12 +179,23 @@ public class TeleOpOctopus2 extends OpMode {
             pullUp1.setPower(0);
             pullUp2.setPower(0);
         }
+
+
         //arm angle
 
-        armAngle2.setPosition(gamepad2.left_stick_y/2+0.5);
-        armAngle1.setPosition(gamepad2.left_stick_y/2+0.5);
+        armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+        armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
 
 
+    }
+    double clip(double variable, double min, double max) {
+        if (variable < min)
+            variable = min;
+
+        if (variable > max)
+            variable = max;
+
+        return variable;
     }
 }
 

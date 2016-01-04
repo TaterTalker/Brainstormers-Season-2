@@ -9,13 +9,11 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class OdmTest extends OpMode {
 
     OpticalDistanceSensor odmtry1;
-    OpticalDistanceSensor odmtry2;
 
     @Override
     public void init() {
 
-        odmtry1 = hardwareMap.opticalDistanceSensor.get("odm1");
-        odmtry2 = hardwareMap.opticalDistanceSensor.get("odm2");
+        odmtry1 = hardwareMap.opticalDistanceSensor.get("odm");
 
     }
 
@@ -29,7 +27,6 @@ public class OdmTest extends OpMode {
     public void loop() {
 
         telemetry.addData("1", " " + odmtry1.getLightDetectedRaw());
-        telemetry.addData("2", " " + odmtry2.getLightDetectedRaw());
 
 
     }
