@@ -107,8 +107,8 @@ public class TeleOp extends OpMode {
 
         FRpower = Range.clip(FRpower, -1, 1)/driveMod;
         FLpower = Range.clip(FLpower, -1, 1)/driveMod;
-        BRpower = Range.clip(BRpower, -1, 1);
-        BLpower = Range.clip(BLpower, -1, 1);
+        BRpower = Range.clip(BRpower, -1, 1)/driveMod;
+        BLpower = Range.clip(BLpower, -1, 1)/driveMod;
 
         // write the values to the motors
         FR.setPower(FRpower);

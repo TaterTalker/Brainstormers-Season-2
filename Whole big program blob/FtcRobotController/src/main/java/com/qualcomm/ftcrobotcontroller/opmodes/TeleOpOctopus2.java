@@ -31,6 +31,7 @@ public class TeleOpOctopus2 extends OpMode {
     Servo climberDumper;
     Servo sideArmL;
     Servo sideArmR;
+    float driveMod;
 
     //Sensing
     TouchSensor extStop;
@@ -72,8 +73,14 @@ public class TeleOpOctopus2 extends OpMode {
     }
 
     private void drive() {
+        if(gamepad1.right_trigger==1){
+            driveMod=1.5f;
+        }
+        else{
+            driveMod=1;
+        }
         float YVal = gamepad1.left_stick_y;
-        float RotVal = gamepad1.left_stick_x;
+        float RotVal = gamepad1.right_stick_x;
 
         // clip the right/left values so that the values never exceed +/- 1
         YPower = Range.clip(YVal, -1, 1);
@@ -84,10 +91,10 @@ public class TeleOpOctopus2 extends OpMode {
         float FLpower = YPower + rotPower;
         float BLpower = YPower + rotPower;
 
-        FRpower = Range.clip(FRpower, -1, 1);
-        FLpower = Range.clip(FLpower, -1, 1);
-        BRpower = Range.clip(BRpower, -1, 1);
-        BLpower = Range.clip(BLpower, -1, 1);
+        FRpower = Range.clip(FRpower, -1, 1)/driveMod;
+        FLpower = Range.clip(FLpower, -1, 1)/driveMod;
+        BRpower = Range.clip(BRpower, -1, 1)/driveMod;
+        BLpower = Range.clip(BLpower, -1, 1)/driveMod;
 
         // write the values to the motors
         fr.setPower(FRpower);
@@ -113,15 +120,16 @@ public class TeleOpOctopus2 extends OpMode {
 
         //dumping
 
-        if (gamepad2.dpad_right) {
-            dumper.setPosition(1);
+        if (gamepad2.b) {
+            dumper.setPosition(0.5);
             //collection out
         }
-        else if (gamepad2.dpad_left) {
-            dumper.setPosition(1);
+        else if (gamepad2.x) {
+            dumper.setPosition(0);
             //resting
         }
-        else dumper.setPosition(0);
+        else
+            dumper.setPosition(0.25);
 
         //mountain climber release
         if(gamepad2.b){
@@ -146,15 +154,15 @@ public class TeleOpOctopus2 extends OpMode {
         }
 
         //arm
-        if (gamepad2.right_trigger!=0){
+        if (gamepad2.left_trigger!=0){
             ext.setPower(-1);
-            pullUp1.setPower(-1);
-            pullUp2.setPower(1);
+            pullUp1.setPower(-0.7);
+            pullUp2.setPower(0.7);
         }
-        else if (gamepad2.left_trigger!=0) {
+        else if (gamepad2.right_trigger!=0) {
             ext.setPower(1);
-            pullUp1.setPower(1);
-            pullUp2.setPower(-1);
+            pullUp1.setPower(0.15);
+            pullUp2.setPower(-0.15);
         }
         else {
             ext.setPower(0);
@@ -162,7 +170,7 @@ public class TeleOpOctopus2 extends OpMode {
             pullUp2.setPower(0);
         }
 
-        if (extStop.isPressed()) {
+        if (extStop.isPressed() && gamepad2.left_trigger!=0) {
             ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
