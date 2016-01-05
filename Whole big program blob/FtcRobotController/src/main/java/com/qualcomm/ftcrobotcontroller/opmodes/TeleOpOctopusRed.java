@@ -32,6 +32,8 @@ public class TeleOpOctopusRed extends OpMode {
     Servo climberDumper;
     Servo sideArmL;
     Servo sideArmR;
+    Servo doorR;
+    Servo doorL;
     float driveMod;
 
     //Sensing
@@ -47,6 +49,8 @@ public class TeleOpOctopusRed extends OpMode {
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
 
+        doorR = hardwareMap.servo.get("doorR");
+        doorL = hardwareMap.servo.get("doorL");
         collect = hardwareMap.dcMotor.get("collect");
         armAngle1 = hardwareMap.servo.get("armAngle1");
         armAngle2 = hardwareMap.servo.get("armAngle2");
@@ -122,20 +126,23 @@ public class TeleOpOctopusRed extends OpMode {
 
         //dumping
 
-        if (gamepad2.b)
+        if (gamepad2.dpad_left) {
             dumper.setPosition(0.25);
-        else
+            doorL.setPosition(0.8);
+        }
+        else {
             dumper.setPosition(0);
-
+            doorL.setPosition(0);
+        }
         //mountain climber release
-        if(gamepad2.b){
+        if(gamepad1.b){
             sideArmR.setPosition(1);
         }
         else{
             sideArmR.setPosition(0);
         }
 
-        if(gamepad2.x){
+        if(gamepad1.x){
             sideArmL.setPosition(0);
         }
         else{
@@ -150,25 +157,23 @@ public class TeleOpOctopusRed extends OpMode {
         }
 
         //arm
+
+        //tension the pullUp motor
+        if (gamepad2.a) {
+            pullUp1.setPower(-0.2);
+            pullUp2.setPower(0.2);
+        }
+
+
         if (gamepad2.left_trigger!=0){
+            pullUp1.setPower(-0.68);
+            pullUp2.setPower(0.68);
             ext.setPower(-1);
-            pullUp1.setPower(-0.7);
-            pullUp2.setPower(0.7);
         }
         else if (gamepad2.right_trigger!=0) {
             ext.setPower(1);
-            double pullPower1=clip(
-                    (ext.getCurrentPosition()-pullUp1.getCurrentPosition()),
-                    -1,
-                    1
-            );
-            double pullPower2=clip(
-                    (ext.getCurrentPosition()-pullUp2.getCurrentPosition()),
-                    -1,
-                    1
-            );
-            pullUp1.setPower(pullPower1);
-            pullUp2.setPower(-pullPower2);
+            pullUp1.setPower(0.11);
+            pullUp2.setPower(-0.11);
         }
         else {
             ext.setPower(0);
@@ -181,7 +186,6 @@ public class TeleOpOctopusRed extends OpMode {
             pullUp1.setPower(0);
             pullUp2.setPower(0);
         }
-
 
         //arm angle
 

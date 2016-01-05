@@ -25,6 +25,8 @@ public class TeleOpOctopusBlue extends OpMode {
     Servo armAngle1;
     Servo armAngle2;
     Servo dumper;
+    Servo doorR;
+    Servo doorL;
     DcMotor pullUp1;
     DcMotor pullUp2;
     DcMotor ext;
@@ -46,6 +48,8 @@ public class TeleOpOctopusBlue extends OpMode {
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
 
+        doorR = hardwareMap.servo.get("doorR");
+        doorL = hardwareMap.servo.get("doorL");
         collect = hardwareMap.dcMotor.get("collect");
         armAngle1 = hardwareMap.servo.get("armAngle1");
         armAngle2 = hardwareMap.servo.get("armAngle2");
@@ -120,20 +124,25 @@ public class TeleOpOctopusBlue extends OpMode {
 
         //dumping
 
-        if (gamepad2.b)
+        if (gamepad2.dpad_right) {
             dumper.setPosition(0);
-        else
+            doorR.setPosition(0.4);
+        }
+        else {
             dumper.setPosition(0.25);
+            doorR.setPosition(1);
+        }
+
 
         //mountain climber release
-        if(gamepad2.b){
+        if(gamepad1.b){
             sideArmR.setPosition(1);
         }
         else{
             sideArmR.setPosition(0);
         }
 
-        if(gamepad2.x){
+        if(gamepad1.x){
             sideArmL.setPosition(0);
         }
         else{
@@ -148,25 +157,23 @@ public class TeleOpOctopusBlue extends OpMode {
         }
 
         //arm
+
+        //tension the pullUp motor
+        if (gamepad2.a) {
+            pullUp1.setPower(-0.2);
+            pullUp2.setPower(0.2);
+        }
+
+
         if (gamepad2.left_trigger!=0){
-            pullUp1.setPower(-1);
-            pullUp2.setPower(1);
-            double extPower=clip(
-                    (pullUp1.getCurrentPosition()-ext.getCurrentPosition()),
-                    -1,
-                    1
-            );
-            ext.setPower(extPower);
+            pullUp1.setPower(-0.68);
+            pullUp2.setPower(0.68);
+            ext.setPower(-1);
         }
         else if (gamepad2.right_trigger!=0) {
             ext.setPower(1);
-            double pullPower=clip(
-                    (ext.getCurrentPosition()-pullUp1.getCurrentPosition()),
-                    -1,
-                    1
-            );
-            pullUp1.setPower(pullPower);
-            pullUp2.setPower(-pullPower);
+            pullUp1.setPower(0.11);
+            pullUp2.setPower(-0.11);
         }
         else {
             ext.setPower(0);
