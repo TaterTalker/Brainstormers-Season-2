@@ -84,7 +84,7 @@ public abstract class AutonomousLinear extends LinearOpMode {
         turn(40);
         sleep(200);
 
-        driveUntilUltra(25, 0.2);
+        driveUntilUltra(30, 0.2);
         sleep(200);
 
         squareUp();
@@ -106,16 +106,18 @@ public abstract class AutonomousLinear extends LinearOpMode {
         collector.setPower(0);
         sleep(200);
 
-        driveUntilUltra(15, 0.2);
+        driveUntilUltra(20, 0.2);
         sleep(200);
 
         stopMotors();
+        turn(-17);
         sleep(200);
         climberDumper.setPosition(0);
         sleep(1000);
         climberDumper.setPosition(.92);
         sleep(200);
-
+        turn(17);
+        sleep(200);
         drive(50, 0.5, true);
         sleep(200);
 
@@ -283,9 +285,9 @@ public abstract class AutonomousLinear extends LinearOpMode {
             power=clip(power,-1,1);
             if(Math.abs(power)<0.05){
                 if((degrees-dir)>0)
-                    power= 0.05;
+                    power= 0.025;
                 else
-                    power= -0.05;
+                    power= -0.025;
             }
 
             telemetry.addData("power", " " + power);
