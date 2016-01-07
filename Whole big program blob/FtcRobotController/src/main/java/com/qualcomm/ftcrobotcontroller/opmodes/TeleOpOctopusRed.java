@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -20,20 +21,22 @@ public class TeleOpOctopusRed extends OpMode {
     DcMotor bl;
     DcMotor fr;
     float YPower, rotPower, YPower2;
+    boolean armextended = false;
+    int oldarm;
 
     //scoring
     DcMotor collect;
     Servo armAngle1;
     Servo armAngle2;
     Servo dumper;
+    Servo doorR;
+    Servo doorL;
     DcMotor pullUp1;
     DcMotor pullUp2;
     DcMotor ext;
     Servo climberDumper;
     Servo sideArmL;
     Servo sideArmR;
-    Servo doorR;
-    Servo doorL;
     float driveMod;
 
     //Sensing
@@ -63,14 +66,18 @@ public class TeleOpOctopusRed extends OpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         extStop = hardwareMap.touchSensor.get("extStop");
 
-
-
+        ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        armextended = false;
+        oldarm = 0;
     }
 
     @Override
     public void loop() {
         drive();
         attachments();
+        telemetry.addData("Encoder Val", "" + ext.getCurrentPosition());
+        telemetry.addData("armextended", "" + armextended);
     }
 
     @Override
@@ -133,7 +140,10 @@ public class TeleOpOctopusRed extends OpMode {
         else {
             dumper.setPosition(0);
             doorL.setPosition(0);
+            doorR.setPosition(1);
         }
+
+
         //mountain climber release
         if(gamepad1.b){
             sideArmR.setPosition(1);
@@ -158,33 +168,59 @@ public class TeleOpOctopusRed extends OpMode {
 
         //arm
 
-        //tension the pullUp motor
-        if (gamepad2.a) {
-            pullUp1.setPower(-0.2);
-            pullUp2.setPower(0.2);
-        }
 
-
+        //brings arm in
         if (gamepad2.left_trigger!=0){
-            pullUp1.setPower(-0.68);
-            pullUp2.setPower(0.68);
+            pullUp1.setPower(-0.8);
+            pullUp2.setPower(0.8);
+            armextended = false;
             ext.setPower(-1);
+            oldarm=ext.getCurrentPosition();
         }
+        //sends arm out
+
         else if (gamepad2.right_trigger!=0) {
+            ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             ext.setPower(1);
-            pullUp1.setPower(0.11);
-            pullUp2.setPower(-0.11);
+            if(ext.getCurrentPosition()<= oldarm && ext.getCurrentPosition()>6500){
+                armextended = true;
+            }
+            oldarm=ext.getCurrentPosition();
+            if(!armextended) {
+                pullUp1.setPower(0.16);
+                pullUp2.setPower(-0.16);
+            }
+            else{
+                pullUp1.setPower(0);
+                pullUp2.setPower(0);
+            }
         }
         else {
             ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
+            oldarm=ext.getCurrentPosition();
         }
 
         if (extStop.isPressed() && gamepad2.left_trigger!=0) {
             ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
+            oldarm=ext.getCurrentPosition();
+            ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
+
+        //tension the pullUp motor
+        if (gamepad2.a) {
+            pullUp1.setPower(-0.2);
+            pullUp2.setPower(0.2);
+        }
+
+        if (gamepad2.dpad_left && armextended)
+        {
+            pullUp1.setPower(-0.05);
+            pullUp2.setPower(0.05);
         }
 
         //arm angle
