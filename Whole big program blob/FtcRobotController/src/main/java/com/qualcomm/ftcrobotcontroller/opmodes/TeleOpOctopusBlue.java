@@ -135,7 +135,7 @@ public class TeleOpOctopusBlue extends OpMode {
 
         if (gamepad2.dpad_right) {
             dumper.setPosition(0);
-            doorR.setPosition(0.4);
+            doorR.setPosition(0.2);
         }
         else {
             dumper.setPosition(0.25);
