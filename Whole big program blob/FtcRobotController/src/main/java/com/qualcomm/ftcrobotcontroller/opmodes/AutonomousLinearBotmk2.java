@@ -83,20 +83,22 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(4700, 1);
         sleep(500);
 
-        turn(60);
+        turn(30);
+        turn(30);//two turn because 60 degree turn messes up
         sleep(200);
 
-        driveUntilUltra(10, 0.2);
+        driveUntilUltra(20, 0.2);
         sleep(200);
 
         squareUp();
         sleep(200);
 
-        turn(-90);
+        turn(-45);
+        turn(-45);
         sleep(200);
 
         while (colorSensor2.alpha() < 15) {
-            driveForever(0.2);
+            driveForever(0.4);
             waitOneFullHardwareCycle();
         }
         stopMotors();
@@ -110,6 +112,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         driveUntilUltra(10, 0.2);
         sleep(200);
+        turn(17* turnDirection);
 
         stopMotors();
         sleep(200);
@@ -118,13 +121,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         climberDumper.setPosition(1);
         sleep(200);
 
-        drive(50, 0.5, true);
-        sleep(200);
+        turn(-17*turnDirection);
 
         telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
         waitOneFullHardwareCycle();
-
+    /* BEACON
         if (colorSensor.blue() > colorSensor.red() && Math.abs(colorSensor.blue() - colorSensor.red()) > 20) {
             turn(5);
             sleep(200);
@@ -144,6 +146,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             turn(5);
             sleep(200);
         }
+        */
         drive(-200,0.2);
         squareUp();
         sleep(200);
@@ -160,7 +163,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         turn(105);
         sleep(200);
 
-        drive(5000, -1);
+        drive(1000, -0.5);
 
 
         if (turnDirectionInput == 1){}
@@ -274,14 +277,14 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             if (dir > 180)
                 dir -= 360;
 
-            double power=(degrees-dir)/30;
+            double power=(degrees-dir)/40;
             telemetry.addData("initial power", " " + power);
-            power=clip(power,-0.3,0.3);
+            power=clip(power,-0.15,0.15);
             if(Math.abs(power)<0.05){
                 if((degrees-dir)>0)
-                    power= 0.05;
+                    power= 0.07;
                 else
-                    power= -0.05;
+                    power= -0.07;
             }
 
             telemetry.addData("power", " " + power);
@@ -339,7 +342,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         while (Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            double power = (ultra1.getUltrasonicLevel() - ultra2.getUltrasonicLevel()) / 100;
+            double power = (ultra1.getUltrasonicLevel() - ultra2.getUltrasonicLevel()) / 70;
+            power = clip(power, -0.15,0.15);
             setLeftPower(-power);
             setRightPower(power);
             waitOneFullHardwareCycle();

@@ -87,7 +87,7 @@ public class TeleOpOctopusRed extends OpMode {
 
     private void drive() {
         if(gamepad1.right_trigger==1){
-            driveMod=1.5f;
+            driveMod=1.2f;
         }
         else{
             driveMod=1;
