@@ -118,7 +118,6 @@ public class TeleOpOctopusBlue extends OpMode {
     }
 
     public void attachments() {
-
         //collection in
         if (gamepad2.right_bumper) {
             collect.setPower(1);

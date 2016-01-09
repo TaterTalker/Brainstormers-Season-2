@@ -83,22 +83,20 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(4700, 1);
         sleep(500);
 
-        turn(30);
-        turn(30);//two turn because 60 degree turn messes up
+        turn(60);
         sleep(200);
 
-        driveUntilUltra(20, 0.2);
+        driveUntilUltra(15, 0.2);
         sleep(200);
 
         squareUp();
         sleep(200);
 
-        turn(-45);
-        turn(-45);
+        turn(-80);
         sleep(200);
 
         while (colorSensor2.alpha() < 15) {
-            driveForever(0.4);
+            driveForever(0.2);
             waitOneFullHardwareCycle();
         }
         stopMotors();
@@ -154,25 +152,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(100, -0.5);
         sleep(200);
 
-        turn(110);
+        turn(-80);
+        collector.setPower(1);
         sleep(200);
-
-        drive(2800, 1);
-        sleep(200);
-
-        turn(105);
-        sleep(200);
-
-        drive(1000, -0.5);
-
-
-        if (turnDirectionInput == 1){}
-            //sideArmL.setPosition(0);
-        else{}
-            //sideArmR.setPosition(1);
-
-        //lock.setPosition(0.6);
-
+        drive(700,1);
+        stopMotors();
     }
 
 
@@ -273,18 +257,21 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         dir=heading();
         while(Math.abs(degrees-dir)>1) {
             telemetry.addData("difference", " " + Math.abs(degrees-dir));
+            telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             dir = heading();
             if (dir > 180)
                 dir -= 360;
 
-            double power=(degrees-dir)/40;
+            double power=Math.pow(((degrees-dir)/50),2);
+            if(degrees<0)
+                power*=-1;
             telemetry.addData("initial power", " " + power);
-            power=clip(power,-0.15,0.15);
-            if(Math.abs(power)<0.05){
+            power=clip(power,-0.50,0.50);
+            if(Math.abs(power)<0.1){
                 if((degrees-dir)>0)
-                    power= 0.07;
+                    power= 0.1;
                 else
-                    power= -0.07;
+                    power= -0.1;
             }
 
             telemetry.addData("power", " " + power);
