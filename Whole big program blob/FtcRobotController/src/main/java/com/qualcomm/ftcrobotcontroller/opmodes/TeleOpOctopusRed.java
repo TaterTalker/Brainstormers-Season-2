@@ -145,19 +145,13 @@ public class TeleOpOctopusRed extends OpMode {
 
 
         //mountain climber release
-        if(gamepad1.b){
-            sideArmR.setPosition(1);
+       /* if(gamepad1.left_bumper){
+            sideArmL.setPosition(0.5);
         }
         else{
-            sideArmR.setPosition(0);
-        }
-
-        if(gamepad1.x){
             sideArmL.setPosition(0);
-        }
-        else{
-            sideArmL.setPosition(1);
-        }
+        }*/
+
         // climber dumper
         if (gamepad2.y){
             climberDumper.setPosition(0);

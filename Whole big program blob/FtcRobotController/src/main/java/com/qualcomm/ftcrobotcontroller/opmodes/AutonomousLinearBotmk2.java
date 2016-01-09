@@ -74,7 +74,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         turn(30);
         sleep(200);
-        reset_drive_encoders();
 
         drive(4700, 1);
         sleep(500);
@@ -83,13 +82,14 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         collector.setPower(1);
         sleep(200);
 
-        driveUntilUltra(15, 0.2);
+        squareUp();
+        driveUntilUltra(30, 0.2);
         sleep(200);
 
         turn(-80);
         sleep(200);
 
-        while (colorSensor2.alpha() < 15) {
+        while (colorSensor2.alpha() < 30) {
             driveForever(0.2);
             waitOneFullHardwareCycle();
         }
@@ -103,9 +103,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(200);
         drive(200,-0.5);
 
-        driveUntilUltra(12, 0.2);
+        driveUntilUltra(8, 0.2);
         sleep(200);
-        turn(10 * turnDirection);
+        squareUp();
+        sleep(100);
+        turn(15 * turnDirection);
 
         stopMotors();
         sleep(200);

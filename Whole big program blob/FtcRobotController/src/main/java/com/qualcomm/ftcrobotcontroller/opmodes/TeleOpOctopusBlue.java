@@ -118,6 +118,7 @@ public class TeleOpOctopusBlue extends OpMode {
     }
 
     public void attachments() {
+
         //collection in
         if (gamepad2.right_bumper) {
             collect.setPower(1);
@@ -144,19 +145,13 @@ public class TeleOpOctopusBlue extends OpMode {
 
 
         //mountain climber release
-        if(gamepad1.b){
-            sideArmR.setPosition(1);
-        }
-        else{
+        /*if(gamepad1.left_bumper){
             sideArmR.setPosition(0);
         }
-
-        if(gamepad1.x){
-            sideArmL.setPosition(0);
-        }
         else{
-            sideArmL.setPosition(1);
-        }
+            sideArmR.setPosition(0.5);
+        }*/
+
         // climber dumper
         if (gamepad2.y){
             climberDumper.setPosition(0);
