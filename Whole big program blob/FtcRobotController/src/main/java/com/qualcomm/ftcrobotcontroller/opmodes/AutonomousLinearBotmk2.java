@@ -84,12 +84,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(500);
 
         turn(60);
+        collector.setPower(1);
         sleep(200);
 
         driveUntilUltra(15, 0.2);
-        sleep(200);
-
-        squareUp();
         sleep(200);
 
         turn(-80);
@@ -107,10 +105,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         squareUp();
         collector.setPower(0);
         sleep(200);
+        drive(200,-0.5);
 
-        driveUntilUltra(10, 0.2);
+        driveUntilUltra(12, 0.2);
         sleep(200);
-        turn(17* turnDirection);
+        turn(10 * turnDirection);
 
         stopMotors();
         sleep(200);
@@ -119,7 +118,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         climberDumper.setPosition(1);
         sleep(200);
 
-        turn(-17*turnDirection);
+        turn(-10 * turnDirection);
 
         telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
@@ -155,7 +154,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         turn(-80);
         collector.setPower(1);
         sleep(200);
-        drive(700,1);
+        driveUntilUltra(15,0.2);
         stopMotors();
     }
 
@@ -258,6 +257,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         while(Math.abs(degrees-dir)>1) {
             telemetry.addData("difference", " " + Math.abs(degrees-dir));
             telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+            telemetry.addData("old gyro", lastgyro);
             dir = heading();
             if (dir > 180)
                 dir -= 360;
@@ -375,6 +375,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                 currSpeed = clip(currSpeed, -0.9, 0.9);
 
             telemetry.addData("heading ", "" + heading());
+            telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             run_using_encoders();
             setLeftPower(currSpeed + turnheading);
             setRightPower(currSpeed - turnheading);
@@ -405,6 +406,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                 activeSpeed = clip(activeSpeed, -0.9, 0.9);
 
             telemetry.addData("heading ", "" + heading());
+            telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             run_using_encoders();
             setLeftPower(activeSpeed + turnheading);
             setRightPower(activeSpeed - turnheading);
