@@ -37,17 +37,15 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     Servo sideArmR;
 
     //Variables
-    double turnChange = 1;
     int turnDirection = 1;
     private boolean didEncodersReset = false;
     Servo someServo1; //I have no idea what these are supposed to do --> bad name
     Servo someServo2;
 
     //Our Main Function that Controls the Robots Actions.
-    public void runOpMode(int turnDirectionInput, double turnChangeInput) throws InterruptedException {
+    public void runOpMode(int turnDirectionInput) throws InterruptedException {
 
         //Adjusts turns based on team color.
-        turnChange = turnChangeInput;
         turnDirection = turnDirectionInput;
 
         //Map Motors and Sensors.

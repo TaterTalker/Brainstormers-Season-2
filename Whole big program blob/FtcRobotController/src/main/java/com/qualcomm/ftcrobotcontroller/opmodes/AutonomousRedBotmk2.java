@@ -6,6 +6,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class AutonomousRedBotmk2 extends AutonomousLinearBotmk2 {
     @Override
     public void runOpMode() throws InterruptedException {
-        super.runOpMode(-1,-1);
+        super.runOpMode(-1);
     }
 }
