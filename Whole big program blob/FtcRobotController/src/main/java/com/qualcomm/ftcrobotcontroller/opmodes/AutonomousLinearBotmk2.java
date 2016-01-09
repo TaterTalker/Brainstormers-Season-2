@@ -12,66 +12,64 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
+
+    //Driving Motors
     DcMotor FL;
+    DcMotor FR;
     DcMotor BR;
     DcMotor BL;
+    int FRold, BRold, FLold, BLold;
+
+    //Sensors
     GyroSensor gyroSensor;
+    int lastgyro;
     ColorSensor colorSensor;
     ColorSensor colorSensor2;
-    DcMotor FR;
-    int FRold, BRold, FLold, BLold;
     DcMotor collector;
-    Servo climberDumper;
-    //Servo sideArmL;
-    //Servo lock;
-    //Servo sideArmR;
-    boolean turnComplete = false;
-    Servo debDumper;
-    OpticalDistanceSensor odm;
-    final int LED_CHANNEL = 5;
     UltrasonicSensor ultra1;
     UltrasonicSensor ultra2;
-    int lastgyro;
+    OpticalDistanceSensor odm;
+
+    //Servos
+    Servo climberDumper;
+    Servo sideArmL;
+    Servo debDumper;
+    Servo sideArmR;
+
+    //Variables
     double turnChange = 1;
     int turnDirection = 1;
-    private final double TURNRATIO = 18.3;
     private boolean didEncodersReset = false;
     Servo someServo1; //I have no idea what these are supposed to do --> bad name
     Servo someServo2;
 
-
+    //Our Main Function that Controls the Robots Actions.
     public void runOpMode(int turnDirectionInput, double turnChangeInput) throws InterruptedException {
+
+        //Adjusts turns based on team color.
         turnChange = turnChangeInput;
         turnDirection = turnDirectionInput;
+
+        //Map Motors and Sensors.
         getRobotConfig();
+
+        //Configure and Reset.
         run_using_encoders();
         reset_drive_encoders();
-
         gyroSensor.calibrate();
-        //lock.setPosition(0);
         climberDumper.setPosition(.92);
         someServo1.setPosition(0.5);
         someServo2.setPosition(0.5);
         debDumper.setPosition((turnDirection+1)/2);
-        //sideArmL.setPosition(1);
-        //sideArmR.setPosition(0);
+
         sleep(5000);
 
         waitForStart(); //everything before this happens when you press init
 
         collector.setPower(-1);
-//        turn(90);
-//        sleep(200);
-//        turn(-90);
-//        sleep(200);
-//        turn(50);
-//        sleep(200);
-//        turn(-50);
         final boolean SLEEP = false;
-        if (SLEEP) {
 
-        sleep(5000);
-        }
+        if (SLEEP) sleep(5000);
 
         drive(2000, 1);
         sleep(200);
@@ -166,6 +164,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         setRightPower(speed);
     }
 
+    //Resets the Drive Encoders.
     void reset_drive_encoders() {
 
         FL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -173,10 +172,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         BL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         BR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-
         didEncodersReset = false;
     }
-
+    //Run using Encoders.
     void run_using_encoders() {
 
         FL.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -185,64 +183,73 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         BR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
+    //Has the left side reached a certain encoder value.
     boolean hasLeftReached(double leftd) {
 
-        return (Math.abs(FLposition()) > leftd) &&
-                (Math.abs(BLposition()) > leftd);
+        return (Math.abs(FLposition()) > leftd) && (Math.abs(BLposition()) > leftd);
     }
 
+    //Has the right side reached a certain encoder value.
     boolean hasRightReached(double rightd) {
 
-        return (Math.abs(FRposition()) > rightd) &&
-                (Math.abs(BRposition()) > rightd);
+        return (Math.abs(FRposition()) > rightd) && (Math.abs(BRposition()) > rightd);
     }
 
+    //Set the motors power.
     void setLeftPower(double power) {
+
         power = clip(power, -1, 1);
         run_using_encoders();
         FL.setPower(-power);
         BL.setPower(-power);
     }
-
+    //Set the motors power.
     void setRightPower(double power) {
+
         power = clip(power, -1, 1);
         run_using_encoders();
         FR.setPower(power);
         BR.setPower(power);
     }
 
+    //Clip the values.
     double clip(double variable, double min, double max) {
-        if (variable < min)
-            variable = min;
 
-        if (variable > max)
-            variable = max;
+        if (variable < min) variable = min;
+        if (variable > max) variable = max;
 
         return variable;
     }
 
+    //Configures the Robots Motors and Sensors.
     void getRobotConfig() {
         //sideArmL = hardwareMap.servo.get("sideArmL");
         //sideArmR = hardwareMap.servo.get("sideArmR");
         //lock = hardwareMap.servo.get("lock");
+
+        //Sensors
         gyroSensor = hardwareMap.gyroSensor.get("G1");
         climberDumper = hardwareMap.servo.get("climberDumper");
         debDumper = hardwareMap.servo.get("dumper");
         colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor2 = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
+        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
+        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
+        odm = hardwareMap.opticalDistanceSensor.get("odm");
+
+        //Motors
         FR = hardwareMap.dcMotor.get("fr");
         FL = hardwareMap.dcMotor.get("fl");
         BR = hardwareMap.dcMotor.get("br");
         BL = hardwareMap.dcMotor.get("bl");
-        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
-        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
-        odm = hardwareMap.opticalDistanceSensor.get("odm");
         someServo1 = hardwareMap.servo.get("armAngle1");
         someServo2 = hardwareMap.servo.get("armAngle2");
     }
 
+    //Resets the gyro based on the old heading.
     void resetGyro() throws InterruptedException {
+
         while (heading() != 0) {
             lastgyro = gyroSensor.getHeading();
             waitOneFullHardwareCycle();
@@ -250,10 +257,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     }
 
     void turn(int degrees) throws InterruptedException {
+
         resetGyro();
-        degrees *= turnDirection;
-        int dir;
-        dir=heading();
+        degrees *= turnDirection; //Changes the turn direction based on team color.
+        int dir = heading(); //Heading.
+
+        //Turn while the difference until gyro lines up with angle.
         while(Math.abs(degrees-dir)>1) {
             telemetry.addData("difference", " " + Math.abs(degrees-dir));
             telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
@@ -292,10 +301,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     }
 
     double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
+
         double val = 0;
         double maxVal = 0;
         double minVal = 255;
         double tmpVal;
+
         for (int i = 0; i < 4; i++) {
             do {
                 tmpVal = sensor.getUltrasonicLevel();
