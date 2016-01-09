@@ -12,42 +12,54 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class AutonomousLinear extends LinearOpMode {
+
+    //Driving Motors
     DcMotor FL;
+    DcMotor FR;
     DcMotor BR;
     DcMotor BL;
+        int FRold, BRold, FLold, BLold;
+
+    //Sensors
     DeviceInterfaceModule cdim;
     GyroSensor gyroSensor;
+         int lastgyro;
     ColorSensor colorSensor;
-    DcMotor FR;
-    int FRold, BRold, FLold, BLold;
+         final int LED_CHANNEL = 5;
     DcMotor collector;
+    UltrasonicSensor ultra1;
+    UltrasonicSensor ultra2;
+    OpticalDistanceSensor odm;
+
+    //Servos
     Servo climberDumper;
     Servo sideArmL;
     Servo lock;
-    Servo sideArmR;
-    boolean turnComplete = false;
     Servo debDumper;
-    OpticalDistanceSensor odm;
+    Servo sideArmR;
     Servo door;
-    final int LED_CHANNEL = 5;
-    UltrasonicSensor ultra1;
-    UltrasonicSensor ultra2;
-    int lastgyro;
+
+    //Variables
+    boolean turnComplete = false;
     double turnChange = 1;
     int turnDirection = 1;
     private final double TURNRATIO = 18.3;
     private boolean didEncodersReset = false;
 
-
+    //The Main Function that controls the ordered instructions to the robot.
     public void runOpMode(int turnDirectionInput, double turnChangeInput) throws InterruptedException {
+
+        //Changes the direction based on team color.
         turnChange = turnChangeInput;
         turnDirection = turnDirectionInput;
+
+        //Configure the robots motors and sensors
         getRobotConfig();
+
+        //Calibration and Reset.
         run_using_encoders();
         reset_drive_encoders();
-
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
-
         gyroSensor.calibrate();
         lock.setPosition(0);
         climberDumper.setPosition(.92);
