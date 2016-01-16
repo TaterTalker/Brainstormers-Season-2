@@ -154,10 +154,10 @@ public class TeleOpOctopusRed extends OpMode {
 
         // climber dumper
         if (gamepad2.y){
-            climberDumper.setPosition(0);
+            climberDumper.setPosition(1);
         }
         else{
-            climberDumper.setPosition(1);
+            climberDumper.setPosition(0);
         }
 
         //arm
