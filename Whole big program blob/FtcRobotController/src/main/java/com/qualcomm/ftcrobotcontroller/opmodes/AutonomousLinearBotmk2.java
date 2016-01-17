@@ -65,7 +65,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         waitForStart(); //everything before this happens when you press init
 
         collector.setPower(-1);
-        final boolean SLEEP = true;
+        final boolean SLEEP = false;
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
@@ -73,10 +73,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(2000, 1);
         sleep(200);
 
-        turn(35);
+        turn(30);
         sleep(200);
 
-        drive(4300, 1);
+        drive(4400, 1);
         sleep(500);
 
         turn(60);
@@ -85,15 +85,19 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         squareUp();
         sleep(200);
-        while (colorSensor2.blue() < 7) {
+        while (colorSensor2.blue() < 8&&colorSensor2.red()<8) {
             driveForever(0.2);
             waitOneFullHardwareCycle();
         }
+        resetEncoderDelta();
+        turn(0); //for some reason it doesn't execute anything until a turn is called :/ so this is necessary
         sleep(200);
-        drive(300 ,1, false);
+        drive(200, 0.5, false);
+        sleep(200);
+        squareUp();
         sleep(200);
 
-        turn(-80);
+        turn(-75);
         //pivotleft(800);
 
 
@@ -106,10 +110,26 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         stopMotors();
         sleep(200);
+        turn(0, true);
+        sleep(200);
+        drive(50,0.5);
+        stopMotors();
         climberDumper.setPosition(1);
         sleep(1000);
         climberDumper.setPosition(0);
         sleep(200);
+        drive(300,-0.2);
+
+        while (colorSensor2.blue() < 8&&colorSensor2.red()<8) {
+            driveForever(-0.2);
+            waitOneFullHardwareCycle();
+        }
+
+        turn(45, true);
+        drive(2150,-1);
+        turn(-90);
+        drive(7000,-0.2, false, false);
+
 
      //  turn(-10 * turnDirection);
 
@@ -260,18 +280,27 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         }
     }
 
-    void turn(int degrees) throws InterruptedException {
+    void turn(int degrees, boolean untilAbs) throws InterruptedException {
 
         resetGyro();
         degrees *= turnDirection; //Changes the turn direction based on team color.
-        int dir = heading(); //Heading.
+        int dir;
+
+        if(untilAbs==false)
+            dir = heading(); //Heading.
+        else
+            dir = gyroSensor.getHeading(); //Heading.
 
         //Turn while the difference until gyro lines up with angle.
-        while(Math.abs(degrees-dir)>1) {
+        while(Math.abs(degrees - dir)>1) {
             telemetry.addData("difference", " " + Math.abs(degrees-dir));
             telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             telemetry.addData("old gyro", lastgyro);
-            dir = heading();
+            if(untilAbs==false)
+                dir = heading(); //Heading.
+            else
+                dir = gyroSensor.getHeading(); //Heading.
+
             if (dir > 180)
                 dir -= 360;
 
@@ -294,6 +323,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             waitOneFullHardwareCycle();
         }
         stopMotors();
+    }
+
+    void turn(int degrees) throws InterruptedException {
+        turn(degrees, false);
     }
 
     int heading() {
@@ -372,29 +405,34 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
-    void drive(float distance, double speed, boolean avoidance) throws InterruptedException {
+    void drive(float distance, double speed, boolean avoidance, boolean correction) throws InterruptedException {
         resetEncoderDelta();
         resetGyro();
         // Start the drive wheel motors at full power
         while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+            double turnheading;
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
-            double turnheading = heading();
-            if (turnheading > 180)
-                turnheading -= 360;
-            turnheading /= 15;
+            if (correction==true) {
+                turnheading = heading();
+                if (turnheading > 180)
+                    turnheading -= 360;
+                turnheading /= 15;
 
-            if (Math.abs(turnheading) > 1)
-                currSpeed = clip(currSpeed, -0.7, 0.7);
+                if (Math.abs(turnheading) > 1)
+                    currSpeed = clip(currSpeed, -0.7, 0.7);
 
-            if (blocked() && speed > 0 && avoidance)
-                currSpeed = 0;
+                if (blocked() && speed > 0 && avoidance)
+                    currSpeed = 0;
 
-            else if (turnheading != 0)
-                currSpeed = clip(currSpeed, -0.9, 0.9);
+                else if (turnheading != 0)
+                    currSpeed = clip(currSpeed, -0.9, 0.9);
 
-            telemetry.addData("heading ", "" + heading());
-            telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+                telemetry.addData("heading ", "" + heading());
+                telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+            }
+            else
+                turnheading=0;
             run_using_encoders();
             setLeftPower(currSpeed + turnheading);
             setRightPower(currSpeed - turnheading);
@@ -406,7 +444,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     //Compressed the two drives into one for simplicity - "Ethan ;)"
     void drive(float distance, double speed) throws InterruptedException {
-        drive(distance, speed, true);
+        drive(distance, speed, true, true);
+    }
+    void drive(float distance, double speed, boolean avoidance) throws InterruptedException {
+        drive(distance, speed, avoidance, true);
     }
 
     boolean blocked() throws InterruptedException {
