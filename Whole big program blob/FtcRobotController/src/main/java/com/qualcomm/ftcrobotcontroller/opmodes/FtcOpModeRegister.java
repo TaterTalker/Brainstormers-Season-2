@@ -46,27 +46,12 @@ public class FtcOpModeRegister implements OpModeRegister {
      * @param manager op mode manager
      */
     public void register(OpModeManager manager) {
-        //manager.register("sensorTest", sensorTest.class);
-        //manager.register("TeleOpOctopusBlue", TeleOpOctopusBlue.class);
-        //manager.register("Turn Test", turnTest.class);
-        //manager.register("ultraTest", ultraTest.class);
-        //manager.register("ODM Test", OdmTest.class);
-        //manager.register("ultrasonic square up", SquareupTest.class);
-        //manager.register("str8drive", DriveStraightTest.class);
-        //manager.register("Drive", DriveTest.class);
-        //manager.register("collision Avoidance", collisionAvoidanceTest.class);
-
-
 
         
         manager.register("Sensor Test", sensorTest.class);
         manager.register("color test", ColorTest.class);
-        //manager.register("TeleOp Octopus Test", TeleOpOctopusTestPrgm.class);
-        manager.register("TeleOp Octopus Red", TeleOpOctopusRed.class);
-        manager.register("TeleOp Octopus Blue", TeleOpOctopusBlue.class);
-        //manager.register("TeleOp Elephant", TeleOp.class);
-        //manager.register("Auto-Red Elephant", AutonomousRed.class);
-        //manager.register("Auto-Blue Elephant", AutonomousBlue.class);
+        manager.register("TeleOp Octopus Blue", TeleOpBlue.class);
+        manager.register("TeleOp Octopus Red", TeleOpRed.class);
         manager.register("Auto-Blue Octopus", AutonomousBlueBotmk2.class);
         manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
 
