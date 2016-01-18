@@ -40,7 +40,7 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * this maps all of our variables to the hardware
      *
-     * @param sideInput this is given by our separate programs that reference this file so that Autonomous knows weather it is red or blue. 1=blue, -1=red
+     * @param sideInput this is given by our separate programs that reference this file so that autonomous knows weather it is red or blue. 1=blue, -1=red
      */
     public void init(int sideInput) {
         side=sideInput;

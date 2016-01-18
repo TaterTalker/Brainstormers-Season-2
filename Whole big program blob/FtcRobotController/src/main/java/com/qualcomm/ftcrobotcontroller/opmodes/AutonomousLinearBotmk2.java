@@ -45,7 +45,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     //Our Main Function that Controls the Robots Actions
 
     /**
-     * run all other functions to perform Autonomous
+     * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
      * @throws InterruptedException
      */
