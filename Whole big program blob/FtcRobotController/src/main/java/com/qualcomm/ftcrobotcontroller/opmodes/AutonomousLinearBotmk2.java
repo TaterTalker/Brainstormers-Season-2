@@ -42,7 +42,13 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     Servo someServo1; //I have no idea what these are supposed to do --> bad name
     Servo someServo2;
 
-    //Our Main Function that Controls the Robots Actions.
+    //Our Main Function that Controls the Robots Actions
+
+    /**
+     * run all other functions to perform Autonomous
+     * @param turnDirectionInput 1=blue -1=red
+     * @throws InterruptedException
+     */
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
 
         //Adjusts turns based on team color.
@@ -172,6 +178,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     }
 
 
+    /**
+     * sets all motors to a specific speed
+     * @param speed target speed
+     */
     void driveForever(double speed) {
         // Start the drive wheel motors at full power
         run_using_encoders();
@@ -188,6 +198,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
+    /**
+     * sets all drive encoders to 0
+     */
     //Resets the Drive Encoders.
     void reset_drive_encoders() {
 
@@ -198,6 +211,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         didEncodersReset = false;
     }
+
+    /**
+     * sets all drive encoders to run using encoders mode
+     */
     //Run using Encoders.
     void run_using_encoders() {
 
@@ -207,18 +224,32 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         BR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
+    /**
+     * determines if the left side has reached the target disance
+     * @param leftd target distance
+     * @return if the eoncoders are >= the target distance
+     */
     //Has the left side reached a certain encoder value.
     boolean hasLeftReached(double leftd) {
 
         return (Math.abs(FLposition()) > leftd) && (Math.abs(BLposition()) > leftd);
     }
 
+    /**
+     * determines if the left side has reached the target disance
+     * @param rightd target distance
+     * @return if the eoncoders are >= the target distance
+     */
     //Has the right side reached a certain encoder value.
     boolean hasRightReached(double rightd) {
 
         return (Math.abs(FRposition()) > rightd) && (Math.abs(BRposition()) > rightd);
     }
 
+    /**
+     * sets the left motors to a specific power, keeping in mind the acceptable limits
+     * @param power target power
+     */
     //Set the motors power.
     void setLeftPower(double power) {
 
@@ -227,6 +258,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         FL.setPower(-power);
         BL.setPower(-power);
     }
+    /**
+     * sets the right motors to a specific power, keeping in mind the acceptable limits
+     * @param power target power
+     */
     //Set the motors power.
     void setRightPower(double power) {
 
@@ -236,6 +271,14 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         BR.setPower(power);
     }
 
+    /**
+     * takes a variable and returns the variable
+     * if the variable is outside the one of the bounds, instead it returns that bound
+     * @param variable the variable to be clipped
+     * @param min the minimum exeptable value
+     * @param max the maximum exeptable value
+     * @return returns the variable, exept it is inside the exeptable vlues
+     */
     //Clip the values.
     double clip(double variable, double min, double max) {
 
@@ -245,6 +288,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         return variable;
     }
 
+    /**
+     * maps everything to the hardware
+     */
     //Configures the Robots Motors and Sensors.
     void getRobotConfig() {
         //sideArmL = hardwareMap.servo.get("sideArmL");
@@ -271,6 +317,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         someServo2 = hardwareMap.servo.get("armAngle2");
     }
 
+    /**
+     * resets the gyro delta
+     * @see #heading()
+     * @throws InterruptedException
+     */
     //Resets the gyro based on the old heading.
     void resetGyro() throws InterruptedException {
 
@@ -280,6 +331,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         }
     }
 
+    /**
+     * uses the gyro to turn
+     * @param degrees target degrees
+     * @param untilAbs if true it uses the absolute heading insted of the altered one {@link #heading()}
+     * @throws InterruptedException
+     */
     void turn(int degrees, boolean untilAbs) throws InterruptedException {
 
         resetGyro();
@@ -325,10 +382,19 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
+    /**
+     * allows {@link #turn(int, boolean)} to be run without referencing absolute heading
+     * @param degrees target degrees
+     * @throws InterruptedException
+     */
     void turn(int degrees) throws InterruptedException {
         turn(degrees, false);
     }
 
+    /**
+     * gets an adjusted headier that can be reset
+     * @return the adjusted heading
+     */
     int heading() {
         int head;
         head = gyroSensor.getHeading() - lastgyro;
@@ -337,6 +403,13 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         return (head);
     }
 
+    /**
+     * takes multiple ultrasonic readins and throws out anomalies
+     * to get a more precise ul;trasonic value
+     * @param sensor the sensor to be read
+     * @return the more accurate ultrasonic value
+     * @throws InterruptedException
+     */
     double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
 
         double val = 0;
@@ -360,18 +433,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         return val;
     }
 
-
-    int readFixedODM(OpticalDistanceSensor odm) throws InterruptedException {
-        int val = 0;
-        for (int i = 0; i < 2; i++) {
-            val += odm.getLightDetectedRaw();
-            waitOneFullHardwareCycle();
-        }
-        val /= 2;
-        return val;
-    }
-
-
+    /**
+     * uses two ultrasonic sensors to square up against a wall
+     * @see #readFixedUltra(UltrasonicSensor)
+     * @throws InterruptedException
+     */
     void squareUp() throws InterruptedException {
 
         while (Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
@@ -386,6 +452,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
+    /**
+     * stops all motors and verifies that they are stopped
+     * @throws InterruptedException
+     */
     void stopMotors() throws InterruptedException {
         while (FR.isBusy() || BR.isBusy() || FL.isBusy() || BL.isBusy()) {
             run_using_encoders();
@@ -397,6 +467,13 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         }
     }
 
+    /**
+     * drives until the ultrasonic sensors read a certain value
+     * @see #readFixedUltra(UltrasonicSensor)
+     * @param target target distance
+     * @param speed movement speed
+     * @throws InterruptedException
+     */
     void driveUntilUltra(int target, double speed) throws InterruptedException {
         while (readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
             driveForever(speed);
@@ -405,6 +482,16 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
+    /**
+     * uses encoders, ultrasonic sensors and gyro sensors to drive accurately
+     * encoders are used for distance
+     * ultrasonic sensors do collision avoidance {@link #blocked()}
+     * @param distance distance to travel in encoder clicks
+     * @param speed speed to travel at
+     * @param avoidance if true, it will use collision avoidance
+     * @param correction if true, it will do gyro aided corce correction
+     * @throws InterruptedException
+     */
     void drive(float distance, double speed, boolean avoidance, boolean correction) throws InterruptedException {
         resetEncoderDelta();
         resetGyro();
@@ -442,34 +529,78 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         reset_drive_encoders();
     }
 
+    /**
+     * runs {@link #drive(float, double, boolean, boolean)} without needing to input
+     * collision avoidance or course correction
+     * @param distance distance to travel in encoder clicks
+     * @param speed speed to travel at
+     * @throws InterruptedException
+     */
     //Compressed the two drives into one for simplicity - "Ethan ;)"
     void drive(float distance, double speed) throws InterruptedException {
         drive(distance, speed, true, true);
     }
+
+    /**
+     * runs {@link #drive(float, double, boolean, boolean)} without needing to input
+     * course correction
+     * @param distance distance to travel in encoder clicks
+     * @param speed speed to travel at
+     * @throws InterruptedException
+     */
     void drive(float distance, double speed, boolean avoidance) throws InterruptedException {
         drive(distance, speed, avoidance, true);
     }
 
+    /**
+     * determines whether the robot is blocked
+     * @see #readFixedUltra(UltrasonicSensor)
+     * @return if something is detected within 20 cm, TRUE
+     * @throws InterruptedException
+     */
     boolean blocked() throws InterruptedException {
         return (readFixedUltra(ultra1) < 20 || readFixedUltra(ultra2) < 20);
     }
 
+    /**
+     * gets adjusted position of the front right motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     * @return the adjusted value
+     */
     int FRposition() {
         return (FR.getCurrentPosition() - FRold);
     }
 
+    /**
+     * gets adjusted position of the back right motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     * @return the adjusted value
+     */
     int BRposition() {
         return (BR.getCurrentPosition() - BRold);
     }
 
+    /**
+     * gets adjusted position of the front left motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     * @return the adjusted value
+     */
     int FLposition() {
         return (FL.getCurrentPosition() - FLold);
     }
 
+    /**
+     * gets adjusted position of the back left motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     * @return the adjusted value
+     */
     int BLposition() {
         return (BL.getCurrentPosition() - BLold);
     }
 
+    /**
+     * resets {@link #FRposition()} {@link #BRposition()} {@link #FLposition()} {@link #BLposition()}
+     */
     void resetEncoderDelta() {
         FRold = FR.getCurrentPosition();
         BRold = BR.getCurrentPosition();
