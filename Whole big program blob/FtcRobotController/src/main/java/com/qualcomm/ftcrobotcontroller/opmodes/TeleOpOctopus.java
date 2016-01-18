@@ -97,15 +97,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * this processes inputs directly related to moving the wheels
      */
     private void drive() {
-        /**
-         * if right trigger is pressed, it causes the robot to slow down
-         */
-        if(gamepad1.right_trigger==1){
-            driveMod=1.2f;
-        }
-        else{
-            driveMod=1;
-        }
+        slowRobot();
 
         /**
          * gets values from the joysticks
@@ -145,6 +137,17 @@ public abstract class TeleOpOctopus extends OpMode {
         fl.setPower(FLpower);
         bl.setPower(BLpower);
 
+    }
+    /**
+     * if right trigger is pressed, it causes the robot to slow down
+     */
+    private void slowRobot() {
+        if(gamepad1.right_trigger==1){
+            driveMod=1.2f;
+        }
+        else{
+            driveMod=1;
+        }
     }
 
     /**
