@@ -1,7 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 /**
- * runs {@link #runOpMode(int)} set up for blue
+ * runs {@link AutonomousLinearBotmk2} set up for blue
  */
 public class AutonomousBlueBotmk2 extends AutonomousLinearBotmk2 {
     @Override
