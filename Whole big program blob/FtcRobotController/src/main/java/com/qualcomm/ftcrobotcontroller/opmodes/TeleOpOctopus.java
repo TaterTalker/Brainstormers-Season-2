@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
+
+/**
+ * contains all the code to run TeleOp, it has no inherent side
+ */
 public abstract class TeleOpOctopus extends OpMode {
 
 

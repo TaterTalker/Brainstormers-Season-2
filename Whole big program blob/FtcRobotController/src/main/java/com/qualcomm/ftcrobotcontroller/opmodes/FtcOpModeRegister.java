@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 /**
- * Register Op Modes
+ * determines which OpModes show uop on the control phone screen
  */
 public class FtcOpModeRegister implements OpModeRegister {
 

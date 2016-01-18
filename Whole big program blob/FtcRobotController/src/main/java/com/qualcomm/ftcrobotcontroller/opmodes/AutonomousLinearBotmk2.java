@@ -11,6 +11,9 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+/**
+ * contains all the code to run Autonomous, it has no inherent side
+ */
 public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     //Driving Motors

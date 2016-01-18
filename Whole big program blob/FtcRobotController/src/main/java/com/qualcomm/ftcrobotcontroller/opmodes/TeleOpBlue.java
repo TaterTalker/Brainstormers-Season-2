@@ -1,7 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 /**
- * Created by August on 1/17/2016.
+ * runs {@link TeleOpOctopus} set up for blue
  */
 public class TeleOpBlue extends TeleOpOctopus {
     /**
