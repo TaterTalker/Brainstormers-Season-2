@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 
 /**
- * Created by dan on 12/26/15.
+ * prints all sensor values
  */
 public class sensorTest extends LinearOpMode{
     //OpticalDistanceSensor odmtry1;
