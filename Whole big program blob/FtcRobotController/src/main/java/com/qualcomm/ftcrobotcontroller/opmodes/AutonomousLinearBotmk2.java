@@ -227,7 +227,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * determines if the left side has reached the target disance
      * @param leftd target distance
-     * @return if the eoncoders are >= the target distance
+     * @return if the encoders are greater than or equal to the target distance
      */
     //Has the left side reached a certain encoder value.
     boolean hasLeftReached(double leftd) {
@@ -238,7 +238,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * determines if the left side has reached the target disance
      * @param rightd target distance
-     * @return if the eoncoders are >= the target distance
+     * @return if the encoders are greater than or equal to the target distance
      */
     //Has the right side reached a certain encoder value.
     boolean hasRightReached(double rightd) {

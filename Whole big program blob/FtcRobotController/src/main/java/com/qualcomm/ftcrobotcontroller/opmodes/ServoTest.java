@@ -6,11 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * TeleOp Mode
- * <p/>
- * Enables control of the robot via the gamepad
- */
 public class ServoTest extends OpMode {
 
     Servo linear;
