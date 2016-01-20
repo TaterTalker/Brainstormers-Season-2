@@ -37,7 +37,12 @@ public abstract class TeleOpOctopus extends OpMode {
     Servo sideArmR;
     float driveMod;
     int side;
-
+    float FRpower;
+    float BRpower;
+    float FLpower;
+    float BLpower;
+    float YVal;
+    float rotVal;
     //Sensing
     TouchSensor extStop;
 
@@ -76,6 +81,8 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * all this does is starts the runs the functions that actually process inputs and do the driving
+     * @see #drive()
+     * @see #attachments()
      */
     @Override
     public void loop() {
@@ -95,72 +102,40 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * this processes inputs directly related to moving the wheels
+     * @see #getInput()
+     * @see #processInput()
+     * @see #slowRobot()
+     * @see #setPower()
      */
     private void drive() {
+        getInput();
+        processInput();
         slowRobot();
-
-        /**
-         * gets values from the joysticks
-         */
-        float YVal = gamepad1.left_stick_y;
-        float RotVal = gamepad1.right_stick_x;
-
-        /**
-         * clip the right/left values so that the values never exceed +/- 1
-         */
-        YPower = Range.clip(YVal, -1, 1);
-        rotPower = Range.clip(RotVal, -1, 1);
-
-        /**
-         * combines the rotation and speed together
-         */
-        float FRpower = -YPower + rotPower;
-        float BRpower = -YPower + rotPower;
-        float FLpower = YPower + rotPower;
-        float BLpower = YPower + rotPower;
-
-        /**
-         * this makes sure that the power stays within the exeptable bounds
-         * it also applies a speed modifier if required
-         */
-        FRpower = Range.clip(FRpower, -1, 1)/driveMod;
-        FLpower = Range.clip(FLpower, -1, 1)/driveMod;
-        BRpower = Range.clip(BRpower, -1, 1)/driveMod;
-        BLpower = Range.clip(BLpower, -1, 1)/driveMod;
-
-        // write the values to the motors
-        /**
-         * writes the final values to the motors
-         */
-        fr.setPower(FRpower);
-        br.setPower(BRpower);
-        fl.setPower(FLpower);
-        bl.setPower(BLpower);
-
-    }
-    /**
-     * if right trigger is pressed, it causes the robot to slow down
-     */
-    private void slowRobot() {
-        if(gamepad1.right_trigger==1){
-            driveMod=1.2f;
-        }
-        else{
-            driveMod=1;
-        }
+        setPower();
     }
 
     /**
      * this processes all inputs that do not affect the movement of the wheels
+     * @see #collector()
+     * @see #dumping()
+     * @see #climberDumper()
+     * @see #processArm()
+     * @see #angleArm()
      */
     public void attachments() {
+        collector();
+        dumping();
+        climberDumper();
+        processArm();
+        angleArm();
+    }
 
-        //collection in
-        /**
-         * Runs the collector
-         * in is right bumper
-         * out is left bumper
-         */
+    /**
+     * Runs the collector
+     * in is right bumper
+     * out is left bumper
+     */
+    private void collector() {
         if (gamepad2.right_bumper) {
             collect.setPower(1);
             //collection out
@@ -168,16 +143,15 @@ public abstract class TeleOpOctopus extends OpMode {
             collect.setPower(-1);
             //resting
         } else collect.setPower(0);
+    }
 
+    /**
+    * pressing a button causes the dumper to slide to the other side
+    * as this happens the release door opens
+    * if the robot is blue the trigger is the D-pad right, otherwise it is D-pad left
+    */
 
-        //dumping
-
-        /**
-         * pressing a button causes the dumper to slide to the other side
-         * as this happens the release door opens
-         * if the robot is blue the trigger is the D-pad right, otherwise it is D-pad left
-         */
-
+    private void dumping() {
         if (side == 1) {
 
             if (gamepad2.dpad_right) {
@@ -198,118 +172,145 @@ public abstract class TeleOpOctopus extends OpMode {
                 doorR.setPosition(1);
             }
         }
+    }
 
-
-            //mountain climber release
-        /*if(gamepad1.left_bumper){
-            sideArmR.setPosition(0);
+    /**
+     * dumps the climber if the y button is pressed
+     */
+    private void climberDumper() {
+        // climber dumper
+        if (gamepad2.y) {
+            climberDumper.setPosition(1);
+        } else {
+            climberDumper.setPosition(0);
         }
-        else{
-            sideArmR.setPosition(0.5);
-        }*/
+    }
 
-        /**
-         * dumps the climber if the y button is pressed
-         */
-            // climber dumper
-            if (gamepad2.y) {
-                climberDumper.setPosition(1);
-            } else {
-                climberDumper.setPosition(0);
-            }
-
-            //arm
-
+    /**
+     * runs everything involving extending and retracting the main dumper arm
+     * the arm is extended by the right trigger and retracted by the left
+     * the a button tightens the arm
+     */
+    private void processArm() {
         /**
          * if the left trigger is pressed, the arm is retracted
          */
-            //brings arm in
-            if (gamepad2.left_trigger != 0) {
-                pullUp1.setPower(-0.8);
-                pullUp2.setPower(0.8);
-                armextended = false;
-                ext.setPower(-1);
-                oldarm = ext.getCurrentPosition();
-            }
-            //sends arm out
+        //brings arm in
+        if (gamepad2.left_trigger != 0) {
+            pullUp1.setPower(-0.8);
+            pullUp2.setPower(0.8);
+            armextended = false;
+            ext.setPower(-1);
+            oldarm = ext.getCurrentPosition();
+        }
+        //sends arm out
 
-            /**
-             * if the right trigger is pressed, the arm is extended
-             */
-            else if (gamepad2.right_trigger != 0) {
-                ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-                //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-                ext.setPower(1);
-                if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() > 6500) {
-                    armextended = true;
-                }
-                oldarm = ext.getCurrentPosition();
-                if (!armextended) {
-                    pullUp1.setPower(0.16);
-                    pullUp2.setPower(-0.16);
-                } else {
-                    pullUp1.setPower(0);
-                    pullUp2.setPower(0);
-                }
+        /**
+         * if the right trigger is pressed, the arm is extended
+         */
+        else if (gamepad2.right_trigger != 0) {
+            ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            ext.setPower(1);
+            if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() > 6500) {
+                armextended = true;
+            }
+            oldarm = ext.getCurrentPosition();
+            if (!armextended) {
+                pullUp1.setPower(0.16);
+                pullUp2.setPower(-0.16);
             } else {
-                ext.setPower(0);
                 pullUp1.setPower(0);
                 pullUp2.setPower(0);
-                oldarm = ext.getCurrentPosition();
             }
+        } else {
+            ext.setPower(0);
+            pullUp1.setPower(0);
+            pullUp2.setPower(0);
+            oldarm = ext.getCurrentPosition();
+        }
 
         /**
          * if the arm is fully retracted
          * this stops it from retracting further
          */
-            if (extStop.isPressed() && gamepad2.left_trigger != 0) {
-                ext.setPower(0);
-                pullUp1.setPower(0);
-                pullUp2.setPower(0);
-                oldarm = ext.getCurrentPosition();
-                ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-            }
+        if (extStop.isPressed() && gamepad2.left_trigger != 0) {
+            ext.setPower(0);
+            pullUp1.setPower(0);
+            pullUp2.setPower(0);
+            oldarm = ext.getCurrentPosition();
+            ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
 
         /**
          * if a is pressed, this tightens the pull up motor
          */
-            //tension the pullUp motor
-            if (gamepad2.a) {
-                pullUp1.setPower(-0.2);
-                pullUp2.setPower(0.2);
-            }
+        //tension the pullUp motor
+        if (gamepad2.a) {
+            pullUp1.setPower(-0.2);
+            pullUp2.setPower(0.2);
+        }
         /**
          * tightens the pull up if the arm is fully extended
          */
-            if (gamepad2.dpad_right && armextended) {
-                pullUp1.setPower(-0.05);
-                pullUp2.setPower(0.05);
-            }
-
-        /**
-         * sets the angle of the arm
-         */
-            armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
-            armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
-
+        if (gamepad2.dpad_right && armextended) {
+            pullUp1.setPower(-0.05);
+            pullUp2.setPower(0.05);
         }
+    }
 
     /**
-     * takes a variable and returns the variable
-     * if the variable is outside the one of the bounds, instead it returns that bound
-     * @param variable the variable to be clipped
-     * @param min the minimum exeptable value
-     * @param max the maximum exeptable value
-     * @return returns the variable, exept it is inside the exeptable vlues
+     * sets the angle of the arm
      */
-    double clip(double variable, double min, double max) {
-        if (variable < min)
-            variable = min;
+    private void angleArm() {
+        armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+        armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+    }
 
-        if (variable > max)
-            variable = max;
+    /**
+     * receives input from joystick and writes it to variables
+     */
+    private void getInput() {
+        YVal = gamepad1.left_stick_y;
+        rotVal = gamepad1.right_stick_x;
+    }
 
-        return variable;
+    /**
+     * processes input to form a complete power for each wheel
+     */
+    private void processInput() {
+        YPower = Range.clip(YVal, -1, 1);
+        rotPower = Range.clip(rotVal, -1, 1);
+
+        /**
+         * combines the rotation and speed together
+         */
+        FRpower = -YPower + rotPower;
+        BRpower = -YPower + rotPower;
+        FLpower = YPower + rotPower;
+        BLpower = YPower + rotPower;
+    }
+
+    /**
+     *sets power
+     *also clips the speed to avoid errors and slows down the robot if required
+     */
+    private void setPower() {
+        fr.setPower(Range.clip(FRpower, -1, 1)/driveMod);
+        br.setPower(Range.clip(BRpower, -1, 1)/driveMod);
+        fl.setPower(Range.clip(FLpower, -1, 1)/driveMod);
+        bl.setPower(Range.clip(BLpower, -1, 1)/driveMod);
+    }
+
+    /**
+     * if right trigger is pressed, it causes the robot to slow down
+     */
+    private void slowRobot() {
+        if (gamepad1.right_trigger == 1) {
+            driveMod = 1.2f;
+        } else {
+            driveMod = 1;
+        }
     }
 }
 
