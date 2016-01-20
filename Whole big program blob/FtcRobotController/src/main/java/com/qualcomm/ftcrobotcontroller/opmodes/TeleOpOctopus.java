@@ -142,7 +142,6 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * this maps all of our variables to the hardware
-     *
      * @param sideInput this is given by our separate programs that reference this file so that autonomous knows weather it is red or blue. 1=blue, -1=red
      */
     public void init(int sideInput) {
@@ -280,7 +279,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * runs everything involving extending and retracting the main dumper arm
+     * runs everything involving extending and retracting the main dumper arm {@link #ext} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
      * the arm is extended by {@link #gamepad2} right trigger and retracted by {@link #gamepad2} left trigger
      * {@link #gamepad2} a button tightens the arm
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
