@@ -14,36 +14,130 @@ public abstract class TeleOpOctopus extends OpMode {
 
 
     //drive
+    /**
+     * front left drive motor
+     */
     DcMotor fl;
+    /**
+     * back right drive motor
+     */
     DcMotor br;
+    /**
+     * back left drive motor
+     */
     DcMotor bl;
+    /**
+     * front right drive motor
+     */
     DcMotor fr;
-    float YPower, rotPower, YPower2;
+    /**
+     * the forwards backwards power
+     */
+    float YPower;
+    /**
+     * the rotational power
+     */
+    float rotPower;
+    /**
+     * set as true when the arm is fully extended
+     */
     boolean armextended = false;
+    /**
+     * the arm's last value
+     */
     int oldarm;
 
     //scoring
+    /**
+     * the motor that powers the collector
+     */
     DcMotor collect;
+    /**
+     * arm angler 1
+     */
     Servo armAngle1;
+    /**
+     * arm angler 2
+     */
     Servo armAngle2;
+    /**
+     * the servo which controls the sliding dumper block
+     */
     Servo dumper;
+    /**
+     * the right hopper door control servo
+     */
     Servo doorR;
+    /**
+     * the left hopper door control servo
+     */
     Servo doorL;
+    /**
+     * pull up control motor 1
+     */
     DcMotor pullUp1;
+    /**
+     * pull up control motor 2
+     */
     DcMotor pullUp2;
+    /**
+     * extender control motor
+     */
     DcMotor ext;
+    /**
+     * the servo that controls the climber dumping arm
+     */
     Servo climberDumper;
+    /**
+     * left side arm control servo
+     */
     Servo sideArmL;
+    /**
+     * right side arm control servo
+     */
     Servo sideArmR;
+    /**
+     * how much the robot should be slowed by
+     * higher=slower
+     */
     float driveMod;
+    /**
+     * informs the program whether it is red or blue
+     * 1=blue
+     * -1=red
+     */
     int side;
+    /**
+     * power of {@link #fr} which can be altered
+     */
     float FRpower;
+    /**
+     * power of {@link #br} which can be altered
+     */
     float BRpower;
+    /**
+     * power of {@link #fl} which can be altered
+     */
     float FLpower;
+    /**
+     * power of {@link #bl} which can be altered
+     */
     float BLpower;
+    /**
+     * the value of {@link #gamepad1} joystick 1 y
+     * later written to {@link #YPower}
+     */
     float YVal;
+    /**
+     * the value of {@link #gamepad1} joystick 2 x
+     * latter written to {@link #rotPower}
+     */
     float rotVal;
     //Sensing
+    /**
+     * this is pressed when the arm is fully retracted
+     * it is used by {@link #processArm()}
+     */
     TouchSensor extStop;
 
     /**
@@ -132,8 +226,8 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * Runs the collector
-     * in is right bumper
-     * out is left bumper
+     * in is {@link #gamepad2} right bumper
+     * out is {@link #gamepad2}left bumper
      */
     private void collector() {
         if (gamepad2.right_bumper) {
@@ -146,11 +240,10 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-    * pressing a button causes the dumper to slide to the other side
-    * as this happens the release door opens
-    * if the robot is blue the trigger is the D-pad right, otherwise it is D-pad left
+    * pressing {@link #gamepad2} dpad right while blue or {@link #gamepad2} dpad left while red
+     * slides {@link #dumper} across the hopper, bringing the debris with it
+    * as this happens the proper release door ({@link #doorR} or {@link #doorL})  opens
     */
-
     private void dumping() {
         if (side == 1) {
 
@@ -175,7 +268,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * dumps the climber if the y button is pressed
+     * dumps the climber if the {@link #gamepad2} y button is pressed
      */
     private void climberDumper() {
         // climber dumper
@@ -188,8 +281,9 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * runs everything involving extending and retracting the main dumper arm
-     * the arm is extended by the right trigger and retracted by the left
-     * the a button tightens the arm
+     * the arm is extended by {@link #gamepad2} right trigger and retracted by {@link #gamepad2} left trigger
+     * {@link #gamepad2} a button tightens the arm
+     * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
      */
     private void processArm() {
         /**
@@ -231,8 +325,8 @@ public abstract class TeleOpOctopus extends OpMode {
         }
 
         /**
-         * if the arm is fully retracted
-         * this stops it from retracting further
+         * if the arm is fully retracted this stops it from trying to retract further
+         * it is controlled by touch sensor {@link #extStop}
          */
         if (extStop.isPressed() && gamepad2.left_trigger != 0) {
             ext.setPower(0);
@@ -251,7 +345,7 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp2.setPower(0.2);
         }
         /**
-         * tightens the pull up if the arm is fully extended
+         * tightens the pull up if the arm is fully extended and gamepad 2 dpad right is pressed
          */
         if (gamepad2.dpad_right && armextended) {
             pullUp1.setPower(-0.05);
@@ -261,6 +355,7 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * sets the angle of the arm
+     * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
         armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
@@ -269,6 +364,8 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * receives input from joystick and writes it to variables
+     * {@link #gamepad1} left stick y axis controls forwards and backwards
+     * {@link #gamepad1} right stick x axis controls rotation
      */
     private void getInput() {
         YVal = gamepad1.left_stick_y;
@@ -277,6 +374,7 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * processes input to form a complete power for each wheel
+     * it also  the input values to avoid errors
      */
     private void processInput() {
         YPower = Range.clip(YVal, -1, 1);
@@ -294,6 +392,10 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      *sets power
      *also clips the speed to avoid errors and slows down the robot if required
+     * @see #fr
+     * @see #br
+     * @see #fl
+     * @see #bl
      */
     private void setPower() {
         fr.setPower(Range.clip(FRpower, -1, 1)/driveMod);
@@ -303,7 +405,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * if right trigger is pressed, it causes the robot to slow down
+     * if {@link #gamepad1} right trigger is pressed, it causes the robot to slow down
      */
     private void slowRobot() {
         if (gamepad1.right_trigger == 1) {
