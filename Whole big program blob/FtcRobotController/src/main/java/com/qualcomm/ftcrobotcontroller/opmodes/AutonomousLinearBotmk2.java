@@ -34,7 +34,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     OpticalDistanceSensor odm;
 
     //Servos
-    Servo climberDumper;
+    Servo climberDumperB;
+    Servo climberDumperR;
     Servo sideArmL;
     Servo debDumper;
     Servo sideArmR;
@@ -42,8 +43,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     //Variables
     int turnDirection = 1;
     private boolean didEncodersReset = false;
-    Servo someServo1; //I have no idea what these are supposed to do --> bad name
-    Servo someServo2;
+    Servo armAngle1; //I have no idea what these are supposed to do --> bad name
+    Servo armAngle2;
 
     //Our Main Function that Controls the Robots Actions
 
@@ -64,14 +65,16 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         run_using_encoders();
         reset_drive_encoders();
         gyroSensor.calibrate();
-        climberDumper.setPosition(0);
-        someServo1.setPosition(0.5);
-        someServo2.setPosition(0.5);
+        climberDumperB.setPosition(0);
+        climberDumperR.setPosition(1);
+        armAngle1.setPosition(0.5);
+        armAngle2.setPosition(0.5);
         debDumper.setPosition((turnDirection + 1) / 2);
 
         sleep(5000);
 
         waitForStart(); //everything before this happens when you press init
+
 
         collector.setPower(-1);
         final boolean SLEEP = false;
@@ -85,58 +88,47 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         turn(30);
         sleep(200);
 
-        drive(4400, 1);
+        drive(4200, 1);
         sleep(500);
 
         turn(60);
         collector.setPower(1);
+        drive(200, 0.2);
         sleep(200);
 
+        driveUntilUltra(17, 0.2);
         squareUp();
-        sleep(200);
-        while (colorSensor2.blue() < 8&&colorSensor2.red()<8) {
-            driveForever(0.2);
-            waitOneFullHardwareCycle();
+        turn(90);
+
+        resetGyro();
+        while (colorSensor2.alpha() < 25) {
+            driveForeverWitGyro(-0.2);
         }
+        stopMotors();
+        reset_drive_encoders();
         resetEncoderDelta();
-        turn(0); //for some reason it doesn't execute anything until a turn is called :/ so this is necessary
-        sleep(200);
-        drive(200, 0.5, false);
-        sleep(200);
-        squareUp();
-        sleep(200);
-
-        turn(-75);
-        //pivotleft(800);
-
-
-        sleep(200);
-
-        while (colorSensor2.alpha() < 30) {
-            driveForever(0.2);
-            waitOneFullHardwareCycle();
-        }
-
+        turn(0);
+        drive(450, -0.5);
         stopMotors();
-        sleep(200);
-        turn(0, true);
-        sleep(200);
-        drive(50,0.5);
-        stopMotors();
-        climberDumper.setPosition(1);
+        climberDumperB.setPosition(1);
+        climberDumperR.setPosition(0);
         sleep(1000);
-        climberDumper.setPosition(0);
-        sleep(200);
-        drive(300,-0.2);
+        climberDumperB.setPosition(0);
+        climberDumperR.setPosition(1);
 
-        while (colorSensor2.blue() < 8&&colorSensor2.red()<8) {
-            driveForever(-0.2);
+        sleep(200);
+        drive(300, 0.2);
+
+        drive(250,0.5);
+        while (colorSensor2.alpha()<25) {
+            driveForeverWitGyro(0.2);
             waitOneFullHardwareCycle();
         }
 
-        turn(45, true);
-        drive(2150,-1);
-        turn(-90);
+        reset_drive_encoders();
+        turn(45);
+        drive(2500,1);
+        turn(75);
         drive(7000,-0.2, false, false);
 
 
@@ -145,39 +137,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
         waitOneFullHardwareCycle();
-    /* BEACON
-        if (colorSensor.blue() > colorSensor.red() && Math.abs(colorSensor.blue() - colorSensor.red()) > 20) {
-            turn(5);
-            sleep(200);
-            drive(200, 0.25, true);
-            sleep(200);
-            drive(200, -0.25, true);
-            sleep(200);
-            turn(-5);
-            sleep(200);
-        } else if (Math.abs(colorSensor.blue() - colorSensor.red()) > 20) {
-            turn(-5);
-            sleep(200);
-            drive(200, 0.25, true);
-            sleep(200);
-            drive(200, -0.25, true);
-            sleep(200);
-            turn(5);
-            sleep(200);
-        }
-        */
-//        drive(-200,0.2);
-//        squareUp();
-//        sleep(200);
-//
-//        drive(100, -0.5);
-//        sleep(200);
-//
-//        turn(-80);
-//        collector.setPower(1);
-//        sleep(200);
-//        driveUntilUltra(15,0.2);
-//        stopMotors();
     }
 
 
@@ -302,22 +261,23 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //Sensors
         gyroSensor = hardwareMap.gyroSensor.get("G1");
-        climberDumper = hardwareMap.servo.get("climberDumper");
-        debDumper = hardwareMap.servo.get("dumper");
+        climberDumperB = hardwareMap.servo.get("clmbrDmprB");
+        climberDumperR = hardwareMap.servo.get("clmbrDmprR");
         colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor2 = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
         ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
         odm = hardwareMap.opticalDistanceSensor.get("odm");
+        debDumper = hardwareMap.servo.get("dumper");
 
         //Motors
         FR = hardwareMap.dcMotor.get("fr");
         FL = hardwareMap.dcMotor.get("fl");
         BR = hardwareMap.dcMotor.get("br");
         BL = hardwareMap.dcMotor.get("bl");
-        someServo1 = hardwareMap.servo.get("armAngle1");
-        someServo2 = hardwareMap.servo.get("armAngle2");
+        armAngle1 = hardwareMap.servo.get("armAngle1");
+        armAngle2 = hardwareMap.servo.get("armAngle2");
     }
 
     /**
@@ -485,6 +445,28 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
     }
 
+    void driveForeverWitGyro(double speed) throws InterruptedException {
+        double turnheading;
+        double currSpeed = speed;
+        // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+            turnheading = heading();
+            if (turnheading > 180)
+                turnheading -= 360;
+            turnheading /= 15;
+
+            if (Math.abs(turnheading) > 1)
+                currSpeed = clip(currSpeed, -0.7, 0.7);
+
+            else if (turnheading != 0)
+                currSpeed = clip(currSpeed, -0.9, 0.9);
+
+            telemetry.addData("heading ", "" + heading());
+        telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+        run_using_encoders();
+        setLeftPower(currSpeed + turnheading);
+        setRightPower(currSpeed - turnheading);
+    }
+
     /**
      * uses encoders, ultrasonic sensors and gyro sensors to drive accurately
      * encoders are used for distance
@@ -492,7 +474,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * @param distance distance to travel in encoder clicks
      * @param speed speed to travel at
      * @param avoidance if true, it will use collision avoidance
-     * @param correction if true, it will do gyro aided corce correction
+     * @param correction if true, it will do gyro aided course correction
      * @throws InterruptedException
      */
     void drive(float distance, double speed, boolean avoidance, boolean correction) throws InterruptedException {
