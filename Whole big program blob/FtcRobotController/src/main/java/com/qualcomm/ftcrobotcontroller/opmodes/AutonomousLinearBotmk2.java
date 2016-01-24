@@ -98,17 +98,17 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         driveUntilUltra(17, 0.2);
         squareUp();
-        turn(90);
+        turn(-90);
 
         resetGyro();
-        while (colorSensor2.alpha() < 25) {
-            driveForeverWitGyro(-0.2);
+        while (colorSensor2.alpha() < 20) {
+            driveForeverWitGyro(0.2);
         }
         stopMotors();
         reset_drive_encoders();
         resetEncoderDelta();
         turn(0);
-        drive(450, -0.5);
+        drive(750, -0.5);
         stopMotors();
         climberDumperB.setPosition(1);
         climberDumperR.setPosition(0);
@@ -120,14 +120,14 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(300, 0.2);
 
         drive(250,0.5);
-        while (colorSensor2.alpha()<25) {
-            driveForeverWitGyro(0.2);
+        while (colorSensor2.alpha()<20) {
+            driveForeverWitGyro(-0.2);
             waitOneFullHardwareCycle();
         }
 
         reset_drive_encoders();
-        turn(45);
-        drive(2500,1);
+        turn(-45);
+        drive(2500,-1);
         turn(75);
         drive(7000,-0.2, false, false);
 
@@ -454,11 +454,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                 turnheading -= 360;
             turnheading /= 15;
 
-            if (Math.abs(turnheading) > 1)
-                currSpeed = clip(currSpeed, -0.7, 0.7);
+            if (Math.abs(turnheading) > 5)
+                currSpeed = clip(currSpeed, -0.8, 0.8);
 
             else if (turnheading != 0)
-                currSpeed = clip(currSpeed, -0.9, 0.9);
+                currSpeed = clip(currSpeed, -0.95, 0.95);
 
             telemetry.addData("heading ", "" + heading());
         telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
