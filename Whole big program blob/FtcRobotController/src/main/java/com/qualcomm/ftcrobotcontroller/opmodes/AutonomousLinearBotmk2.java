@@ -109,8 +109,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         resetEncoderDelta();
         turn(1);
         stopMotors();
-        drive(200, -0.5);
-        drive(600, -0.5);
+        drive(20,-0.5);
+        drive(800, -0.5);
         stopMotors();
         climberDumperB.setPosition(1);
         climberDumperR.setPosition(0);
@@ -119,7 +119,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         climberDumperR.setPosition(1);
         sleep(200);
 
-        drive(1000,0.5);
+        drive(1200,0.5);
         while (colorSensor2.alpha()<20) {
             driveForeverWitGyro(-0.2);
             waitOneFullHardwareCycle();
