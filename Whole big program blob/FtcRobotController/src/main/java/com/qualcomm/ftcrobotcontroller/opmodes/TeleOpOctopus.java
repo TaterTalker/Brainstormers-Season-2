@@ -73,6 +73,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     Servo doorL;
     /**
+     * makes the hook on the end of the arm go out for hanging
+     */
+    Servo armHook;
+    /**
      * pull up control motor 1
      */
     DcMotor pullUp1;
@@ -85,9 +89,13 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     DcMotor ext;
     /**
-     * the servo that controls the climber dumping arm
+     * the servo that controls the climber dumping arm for the red side
      */
-    Servo climberDumper;
+    Servo clmbrDmprR;
+    /**
+     * the servo that controls the climber dumping arm for the blue side
+     */
+    Servo clmbrDmprB;
     /**
      * left side arm control servo
      */
@@ -161,10 +169,12 @@ public abstract class TeleOpOctopus extends OpMode {
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         ext = hardwareMap.dcMotor.get("ext");
-        climberDumper = hardwareMap.servo.get("climberDumper");
+        clmbrDmprB = hardwareMap.servo.get("clmbrDmprB");
+        clmbrDmprR = hardwareMap.servo.get("clmbrDmprR");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         extStop = hardwareMap.touchSensor.get("extStop");
+        armHook = hardwareMap.servo.get("armHook");
 
         ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -181,6 +191,7 @@ public abstract class TeleOpOctopus extends OpMode {
     public void loop() {
         drive();
         attachments();
+        hang();
         telemetry.addData("Encoder Val", "" + ext.getCurrentPosition());
         telemetry.addData("armextended", "" + armextended);
     }
@@ -221,6 +232,8 @@ public abstract class TeleOpOctopus extends OpMode {
         climberDumper();
         processArm();
         angleArm();
+        hook();
+        sideArm();
     }
 
     /**
@@ -271,10 +284,22 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void climberDumper() {
         // climber dumper
-        if (gamepad2.y) {
-            climberDumper.setPosition(1);
-        } else {
-            climberDumper.setPosition(0);
+        if (side == 1) {
+            if(gamepad2.y) {
+                clmbrDmprB.setPosition(1);
+                clmbrDmprR.setPosition(1);
+            } else{
+                clmbrDmprB.setPosition(0);
+                clmbrDmprR.setPosition(1);
+            }
+        } else if(side==-1) {
+            if (gamepad2.y) {
+                clmbrDmprB.setPosition(0);
+                clmbrDmprR.setPosition(0);
+            } else {
+                clmbrDmprB.setPosition(0);
+                clmbrDmprR.setPosition(1);
+            }
         }
     }
 
@@ -284,14 +309,15 @@ public abstract class TeleOpOctopus extends OpMode {
      * {@link #gamepad2} a button tightens the arm
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
      */
+
     private void processArm() {
         /**
          * if the left trigger is pressed, the arm is retracted
          */
         //brings arm in
         if (gamepad2.left_trigger != 0) {
-            pullUp1.setPower(-0.8);
-            pullUp2.setPower(0.8);
+            pullUp1.setPower(0.8);
+            pullUp2.setPower(-0.8);
             armextended = false;
             ext.setPower(-1);
             oldarm = ext.getCurrentPosition();
@@ -305,13 +331,13 @@ public abstract class TeleOpOctopus extends OpMode {
             ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             ext.setPower(1);
-            if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() > 6500) {
+            if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() > 7000) {
                 armextended = true;
             }
             oldarm = ext.getCurrentPosition();
             if (!armextended) {
-                pullUp1.setPower(0.16);
-                pullUp2.setPower(-0.16);
+                pullUp1.setPower(-0.16);
+                pullUp2.setPower(0.16);
             } else {
                 pullUp1.setPower(0);
                 pullUp2.setPower(0);
@@ -340,6 +366,13 @@ public abstract class TeleOpOctopus extends OpMode {
          */
         //tension the pullUp motor
         if (gamepad2.a) {
+            pullUp1.setPower(0.2);
+            pullUp2.setPower(-0.2);
+        }
+        /**
+         * if b is pressed, this loosens the pull up motor
+         */
+        if (gamepad2.b) {
             pullUp1.setPower(-0.2);
             pullUp2.setPower(0.2);
         }
@@ -347,8 +380,8 @@ public abstract class TeleOpOctopus extends OpMode {
          * tightens the pull up if the arm is fully extended and gamepad 2 dpad right is pressed
          */
         if (gamepad2.dpad_right && armextended) {
-            pullUp1.setPower(-0.05);
-            pullUp2.setPower(0.05);
+            pullUp1.setPower(0.05);
+            pullUp2.setPower(-0.05);
         }
     }
 
@@ -357,9 +390,71 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
-        armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
-        armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+        if(gamepad2.left_stick_y > .5) {
+            armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+            armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+        }
+        else if(gamepad2.left_stick_y < -.5) {
+            armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+            armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+        } else {
+            armAngle2.setPosition(0.5);
+            armAngle1.setPosition(0.5);
+        }
     }
+
+    /**
+     * Makes the hook go out
+     */
+    private void hook(){
+        if (gamepad1.left_bumper){
+            armHook.setPosition(0.5);
+        } else {
+            armHook.setPosition(0);
+        }
+    }
+
+    private void sideArm(){
+        if (side == 1) {
+            if(gamepad1.x) {
+                sideArmL.setPosition(0);
+                sideArmR.setPosition(0.2);
+            } else{
+                sideArmL.setPosition(0);
+                sideArmR.setPosition(.8);
+            }
+        } else if(side==-1) {
+            if (gamepad1.x) {
+                sideArmL.setPosition(.6);
+                sideArmR.setPosition(.8);
+            } else {
+                sideArmL.setPosition(0);
+                sideArmR.setPosition(.8);
+            }
+        }
+    }
+
+    private void hang(){
+        if (gamepad1.y) {
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
+            armextended = false;
+            ext.setPower(-.75);
+            oldarm = ext.getCurrentPosition();
+
+            fr.setPower(-.75);
+            br.setPower(-.75);
+            fl.setPower(.75);
+            bl.setPower(.75);
+
+            telemetry.addData("hang", "" + ext.getCurrentPosition());
+
+            armAngle1.setPosition(1);
+            armAngle2.setPosition(1);
+        }
+    }
+
+
 
     /**
      * receives input from joystick and writes it to variables
