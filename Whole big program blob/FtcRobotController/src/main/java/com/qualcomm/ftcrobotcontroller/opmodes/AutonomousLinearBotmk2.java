@@ -127,9 +127,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         reset_drive_encoders();
         turn(45);
-        drive(2600,-1);
-        turn(-80);
-        drive(7000,-0.2, false, false);
+        drive(2600,-1, false, false);
+
+        //STUFF FROM HERE DOWN IS IN FRONT TO THE RAMP
+        turn(75);
+        drive(1000,0.2);
 
 
      //  turn(-10 * turnDirection);
