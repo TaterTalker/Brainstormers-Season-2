@@ -107,7 +107,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
         reset_drive_encoders();
         resetEncoderDelta();
-        turn(0);
+        turn(1);
+        stopMotors();
         drive(750, -0.5);
         stopMotors();
         climberDumperB.setPosition(1);
@@ -115,20 +116,18 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(1000);
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
-
         sleep(200);
-        drive(300, 0.2);
 
-        drive(250,0.5);
+        drive(1000,0.5);
         while (colorSensor2.alpha()<20) {
             driveForeverWitGyro(-0.2);
             waitOneFullHardwareCycle();
         }
 
         reset_drive_encoders();
-        turn(-45);
-        drive(2500,-1);
-        turn(75);
+        turn(45);
+        drive(2600,-1);
+        turn(-70);
         drive(7000,-0.2, false, false);
 
 
@@ -454,8 +453,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                 turnheading -= 360;
             turnheading /= 15;
 
-            if (Math.abs(turnheading) > 5)
-                currSpeed = clip(currSpeed, -0.8, 0.8);
+            if (Math.abs(turnheading) > 3)
+                currSpeed = clip(currSpeed, -0.9, 0.9);
 
             else if (turnheading != 0)
                 currSpeed = clip(currSpeed, -0.95, 0.95);
@@ -463,8 +462,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             telemetry.addData("heading ", "" + heading());
         telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
         run_using_encoders();
-        setLeftPower(currSpeed + turnheading);
-        setRightPower(currSpeed - turnheading);
+        setLeftPower(currSpeed + turnheading/3);
+        setRightPower(currSpeed - turnheading/3);
     }
 
     /**
