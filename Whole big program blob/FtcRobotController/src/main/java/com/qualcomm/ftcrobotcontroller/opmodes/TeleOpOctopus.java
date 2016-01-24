@@ -261,20 +261,20 @@ public abstract class TeleOpOctopus extends OpMode {
 
             if (gamepad2.dpad_right) {
                 dumper.setPosition(0);
-                doorR.setPosition(0.2);
+                doorR.setPosition(0.4);
             } else { //default position
-                dumper.setPosition(0.25);
-                doorR.setPosition(1);
-                doorL.setPosition(0);
+                dumper.setPosition(0.4);
+                doorR.setPosition(0.8);
+                doorL.setPosition(0.3);
             }
         } else {
             if (gamepad2.dpad_left) {
-                dumper.setPosition(0.25);
-                doorL.setPosition(0.8);
+                dumper.setPosition(0.4);
+                doorL.setPosition(0.6);
             } else { //default position
                 dumper.setPosition(0);
-                doorL.setPosition(0);
-                doorR.setPosition(1);
+                doorL.setPosition(0.3);
+                doorR.setPosition(0.8);
             }
         }
     }
@@ -436,10 +436,10 @@ public abstract class TeleOpOctopus extends OpMode {
 
     private void hang(){
         if (gamepad1.y) {
-            pullUp1.setPower(1);
-            pullUp2.setPower(-1);
+            pullUp1.setPower(0.8);
+            pullUp2.setPower(-0.8);
             armextended = false;
-            ext.setPower(-.75);
+            ext.setPower(-.5);
             oldarm = ext.getCurrentPosition();
 
             fr.setPower(-.75);
