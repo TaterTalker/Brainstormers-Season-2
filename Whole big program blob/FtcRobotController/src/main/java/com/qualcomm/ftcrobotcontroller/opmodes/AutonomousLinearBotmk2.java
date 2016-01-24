@@ -109,8 +109,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         resetEncoderDelta();
         turn(1);
         stopMotors();
-        drive(400, -0.5);
-        drive(400, -0.5);
+        drive(200, -0.5);
+        drive(600, -0.5);
         stopMotors();
         climberDumperB.setPosition(1);
         climberDumperR.setPosition(0);
