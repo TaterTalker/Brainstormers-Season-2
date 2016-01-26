@@ -391,15 +391,21 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void angleArm() {
         if(gamepad2.left_stick_y > .5) {
-            armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
             armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
         }
         else if(gamepad2.left_stick_y < -.5) {
-            armAngle2.setPosition(gamepad2.left_stick_y / 2 + 0.5);
             armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
         } else {
-            armAngle2.setPosition(0.5);
             armAngle1.setPosition(0.5);
+        }
+
+        if(gamepad2.right_stick_y > .5) {
+            armAngle2.setPosition(gamepad2.right_stick_y / 2 + 0.5);
+        }
+        else if(gamepad2.right_stick_y < -.5) {
+            armAngle2.setPosition(gamepad2.right_stick_y / 2 + 0.5);
+        } else {
+            armAngle2.setPosition(0.5);
         }
     }
 
