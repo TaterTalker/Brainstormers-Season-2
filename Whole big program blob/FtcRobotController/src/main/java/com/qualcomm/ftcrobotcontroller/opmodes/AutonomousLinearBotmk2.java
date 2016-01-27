@@ -100,13 +100,15 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(100);
         squareUp();
         sleep(200);
-        turn(-35, true);
+        turn(-45, true);
+        turn(10);
 
         resetGyro();
         while (colorSensor2.alpha() < 15) {
             driveForeverWitGyro(0.2);
             waitOneFullHardwareCycle();
         }
+        turn(-45, true);
         turn(-45, true);
         stopMotors();
         reset_drive_encoders();
