@@ -118,6 +118,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(20, -0.5);
         drive(800, -0.5);
         stopMotors();
+        turn(20);
         if(turnDirection==-1) {
             climberDumperB.setPosition(1);
             climberDumperR.setPosition(1);
@@ -129,6 +130,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(1000);
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
+        turn(-20);
         sleep(200);
         while (colorSensor2.alpha()<10) {
             driveForeverWitGyro(0.2);
