@@ -316,8 +316,8 @@ public abstract class TeleOpOctopus extends OpMode {
          */
         //brings arm in
         if (gamepad2.left_trigger != 0) {
-            pullUp1.setPower(0.8);
-            pullUp2.setPower(-0.8);
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
             armextended = false;
             ext.setPower(-1);
             oldarm = ext.getCurrentPosition();
@@ -336,8 +336,8 @@ public abstract class TeleOpOctopus extends OpMode {
             }
             oldarm = ext.getCurrentPosition();
             if (!armextended) {
-                pullUp1.setPower(-0.16);
-                pullUp2.setPower(0.16);
+                pullUp1.setPower(-0.14);
+                pullUp2.setPower(0.14);
             } else {
                 pullUp1.setPower(0);
                 pullUp2.setPower(0);
@@ -413,7 +413,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * Makes the hook go out
      */
     private void hook(){
-        if (gamepad1.left_bumper){
+        if (gamepad1.left_bumper && ext.getCurrentPosition()>5000){
             armHook.setPosition(0.5);
         } else {
             armHook.setPosition(0);
@@ -422,20 +422,20 @@ public abstract class TeleOpOctopus extends OpMode {
 
     private void sideArm(){
         if (side == 1) {
-            if(gamepad1.x) {
+            if(gamepad1.right_bumper) {
                 sideArmL.setPosition(0);
                 sideArmR.setPosition(0.2);
             } else{
-                sideArmL.setPosition(0);
-                sideArmR.setPosition(.8);
+                sideArmL.setPosition(0.05);
+                sideArmR.setPosition(.75);
             }
         } else if(side==-1) {
-            if (gamepad1.x) {
+            if (gamepad1.right_bumper) {
                 sideArmL.setPosition(.6);
                 sideArmR.setPosition(.8);
             } else {
-                sideArmL.setPosition(0);
-                sideArmR.setPosition(.8);
+                sideArmL.setPosition(0.05);
+                sideArmR.setPosition(.75);
             }
         }
     }
@@ -445,7 +445,10 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(0.8);
             pullUp2.setPower(-0.8);
             armextended = false;
-            ext.setPower(-.5);
+            if (ext.getCurrentPosition()>0)
+                ext.setPower(-.5);
+            else
+                ext.setPower(0);
             oldarm = ext.getCurrentPosition();
 
             fr.setPower(-.75);
