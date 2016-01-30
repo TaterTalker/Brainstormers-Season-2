@@ -231,9 +231,9 @@ public abstract class TeleOpOctopus extends OpMode {
         dumping();
         climberDumper();
         processArm();
-        angleArm();
         hook();
         sideArm();
+        angleArm();
     }
 
     /**
@@ -336,8 +336,8 @@ public abstract class TeleOpOctopus extends OpMode {
             }
             oldarm = ext.getCurrentPosition();
             if (!armextended) {
-                pullUp1.setPower(-0.14);
-                pullUp2.setPower(0.14);
+                pullUp1.setPower(-0.13);
+                pullUp2.setPower(0.13);
             } else {
                 pullUp1.setPower(0);
                 pullUp2.setPower(0);
@@ -395,6 +395,8 @@ public abstract class TeleOpOctopus extends OpMode {
         }
         else if(gamepad2.left_stick_y < -.5) {
             armAngle1.setPosition(gamepad2.left_stick_y / 2 + 0.5);
+            sideArmR.setPosition(0.6);
+            sideArmL.setPosition(0.2);
         } else {
             armAngle1.setPosition(0.5);
         }
@@ -404,6 +406,8 @@ public abstract class TeleOpOctopus extends OpMode {
         }
         else if(gamepad2.right_stick_y < -.5) {
             armAngle2.setPosition(gamepad2.right_stick_y / 2 + 0.5);
+            sideArmR.setPosition(0.6);
+            sideArmL.setPosition(0.2);
         } else {
             armAngle2.setPosition(0.5);
         }
@@ -414,9 +418,9 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void hook(){
         if (gamepad1.left_bumper && ext.getCurrentPosition()>5000){
-            armHook.setPosition(0.5);
+            armHook.setPosition(0.6);
         } else {
-            armHook.setPosition(0);
+            armHook.setPosition(0.1);
         }
     }
 
@@ -424,18 +428,18 @@ public abstract class TeleOpOctopus extends OpMode {
         if (side == 1) {
             if(gamepad1.right_bumper) {
                 sideArmL.setPosition(0);
-                sideArmR.setPosition(0.2);
+                sideArmR.setPosition(0.27);
             } else{
-                sideArmL.setPosition(0.05);
-                sideArmR.setPosition(.75);
+                sideArmL.setPosition(0);
+                sideArmR.setPosition(0.8);
             }
         } else if(side==-1) {
             if (gamepad1.right_bumper) {
                 sideArmL.setPosition(.6);
                 sideArmR.setPosition(.8);
             } else {
-                sideArmL.setPosition(0.05);
-                sideArmR.setPosition(.75);
+                sideArmL.setPosition(0);
+                sideArmR.setPosition(.8);
             }
         }
     }
