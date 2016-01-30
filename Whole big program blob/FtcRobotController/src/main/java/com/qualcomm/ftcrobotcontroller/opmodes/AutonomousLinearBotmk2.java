@@ -101,7 +101,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(100);
         squareUp();
         sleep(200);
-        turn(-90)
+        turn(-90);
+        turn(-45, true);
+        turn(-45, true);
 
         resetGyro();
         while (colorSensor2.alpha() < 15) {
@@ -245,7 +247,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     //Set the motors power.
     void setRightPower(double power) {
 
-        power = clip(power, -1, 1);
+        power = clip(power, -0.95, 0.95); //because david is trash at building robots and it turns by itself we need to slow this side down, you know it would be so much more effective if you did it in hardware you ass - August
         run_using_encoders();
         FR.setPower(power);
         BR.setPower(power);
@@ -532,13 +534,13 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                     turnheading -= 360;
                 turnheading /= 15;
 
-                if (Math.abs(turnheading) > 1)
+                if (Math.abs(turnheading) > 0.25)
                     currSpeed = clip(currSpeed, -0.7, 0.7);
 
                 if (blocked() && speed > 0 && avoidance)
                     currSpeed = 0;
 
-                else if (turnheading != 0)
+                if (turnheading != 0)
                     currSpeed = clip(currSpeed, -0.9, 0.9);
 
                 telemetry.addData("heading ", "" + heading());
