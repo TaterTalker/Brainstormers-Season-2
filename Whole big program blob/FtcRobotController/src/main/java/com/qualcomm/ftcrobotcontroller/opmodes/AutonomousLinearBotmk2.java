@@ -21,6 +21,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     DcMotor FR;
     DcMotor BR;
     DcMotor BL;
+    Servo SideArmL;
+    Servo SideArmR;
     int FRold, BRold, FLold, BLold;
 
     //Sensors
@@ -39,6 +41,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     Servo sideArmL;
     Servo debDumper;
     Servo sideArmR;
+    Servo doorR;
+    Servo doorL;
 
     //Variables
     int turnDirection = 1;
@@ -69,6 +73,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         climberDumperR.setPosition(1);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
+        sideArmL.setPosition(0.05);
+        sideArmR.setPosition(.75);
+        doorL.setPosition(0.3);
+        doorR.setPosition(0.8);
         debDumper.setPosition((turnDirection + 1) / 2);
 
         sleep(5000);
@@ -81,57 +89,67 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
-
-        drive(2000, 1);
-        sleep(200);
-
-        turn(30);
-        sleep(200);
-
-        drive(4200, 1);
+        drive(6700, 1);
         sleep(500);
 
-        turn(60);
-        collector.setPower(1);
-        drive(200, 0.2);
-        sleep(200);
+        turn(45);
+        drive(300, 0.2);
+        sleep(400);
 
         driveUntilUltra(17, 0.2);
+        sleep(100);
         squareUp();
-        turn(-90);
+        sleep(200);
+        turn(-45, true);
+        turn(10);
 
         resetGyro();
-        while (colorSensor2.alpha() < 20) {
+        while (colorSensor2.alpha() < 15) {
             driveForeverWitGyro(0.2);
+            waitOneFullHardwareCycle();
         }
+        turn(-45, true);
+        turn(-45, true);
         stopMotors();
         reset_drive_encoders();
         resetEncoderDelta();
         turn(1);
         stopMotors();
-        drive(20,-0.5);
+        drive(20, -0.5);
         drive(800, -0.5);
         stopMotors();
-        climberDumperB.setPosition(1);
-        climberDumperR.setPosition(0);
+        turn(20);
+        if(turnDirection==-1) {
+            climberDumperB.setPosition(1);
+            climberDumperR.setPosition(1);
+        }
+        else{
+            climberDumperB.setPosition(0);
+            climberDumperR.setPosition(0);
+        }
         sleep(1000);
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
+        turn(-20);
         sleep(200);
-
-        drive(1200,0.5);
-        while (colorSensor2.alpha()<20) {
-            driveForeverWitGyro(-0.2);
+        while (colorSensor2.alpha()<10) {
+            driveForeverWitGyro(0.2);
             waitOneFullHardwareCycle();
         }
 
         reset_drive_encoders();
-        turn(45);
-        drive(2600,-1, false, false);
+        turn(-135);
+        collector.setPower(1);
+
+        drive(3150, 1, false, false);
 
         //STUFF FROM HERE DOWN IS IN FRONT TO THE RAMP
-        turn(75);
-        drive(1000,0.2);
+        turn(-69);
+        drive(1000, 1);
+        drive(1000, -1);
+        sleep(1000);
+        turn(90);
+        turn(90);
 
 
      //  turn(-10 * turnDirection);
@@ -272,6 +290,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
         odm = hardwareMap.opticalDistanceSensor.get("odm");
         debDumper = hardwareMap.servo.get("dumper");
+        sideArmL = hardwareMap.servo.get("sideArmL");
+        sideArmR = hardwareMap.servo.get("sideArmR");
 
         //Motors
         FR = hardwareMap.dcMotor.get("fr");
@@ -280,6 +300,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         BL = hardwareMap.dcMotor.get("bl");
         armAngle1 = hardwareMap.servo.get("armAngle1");
         armAngle2 = hardwareMap.servo.get("armAngle2");
+        doorR = hardwareMap.servo.get("doorR");
+        doorL = hardwareMap.servo.get("doorL");
     }
 
     /**
@@ -312,6 +334,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             dir = heading(); //Heading.
         else
             dir = gyroSensor.getHeading(); //Heading.
+        if (dir > 180)
+            dir -= 360;
 
         //Turn while the difference until gyro lines up with angle.
         while(Math.abs(degrees - dir)>1) {
@@ -327,7 +351,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                 dir -= 360;
 
             double power=Math.pow(((degrees-dir)/50),2);
-            if(degrees<0)
+            if(degrees-dir<0)
                 power*=-1;
             telemetry.addData("initial power", " " + power);
             power=clip(power,-0.50,0.50);
