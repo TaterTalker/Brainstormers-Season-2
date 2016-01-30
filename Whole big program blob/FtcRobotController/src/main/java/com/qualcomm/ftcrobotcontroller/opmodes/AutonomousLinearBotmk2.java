@@ -92,7 +92,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(6700, 1);
         sleep(500);
 
-        turn(45);
+        turn(45, true);
+        sleep(200);
         drive(300, 0.2);
         sleep(400);
 
@@ -108,17 +109,15 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             driveForeverWitGyro(0.2);
             waitOneFullHardwareCycle();
         }
-        turn(-45, true);
-        turn(-45, true);
         stopMotors();
         reset_drive_encoders();
         resetEncoderDelta();
         turn(1);
         stopMotors();
         drive(20, -0.5);
-        drive(800, -0.5);
+        drive(1000, -0.5);
         stopMotors();
-        turn(20);
+        //turn(10);
         if(turnDirection==-1) {
             climberDumperB.setPosition(1);
             climberDumperR.setPosition(1);
@@ -130,10 +129,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(1000);
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
-        turn(-20);
+        turn(-45, true);
         sleep(200);
         while (colorSensor2.alpha()<10) {
-            driveForeverWitGyro(0.2);
+            driveForever(0.2);
             waitOneFullHardwareCycle();
         }
 
@@ -369,6 +368,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             waitOneFullHardwareCycle();
         }
         stopMotors();
+        reset_drive_encoders();
+        sleep(100);
     }
 
     /**
@@ -538,6 +539,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         }
         stopMotors();
         reset_drive_encoders();
+        sleep(100);
     }
 
     /**
