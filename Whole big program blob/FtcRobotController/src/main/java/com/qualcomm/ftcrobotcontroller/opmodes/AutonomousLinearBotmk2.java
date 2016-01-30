@@ -101,7 +101,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(100);
         squareUp();
         sleep(200);
-        turn(-45, true);
+        turn(-90)
 
         resetGyro();
         while (colorSensor2.alpha() < 15) {
@@ -111,7 +111,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         stopMotors();
         reset_drive_encoders();
         resetEncoderDelta();
-        turn(1);
         stopMotors();
         sleep(100);
         drive(20, -0.5);
@@ -138,7 +137,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         reset_drive_encoders();
         turn(-135);
-        collector.setPower(1);
+        collector.setPower(0.8);
 
         drive(3150, 1, false, false);
 
@@ -335,10 +334,17 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             dir = gyroSensor.getHeading(); //Heading.
         if (dir > 180)
             dir -= 360;
+        if (dir > 180)
+            dir += 360;
 
+        int dif=degrees-dir;
+        if(dif>180)
+            dif-=360;
+        if(dif<-180)
+            dif+=360;
         //Turn while the difference until gyro lines up with angle.
-        while(Math.abs(degrees - dir)>1) {
-            telemetry.addData("difference", " " + Math.abs(degrees-dir));
+        while(Math.abs(dif)>1) {
+            telemetry.addData("difference", " " + Math.abs(dif));
             telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             telemetry.addData("old gyro", lastgyro);
             if(untilAbs==false)
@@ -348,14 +354,22 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
             if (dir > 180)
                 dir -= 360;
+            if (dir < -180)
+                dir+=360;
 
-            double power=Math.pow(((degrees-dir)/50),2);
-            if(degrees-dir<0)
+            dif=degrees-dir;
+            if(dif>180)
+                dif-=360;
+            if(dif<-180)
+                dif+=360;
+
+            double power=Math.pow(((dif)/50),2);
+            if(dif<0)
                 power*=-1;
             telemetry.addData("initial power", " " + power);
             power=clip(power,-0.50,0.50);
             if(Math.abs(power)<0.1){
-                if((degrees-dir)>0)
+                if((dif)>0)
                     power= 0.1;
                 else
                     power= -0.1;

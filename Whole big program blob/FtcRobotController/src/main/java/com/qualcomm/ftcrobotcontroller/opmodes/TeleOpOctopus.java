@@ -243,13 +243,14 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void collector() {
         if (gamepad2.right_bumper) {
-            collect.setPower(1);
+            collect.setPower(0.6);
             //collection out
         } else if (gamepad2.left_bumper) {
             collect.setPower(-1);
             //resting
         } else collect.setPower(0);
     }
+
 
     /**
     * pressing {@link #gamepad2} dpad right while blue or {@link #gamepad2} dpad left while red
