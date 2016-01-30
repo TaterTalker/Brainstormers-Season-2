@@ -102,7 +102,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         squareUp();
         sleep(200);
         turn(-45, true);
-        turn(10);
 
         resetGyro();
         while (colorSensor2.alpha() < 15) {
@@ -114,6 +113,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         resetEncoderDelta();
         turn(1);
         stopMotors();
+        sleep(100);
         drive(20, -0.5);
         drive(1000, -0.5);
         stopMotors();
