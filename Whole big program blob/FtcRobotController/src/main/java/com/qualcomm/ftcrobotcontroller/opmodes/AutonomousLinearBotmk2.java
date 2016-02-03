@@ -84,11 +84,19 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         waitForStart(); //everything before this happens when you press init
 
 
-        collector.setPower(-1);
+        //collector.setPower(-1);
         final boolean SLEEP = false;
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
+        turnTo(90);
+        sleep(1000);
+        turnTo(180);
+        sleep(1000);
+        turnTo(270);
+        sleep(500);
+        turnTo(0);
+        sleep(100000);
         drive(6700, 1);
         sleep(500);
 
@@ -324,6 +332,44 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * @param untilAbs if true it uses the absolute heading insted of the altered one {@link #heading()}
      * @throws InterruptedException
      */
+    void turnTo(int degrees) throws InterruptedException {
+        int heading, difference;
+        boolean rightTurn=false;
+        run_using_encoders();
+        while (true){
+            heading=gyroSensor.getHeading();
+            difference=(degrees-heading)%360;
+            if (difference>180)
+                difference=difference-360;
+            else if (difference<-180)
+                difference=360+difference;
+            telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
+            if (!rightTurn && difference<=-5 && difference>=-7)
+                break;
+            if (rightTurn && difference>=5 && difference<=7)// compesnates for the robot having to wait for and full hardware cycle
+                break;
+
+            if (difference>0) {
+                setLeftPower(-0.1);
+                setRightPower(0.1);
+                rightTurn=true;
+            }
+            else{
+                setLeftPower(0.1);
+                setRightPower(-0.1);
+                rightTurn=false;
+            }
+            waitOneFullHardwareCycle();
+        }
+        telemetry.addData("Do" , "ne");
+        setLeftPower(0);
+        setRightPower(0);
+        sleep (20);
+        setLeftPower(0);
+        setRightPower(0);
+
+    }
+
     void turn(int degrees, boolean untilAbs) throws InterruptedException {
 
         resetGyro();
@@ -401,7 +447,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * gets an adjusted headier that can be reset
      * @return the adjusted heading
      */
-    int heading() {
+    int  heading() {
         int head;
         head = gyroSensor.getHeading() - lastgyro;
         if (head < 0)
