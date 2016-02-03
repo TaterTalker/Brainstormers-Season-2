@@ -89,13 +89,13 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
-        turnTo(90);
+        turnTo(-86);
         sleep(1000);
-        turnTo(180);
+        turnTo(-172);
         sleep(1000);
-        turnTo(270);
+        turnTo(-258);
         sleep(500);
-        turnTo(0);
+        turnTo(-344);
         sleep(100000);
         drive(6700, 1);
         sleep(500);
@@ -333,7 +333,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * @throws InterruptedException
      */
     void turnTo(int degrees) throws InterruptedException {
-        int heading, difference;
+        int heading, difference, count=0;
+        double power;
         boolean rightTurn=false;
         run_using_encoders();
         while (true){
@@ -344,19 +345,23 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             else if (difference<-180)
                 difference=360+difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
-            if (!rightTurn && difference<=-5 && difference>=-7)
-                break;
-            if (rightTurn && difference>=5 && difference<=7)// compesnates for the robot having to wait for and full hardware cycle
-                break;
-
-            if (difference>0) {
-                setLeftPower(-0.1);
-                setRightPower(0.1);
+            power=Math.abs(difference/100.0);
+            power=clip(power, 0.05, 0.2);
+            if (difference==0) {
+                count++;
+                if (count > 100)
+                    break;
+                setLeftPower(0);
+                setRightPower(0);
+            }
+            else if (difference>0) {
+                setLeftPower(-power);
+                setRightPower(power);
                 rightTurn=true;
             }
             else{
-                setLeftPower(0.1);
-                setRightPower(-0.1);
+                setLeftPower(power);
+                setRightPower(-power);
                 rightTurn=false;
             }
             waitOneFullHardwareCycle();
