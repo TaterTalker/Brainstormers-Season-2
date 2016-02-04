@@ -92,18 +92,15 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(6700, 1);
         sleep(500);
 
-        turn(45, true);
+        turn(45);
         sleep(200);
         drive(300, 0.2);
-        sleep(400);
 
         driveUntilUltra(17, 0.2);
         sleep(100);
         squareUp();
-        sleep(200);
+        sleep(100);
         turn(-90);
-        turn(-45, true);
-        turn(-45, true);
 
         resetGyro();
         while (colorSensor2.alpha() < 15) {
@@ -130,7 +127,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         sleep(1000);
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
-        turn(-45, true);
         sleep(200);
         while (colorSensor2.alpha()<10) {
             driveForever(0.2);
@@ -312,7 +308,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     //Resets the gyro based on the old heading.
     void resetGyro() throws InterruptedException {
 
-        while (heading() != 0) {
+        while (gyroSensor.getHeading()-lastgyro != 0) {
             lastgyro = gyroSensor.getHeading();
             waitOneFullHardwareCycle();
         }
@@ -321,73 +317,53 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * uses the gyro to turn
      * @param degrees target degrees
-     * @param untilAbs if true it uses the absolute heading insted of the altered one {@link #heading()}
+     * @param abs if true it uses the absolute heading instead of the altered one {@link #heading()}
      * @throws InterruptedException
      */
-    void turn(int degrees, boolean untilAbs) throws InterruptedException {
-
+    void turn(int degrees ,boolean abs) throws InterruptedException {
         resetGyro();
-        degrees *= turnDirection; //Changes the turn direction based on team color.
-        int dir;
+        degrees*=turnDirection;
+        int headingDelta = gyroSensor.getHeading()-lastgyro;
+        double defaultpower = 0.1;
 
-        if(untilAbs==false)
-            dir = heading(); //Heading.
-        else
-            dir = gyroSensor.getHeading(); //Heading.
-        if (dir > 180)
-            dir -= 360;
-        if (dir > 180)
-            dir += 360;
+        int distToTarget=degrees - headingDelta;
+       do {
+           telemetry.addData("heading delta", headingDelta);
+           telemetry.addData("distance to target", distToTarget);
+           telemetry.addData("absolute heading", gyroSensor.getHeading());
+           telemetry.addData("old gyro", lastgyro);
+           headingDelta = gyroSensor.getHeading()-lastgyro;
 
-        int dif=degrees-dir;
-        if(dif>180)
-            dif-=360;
-        if(dif<-180)
-            dif+=360;
-        //Turn while the difference until gyro lines up with angle.
-        while(Math.abs(dif)>1) {
-            telemetry.addData("difference", " " + Math.abs(dif));
-            telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
-            telemetry.addData("old gyro", lastgyro);
-            if(untilAbs==false)
-                dir = heading(); //Heading.
-            else
-                dir = gyroSensor.getHeading(); //Heading.
-
-            if (dir > 180)
-                dir -= 360;
-            if (dir < -180)
-                dir+=360;
-
-            dif=degrees-dir;
-            if(dif>180)
-                dif-=360;
-            if(dif<-180)
-                dif+=360;
-
-            double power=Math.pow(((dif)/50),2);
-            if(dif<0)
-                power*=-1;
-            telemetry.addData("initial power", " " + power);
-            power=clip(power,-0.50,0.50);
-            if(Math.abs(power)<0.1){
-                if((dif)>0)
-                    power= 0.1;
-                else
-                    power= -0.1;
+            while (headingDelta>180) {
+                headingDelta-=360;
             }
 
-            telemetry.addData("power", " " + power);
+            while (headingDelta< -180){
+                headingDelta += 360;
+            }
 
-            setLeftPower(-power);
-            setRightPower(power);
+            distToTarget=degrees - headingDelta;
+
+
+            if(distToTarget > 0){
+                setLeftPower(-defaultpower - distToTarget / 100);
+                setRightPower(defaultpower + distToTarget / 100);
+            }
+            if(distToTarget < 0){
+                setLeftPower(defaultpower + distToTarget/100);
+                setRightPower(-defaultpower - distToTarget/100);
+            }
+
+
             waitOneFullHardwareCycle();
-        }
+        } while (distToTarget != 0);
         stopMotors();
+        resetGyro();
         reset_drive_encoders();
         sleep(100);
-    }
 
+
+    }
     /**
      * allows {@link #turn(int, boolean)} to be run without referencing absolute heading
      * @param degrees target degrees
@@ -507,7 +483,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
         run_using_encoders();
         setLeftPower(currSpeed + turnheading/3);
-        setRightPower(currSpeed - turnheading/3);
+        setRightPower(currSpeed - turnheading / 3);
     }
 
     /**
@@ -534,7 +510,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                     turnheading -= 360;
                 turnheading /= 15;
 
-                if (Math.abs(turnheading) > 0.25)
+                if (Math.abs(turnheading) > 0.5)
                     currSpeed = clip(currSpeed, -0.7, 0.7);
 
                 if (blocked() && speed > 0 && avoidance)

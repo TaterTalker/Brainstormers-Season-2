@@ -243,7 +243,7 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void collector() {
         if (gamepad2.right_bumper) {
-            collect.setPower(0.6);
+            collect.setPower(1);
             //collection out
         } else if (gamepad2.left_bumper) {
             collect.setPower(-1);
@@ -418,7 +418,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * Makes the hook go out
      */
     private void hook(){
-        if (gamepad1.left_bumper && ext.getCurrentPosition()>5000){
+        if (gamepad1.left_bumper){
             armHook.setPosition(0.6);
         } else {
             armHook.setPosition(0.1);
