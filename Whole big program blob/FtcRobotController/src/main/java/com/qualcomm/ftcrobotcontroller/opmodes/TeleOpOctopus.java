@@ -320,7 +320,7 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
             armextended = false;
-            ext.setPower(-1);
+            ext.setPower(1);
             oldarm = ext.getCurrentPosition();
         }
         //sends arm out
@@ -331,8 +331,8 @@ public abstract class TeleOpOctopus extends OpMode {
         else if (gamepad2.right_trigger != 0) {
             ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-            ext.setPower(1);
-            if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() > 7000) {
+            ext.setPower(-1);
+            if (ext.getCurrentPosition() <= oldarm && ext.getCurrentPosition() < -7000) {
                 armextended = true;
             }
             oldarm = ext.getCurrentPosition();
@@ -450,8 +450,8 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(0.8);
             pullUp2.setPower(-0.8);
             armextended = false;
-            if (ext.getCurrentPosition()>0)
-                ext.setPower(-.5);
+            if (ext.getCurrentPosition()<0)
+                ext.setPower(.5);
             else
                 ext.setPower(0);
             oldarm = ext.getCurrentPosition();

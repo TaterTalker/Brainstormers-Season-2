@@ -328,9 +328,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * @param abs if true it uses the absolute heading instead of the altered one {@link #heading()}
      * @throws InterruptedException
      */
-<<<<<<< HEAD
-    void turn(int degrees ,boolean abs) throws InterruptedException {
-=======
     void turnTo(int degrees) throws InterruptedException {
         int heading, difference, count=0;
         double power;
@@ -375,8 +372,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     }
 
     void turn(int degrees, boolean untilAbs) throws InterruptedException {
-
->>>>>>> origin/master
         resetGyro();
         degrees*=turnDirection;
         int headingDelta = gyroSensor.getHeading()-lastgyro;
