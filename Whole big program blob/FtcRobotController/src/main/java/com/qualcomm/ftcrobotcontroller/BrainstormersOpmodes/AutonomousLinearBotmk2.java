@@ -325,7 +325,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * uses the gyro to turn
      * @param degrees target degrees
-     * @param abs if true it uses the absolute heading instead of the altered one {@link #heading()}
      * @throws InterruptedException
      */
     void turnTo(int degrees) throws InterruptedException {
