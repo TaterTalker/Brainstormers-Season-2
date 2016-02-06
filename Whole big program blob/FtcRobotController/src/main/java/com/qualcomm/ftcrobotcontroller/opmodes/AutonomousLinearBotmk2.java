@@ -89,7 +89,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
-        drive(6700, 1);
+        drive(1000, 1);
         sleep(1000);
 
         turn(45);
@@ -445,6 +445,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         for (int i = 0; i < 4; i++) {
             do {
                 tmpVal = sensor.getUltrasonicLevel();
+                waitOneFullHardwareCycle();
             }while(tmpVal==0);
             if (tmpVal < minVal)
                 minVal = tmpVal;
@@ -547,7 +548,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         setRightPower(0.5);
         sleep(20);
         do {
-            waitOneFullHardwareCycle();
             double turnheading;
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
@@ -560,33 +560,39 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
                                 BR.getCurrentPosition()
                         )/2;
                 sleep(1);//all of these are required to allow for stopping
-                if (turnheading > 180)
+                if (turnheading > 180) {
                     turnheading -= 360;
+                }
                 turnheading /= 15;
                 sleep(1);
 
-                if (Math.abs(turnheading) > 0.5)
+                if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
+                }
                 sleep(1);
 
-                if (blocked() && speed > 0 && avoidance)
+                if (blocked() && speed > 0 && avoidance) {
                     currSpeed = 0;
+                }
                 sleep(1);
 
-                if (turnheading != 0)
+                if (turnheading != 0) {
                     currSpeed = clip(currSpeed, -0.9, 0.9);
+                }
                 sleep(1);
 
                 telemetry.addData("heading ", "" + heading());
                 telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             }
-            else
+            else {
                 turnheading=0;
+            }
             telemetry.addData("encoder values", " FL " + FL.getCurrentPosition() + " BL " + BL.getCurrentPosition() + " FR " + FR.getCurrentPosition() + " BR " + BR.getCurrentPosition());
             run_using_encoders();
             setLeftPower(currSpeed + turnheading);
             setRightPower(currSpeed - turnheading);
             sleep(1);
+            waitOneFullHardwareCycle();
         } while (!hasLeftReached(distance) && !hasRightReached(distance));
         stopMotors();
         reset_drive_encoders();
