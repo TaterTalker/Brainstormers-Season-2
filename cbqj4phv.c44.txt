@@ -1,0 +1,82 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Dev
+# Your branch is up-to-date with 'origin/Dev'.
+#
+# Changes to be committed:
+#	renamed:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/AdafruitRGBExample.java -> Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/AdafruitRGBExample.java
+#	renamed:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/ColorSensorDriver.java -> Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/ColorSensorDriver.java
+#	renamed:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/CompassCalibration.java -> Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/CompassCalibration.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/HTRGBExample.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/IrSeekerOp.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/K9AutoTime.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/K9IrSeeker.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/K9Line.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/K9TankDrive.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/K9TeleOp.java
+#	new file:   Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/LinearI2cAddressChange.java
+#
+# Changes not staged for commit:
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/HTRGBExample.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/IrSeekerOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/K9AutoTime.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/K9IrSeeker.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/K9Line.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/K9TankDrive.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/K9TeleOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/LinearI2cAddressChange.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/LinearIrExample.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/LinearK9TeleOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/MRGyroTest.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/MRRGBExample.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/MatrixControllerDemo.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/MatrixK9TeleOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/NullOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/NxtTeleOp.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotAuto.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotAutoSensors.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotDriveTouch.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotHardware.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotHardwareSensors.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotIrEvent.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotIrSeek.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotManual.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotManual1.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotManualSensors.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotOdsDetectEvent.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotOdsFollowEvent.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotSquare.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotTelemetry.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotTelemetrySensors.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/PushBotTouchEvent.java
+#	deleted:    Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/package-info.java
+#
+# Untracked files:
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/LinearIrExample.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/LinearK9TeleOp.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/MRGyroTest.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/MRRGBExample.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/MatrixControllerDemo.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/MatrixK9TeleOp.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/NullOp.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/NxtTeleOp.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotAuto.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotAutoSensors.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotDriveTouch.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotHardware.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotHardwareSensors.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotIrEvent.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotIrSeek.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotManual.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotManual1.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotManualSensors.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotOdsDetectEvent.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotOdsFollowEvent.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotSquare.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotTelemetry.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotTelemetrySensors.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/PushBotTouchEvent.java
+#	Whole big program blob/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/examples/package-info.java
+#
+
