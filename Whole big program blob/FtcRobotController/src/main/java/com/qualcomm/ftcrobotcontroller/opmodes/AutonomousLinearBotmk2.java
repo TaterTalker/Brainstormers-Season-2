@@ -58,7 +58,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * @throws InterruptedException
      */
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
-
+        telemetry.addData("Init", "running");
         //Adjusts turns based on team color.
         turnDirection = turnDirectionInput;
 
@@ -80,7 +80,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         debDumper.setPosition((turnDirection + 1) / 2);
 
         sleep(5000);
-
+        telemetry.addData("Init", "done");
         waitForStart(); //everything before this happens when you press init
 
 
@@ -89,16 +89,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
-        turnTo(-86);
-        sleep(1000);
-        turnTo(-172);
-        sleep(1000);
-        turnTo(-258);
-        sleep(500);
-        turnTo(-344);
-        sleep(100000);
         drive(6700, 1);
-        sleep(500);
+        sleep(1000);
 
         turn(45);
         sleep(200);
@@ -551,35 +543,51 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         resetEncoderDelta();
         resetGyro();
         // Start the drive wheel motors at full power
-        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+        setLeftPower(0.5); //otherwise when calculating turn heading from encoders all will be null and program will halt
+        setRightPower(0.5);
+        sleep(20);
+        do {
+            waitOneFullHardwareCycle();
             double turnheading;
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction==true) {
                 turnheading = heading();
+                turnheading+=(
+                        FL.getCurrentPosition()+
+                                BL.getCurrentPosition()-
+                                FR.getCurrentPosition()-
+                                BR.getCurrentPosition()
+                        )/2;
+                sleep(1);//all of these are required to allow for stopping
                 if (turnheading > 180)
                     turnheading -= 360;
                 turnheading /= 15;
+                sleep(1);
 
                 if (Math.abs(turnheading) > 0.5)
                     currSpeed = clip(currSpeed, -0.7, 0.7);
+                sleep(1);
 
                 if (blocked() && speed > 0 && avoidance)
                     currSpeed = 0;
+                sleep(1);
 
                 if (turnheading != 0)
                     currSpeed = clip(currSpeed, -0.9, 0.9);
+                sleep(1);
 
                 telemetry.addData("heading ", "" + heading());
                 telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
             }
             else
                 turnheading=0;
+            telemetry.addData("encoder values", " FL " + FL.getCurrentPosition() + " BL " + BL.getCurrentPosition() + " FR " + FR.getCurrentPosition() + " BR " + BR.getCurrentPosition());
             run_using_encoders();
             setLeftPower(currSpeed + turnheading);
             setRightPower(currSpeed - turnheading);
-            waitOneFullHardwareCycle();
-        }
+            sleep(1);
+        } while (!hasLeftReached(distance) && !hasRightReached(distance));
         stopMotors();
         reset_drive_encoders();
         sleep(100);
