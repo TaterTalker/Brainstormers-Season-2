@@ -169,8 +169,7 @@ public abstract class TeleOpOctopus extends OpMode {
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         ext = hardwareMap.dcMotor.get("ext");
-        clmbrDmprB = hardwareMap.servo.get("clmbrDmprB");
-        clmbrDmprR = hardwareMap.servo.get("clmbrDmprR");
+       // climberDumperB = hardwareMap.servo.get("climberdumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         extStop = hardwareMap.touchSensor.get("extStop");

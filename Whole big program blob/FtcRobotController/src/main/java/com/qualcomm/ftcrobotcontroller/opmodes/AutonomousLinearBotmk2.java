@@ -277,8 +277,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //Sensors
         gyroSensor = hardwareMap.gyroSensor.get("G1");
-        climberDumperB = hardwareMap.servo.get("clmbrDmprB");
-        climberDumperR = hardwareMap.servo.get("clmbrDmprR");
+        climberDumperB = hardwareMap.servo.get("climberdumper");
         colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor2 = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
