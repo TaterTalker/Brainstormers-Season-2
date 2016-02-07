@@ -21,23 +21,21 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     DcMotor FR;
     DcMotor BR;
     DcMotor BL;
-    Servo SideArmL;
-    Servo SideArmR;
+
     int FRold, BRold, FLold, BLold;
 
     //Sensors
     GyroSensor gyroSensor;
     int lastgyro;
-    ColorSensor colorSensor;
     ColorSensor colorSensor2;
     DcMotor collector;
     UltrasonicSensor ultra1;
     UltrasonicSensor ultra2;
-    OpticalDistanceSensor odm;
+
 
     //Servos
     Servo climberDumperB;
-    Servo climberDumperR;
+    //Servo climberDumperR;
     Servo sideArmL;
     Servo debDumper;
     Servo sideArmR;
@@ -70,11 +68,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         reset_drive_encoders();
         gyroSensor.calibrate();
         climberDumperB.setPosition(0);
-        climberDumperR.setPosition(1);
+      //  climberDumperR.setPosition(1);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
-        sideArmL.setPosition(0.05);
-        sideArmR.setPosition(.75);
+       // sideArmL.setPosition(0.05);
+      //  sideArmR.setPosition(.75);
         doorL.setPosition(0.3);
         doorR.setPosition(0.8);
         debDumper.setPosition((turnDirection + 1) / 2);
@@ -88,16 +86,16 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         final boolean SLEEP = false;
 
         //pivotleft(200);
-        if (SLEEP) sleep(5000);
-        turnTo(-86);
-        sleep(1000);
-        turnTo(-172);
-        sleep(1000);
-        turnTo(-258);
-        sleep(500);
-        turnTo(-344);
-        sleep(100000);
-        drive(6700, 1);
+//        if (SLEEP) sleep(5000);
+//        turnTo(-86);
+//        sleep(1000);
+//        turnTo(-172);
+//        sleep(1000);
+//        turnTo(-258);
+//        sleep(500);
+//        turnTo(-344);
+//        sleep(100000);
+        drive(1000, 1);
         sleep(500);
 
         turn(45);
@@ -126,15 +124,15 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         //turn(10);
         if(turnDirection==-1) {
             climberDumperB.setPosition(1);
-            climberDumperR.setPosition(1);
+
         }
         else{
             climberDumperB.setPosition(0);
-            climberDumperR.setPosition(0);
+            //climberDumperR.setPosition(0);
         }
         sleep(1000);
         climberDumperB.setPosition(0);
-        climberDumperR.setPosition(1);
+        //climberDumperR.setPosition(1);
         sleep(200);
         while (colorSensor2.alpha()<10) {
             driveForever(0.2);
@@ -158,11 +156,44 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
      //  turn(-10 * turnDirection);
 
-        telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
+        telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
         sleep(100);
         waitOneFullHardwareCycle();
     }
 
+
+    /**
+     * maps everything to the hardware
+     */
+    //Configures the Robots Motors and Sensors.
+    void getRobotConfig() {
+        //sideArmL = hardwareMap.servo.get("sideArmL");
+        //sideArmR = hardwareMap.servo.get("sideArmR");
+        //lock = hardwareMap.servo.get("lock");
+
+        //Sensors
+        gyroSensor = hardwareMap.gyroSensor.get("G1");
+        climberDumperB = hardwareMap.servo.get("climberDumper");
+        // colorSensor = hardwareMap.colorSensor.get("cs1");
+        colorSensor2 = hardwareMap.colorSensor.get("cs2");
+        collector = hardwareMap.dcMotor.get("collect");
+        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
+        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
+        //   odm = hardwareMap.opticalDistanceSensor.get("odm");
+        debDumper = hardwareMap.servo.get("dumper");
+        sideArmL = hardwareMap.servo.get("sideArmL");
+        sideArmR = hardwareMap.servo.get("sideArmR");
+
+        //Motors
+        FR = hardwareMap.dcMotor.get("fr");
+        FL = hardwareMap.dcMotor.get("fl");
+        BR = hardwareMap.dcMotor.get("br");
+        BL = hardwareMap.dcMotor.get("bl");
+        armAngle1 = hardwareMap.servo.get("armAngle1");
+        armAngle2 = hardwareMap.servo.get("armAngle2");
+        doorR = hardwareMap.servo.get("doorR");
+        doorL = hardwareMap.servo.get("doorL");
+    }
 
     /**
      * sets all motors to a specific speed
@@ -231,7 +262,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         return (Math.abs(FRposition()) > rightd) && (Math.abs(BRposition()) > rightd);
     }
-
     /**
      * sets the left motors to a specific power, keeping in mind the acceptable limits
      * @param power target power
@@ -244,6 +274,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         FL.setPower(-power);
         BL.setPower(-power);
     }
+
     /**
      * sets the right motors to a specific power, keeping in mind the acceptable limits
      * @param power target power
@@ -272,40 +303,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         if (variable > max) variable = max;
 
         return variable;
-    }
-
-    /**
-     * maps everything to the hardware
-     */
-    //Configures the Robots Motors and Sensors.
-    void getRobotConfig() {
-        //sideArmL = hardwareMap.servo.get("sideArmL");
-        //sideArmR = hardwareMap.servo.get("sideArmR");
-        //lock = hardwareMap.servo.get("lock");
-
-        //Sensors
-        gyroSensor = hardwareMap.gyroSensor.get("G1");
-        climberDumperB = hardwareMap.servo.get("clmbrDmprB");
-        climberDumperR = hardwareMap.servo.get("clmbrDmprR");
-        colorSensor = hardwareMap.colorSensor.get("cs1");
-        colorSensor2 = hardwareMap.colorSensor.get("cs2");
-        collector = hardwareMap.dcMotor.get("collect");
-        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
-        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
-        odm = hardwareMap.opticalDistanceSensor.get("odm");
-        debDumper = hardwareMap.servo.get("dumper");
-        sideArmL = hardwareMap.servo.get("sideArmL");
-        sideArmR = hardwareMap.servo.get("sideArmR");
-
-        //Motors
-        FR = hardwareMap.dcMotor.get("fr");
-        FL = hardwareMap.dcMotor.get("fl");
-        BR = hardwareMap.dcMotor.get("br");
-        BL = hardwareMap.dcMotor.get("bl");
-        armAngle1 = hardwareMap.servo.get("armAngle1");
-        armAngle2 = hardwareMap.servo.get("armAngle2");
-        doorR = hardwareMap.servo.get("doorR");
-        doorL = hardwareMap.servo.get("doorL");
     }
 
     /**
