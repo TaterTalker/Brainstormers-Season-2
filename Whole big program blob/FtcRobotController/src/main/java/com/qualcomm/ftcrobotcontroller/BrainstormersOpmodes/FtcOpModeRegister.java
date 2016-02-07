@@ -54,6 +54,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("TeleOp Octopus Red", TeleOpRed.class);
         manager.register("Auto-Blue Octopus", AutonomousBlueBotmk2.class);
         manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
+        manager.register("CameraTest", CameraOp.class);
 
 
     }
