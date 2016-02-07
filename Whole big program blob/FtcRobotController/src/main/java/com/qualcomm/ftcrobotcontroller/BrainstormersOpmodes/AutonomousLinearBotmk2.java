@@ -87,7 +87,6 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         final boolean SLEEP = false;
 
         //pivotleft(200);
-<<<<<<< HEAD
 //        if (SLEEP) sleep(5000);
 //        turnTo(-86);
 //        sleep(1000);
@@ -99,11 +98,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 //        sleep(100000);
         drive(1000, 1);
         sleep(500);
-=======
+
         if (SLEEP) sleep(5000);
         drive(1000, 1);
         sleep(1000);
->>>>>>> 6273f8ac88083ab864a4ac93de6afbf179ca1ca1
+
 
         turn(45);
         sleep(200);
@@ -131,14 +130,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         //turn(10);
         if (turnDirection == -1) {
             climberDumperB.setPosition(1);
-<<<<<<< HEAD
+
 
         }
-        else{
-=======
-            climberDumperR.setPosition(1);
-        } else {
->>>>>>> 6273f8ac88083ab864a4ac93de6afbf179ca1ca1
+       else {
+
             climberDumperB.setPosition(0);
             //climberDumperR.setPosition(0);
         }
@@ -323,43 +319,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         return variable;
     }
 
-    /**
-<<<<<<< HEAD
-=======
-     * maps everything to the hardware
-     */
-    //Configures the Robots Motors and Sensors.
-    void getRobotConfig() {
-        //sideArmL = hardwareMap.servo.get("sideArmL");
-        //sideArmR = hardwareMap.servo.get("sideArmR");
-        //lock = hardwareMap.servo.get("lock");
-
-        //Sensors
-        gyroSensor = hardwareMap.gyroSensor.get("G1");
-        climberDumperB = hardwareMap.servo.get("climberdumper");
-        colorSensor = hardwareMap.colorSensor.get("cs1");
-        colorSensor2 = hardwareMap.colorSensor.get("cs2");
-        collector = hardwareMap.dcMotor.get("collect");
-        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
-        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
-        odm = hardwareMap.opticalDistanceSensor.get("odm");
-        debDumper = hardwareMap.servo.get("dumper");
-        sideArmL = hardwareMap.servo.get("sideArmL");
-        sideArmR = hardwareMap.servo.get("sideArmR");
-
-        //Motors
-        FR = hardwareMap.dcMotor.get("fr");
-        FL = hardwareMap.dcMotor.get("fl");
-        BR = hardwareMap.dcMotor.get("br");
-        BL = hardwareMap.dcMotor.get("bl");
-        armAngle1 = hardwareMap.servo.get("armAngle1");
-        armAngle2 = hardwareMap.servo.get("armAngle2");
-        doorR = hardwareMap.servo.get("doorR");
-        doorL = hardwareMap.servo.get("doorL");
-    }
-
-    /**
->>>>>>> 6273f8ac88083ab864a4ac93de6afbf179ca1ca1
+   /**
      * resets the gyro delta
      *
      * @throws InterruptedException
