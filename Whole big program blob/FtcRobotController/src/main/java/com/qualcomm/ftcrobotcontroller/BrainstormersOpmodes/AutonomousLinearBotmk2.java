@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -54,11 +54,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * run all other functions to perform autonomous
+     *
      * @param turnDirectionInput 1=blue -1=red
      * @throws InterruptedException
      */
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
-
+        telemetry.addData("Init", "running");
         //Adjusts turns based on team color.
         turnDirection = turnDirectionInput;
 
@@ -80,7 +81,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         debDumper.setPosition((turnDirection + 1) / 2);
 
         sleep(5000);
-
+        telemetry.addData("Init", "done");
         waitForStart(); //everything before this happens when you press init
 
 
@@ -89,16 +90,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //pivotleft(200);
         if (SLEEP) sleep(5000);
-        turnTo(-86);
+        drive(1000, 1);
         sleep(1000);
-        turnTo(-172);
-        sleep(1000);
-        turnTo(-258);
-        sleep(500);
-        turnTo(-344);
-        sleep(100000);
-        drive(6700, 1);
-        sleep(500);
 
         turn(45);
         sleep(200);
@@ -124,11 +117,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         drive(1000, -0.5);
         stopMotors();
         //turn(10);
-        if(turnDirection==-1) {
+        if (turnDirection == -1) {
             climberDumperB.setPosition(1);
             climberDumperR.setPosition(1);
-        }
-        else{
+        } else {
             climberDumperB.setPosition(0);
             climberDumperR.setPosition(0);
         }
@@ -136,7 +128,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         climberDumperB.setPosition(0);
         climberDumperR.setPosition(1);
         sleep(200);
-        while (colorSensor2.alpha()<10) {
+        while (colorSensor2.alpha() < 10) {
             driveForever(0.2);
             waitOneFullHardwareCycle();
         }
@@ -156,7 +148,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         turn(90);
 
 
-     //  turn(-10 * turnDirection);
+        //  turn(-10 * turnDirection);
 
         telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
@@ -166,6 +158,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * sets all motors to a specific speed
+     *
      * @param speed target speed
      */
     void driveForever(double speed) {
@@ -175,9 +168,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         setRightPower(speed);
     }
 
-    void pivotleft (double distance) throws InterruptedException {
+    void pivotleft(double distance) throws InterruptedException {
         run_using_encoders();
-        while( !hasLeftReached(distance)) {
+        while (!hasLeftReached(distance)) {
             setLeftPower(0.5);
             waitOneFullHardwareCycle();
         }
@@ -212,6 +205,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * determines if the left side has reached the target disance
+     *
      * @param leftd target distance
      * @return if the encoders are greater than or equal to the target distance
      */
@@ -223,6 +217,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * determines if the left side has reached the target disance
+     *
      * @param rightd target distance
      * @return if the encoders are greater than or equal to the target distance
      */
@@ -234,6 +229,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * sets the left motors to a specific power, keeping in mind the acceptable limits
+     *
      * @param power target power
      */
     //Set the motors power.
@@ -244,8 +240,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         FL.setPower(-power);
         BL.setPower(-power);
     }
+
     /**
      * sets the right motors to a specific power, keeping in mind the acceptable limits
+     *
      * @param power target power
      */
     //Set the motors power.
@@ -260,9 +258,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * takes a variable and returns the variable
      * if the variable is outside the one of the bounds, instead it returns that bound
+     *
      * @param variable the variable to be clipped
-     * @param min the minimum exeptable value
-     * @param max the maximum exeptable value
+     * @param min      the minimum exeptable value
+     * @param max      the maximum exeptable value
      * @return returns the variable, exept it is inside the exeptable vlues
      */
     //Clip the values.
@@ -285,8 +284,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
         //Sensors
         gyroSensor = hardwareMap.gyroSensor.get("G1");
-        climberDumperB = hardwareMap.servo.get("clmbrDmprB");
-        climberDumperR = hardwareMap.servo.get("clmbrDmprR");
+        climberDumperB = hardwareMap.servo.get("climberdumper");
         colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor2 = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
@@ -310,13 +308,14 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * resets the gyro delta
-     * @see #heading()
+     *
      * @throws InterruptedException
+     * @see #heading()
      */
     //Resets the gyro based on the old heading.
     void resetGyro() throws InterruptedException {
 
-        while (gyroSensor.getHeading()-lastgyro != 0) {
+        while (gyroSensor.getHeading() - lastgyro != 0) {
             lastgyro = gyroSensor.getHeading();
             waitOneFullHardwareCycle();
         }
@@ -324,47 +323,46 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * uses the gyro to turn
+     *
      * @param degrees target degrees
      * @throws InterruptedException
      */
     void turnTo(int degrees) throws InterruptedException {
-        int heading, difference, count=0;
+        int heading, difference, count = 0;
         double power;
-        boolean rightTurn=false;
+        boolean rightTurn = false;
         run_using_encoders();
-        while (true){
-            heading=gyroSensor.getHeading();
-            difference=(degrees-heading)%360;
-            if (difference>180)
-                difference=difference-360;
-            else if (difference<-180)
-                difference=360+difference;
+        while (true) {
+            heading = gyroSensor.getHeading();
+            difference = (degrees - heading) % 360;
+            if (difference > 180)
+                difference = difference - 360;
+            else if (difference < -180)
+                difference = 360 + difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
-            power=Math.abs(difference/100.0);
-            power=clip(power, 0.05, 0.2);
-            if (difference==0) {
+            power = Math.abs(difference / 100.0);
+            power = clip(power, 0.05, 0.2);
+            if (difference == 0) {
                 count++;
                 if (count > 100)
                     break;
                 setLeftPower(0);
                 setRightPower(0);
-            }
-            else if (difference>0) {
+            } else if (difference > 0) {
                 setLeftPower(-power);
                 setRightPower(power);
-                rightTurn=true;
-            }
-            else{
+                rightTurn = true;
+            } else {
                 setLeftPower(power);
                 setRightPower(-power);
-                rightTurn=false;
+                rightTurn = false;
             }
             waitOneFullHardwareCycle();
         }
-        telemetry.addData("Do" , "ne");
+        telemetry.addData("Do", "ne");
         setLeftPower(0);
         setRightPower(0);
-        sleep (20);
+        sleep(20);
         setLeftPower(0);
         setRightPower(0);
 
@@ -372,36 +370,36 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     void turn(int degrees, boolean untilAbs) throws InterruptedException {
         resetGyro();
-        degrees*=turnDirection;
-        int headingDelta = gyroSensor.getHeading()-lastgyro;
+        degrees *= turnDirection;
+        int headingDelta = gyroSensor.getHeading() - lastgyro;
         double defaultpower = 0.1;
 
-        int distToTarget=degrees - headingDelta;
-       do {
-           telemetry.addData("heading delta", headingDelta);
-           telemetry.addData("distance to target", distToTarget);
-           telemetry.addData("absolute heading", gyroSensor.getHeading());
-           telemetry.addData("old gyro", lastgyro);
-           headingDelta = gyroSensor.getHeading()-lastgyro;
+        int distToTarget = degrees - headingDelta;
+        do {
+            telemetry.addData("heading delta", headingDelta);
+            telemetry.addData("distance to target", distToTarget);
+            telemetry.addData("absolute heading", gyroSensor.getHeading());
+            telemetry.addData("old gyro", lastgyro);
+            headingDelta = gyroSensor.getHeading() - lastgyro;
 
-            while (headingDelta>180) {
-                headingDelta-=360;
+            while (headingDelta > 180) {
+                headingDelta -= 360;
             }
 
-            while (headingDelta< -180){
+            while (headingDelta < -180) {
                 headingDelta += 360;
             }
 
-            distToTarget=degrees - headingDelta;
+            distToTarget = degrees - headingDelta;
 
 
-            if(distToTarget > 0){
+            if (distToTarget > 0) {
                 setLeftPower(-defaultpower - distToTarget / 100);
                 setRightPower(defaultpower + distToTarget / 100);
             }
-            if(distToTarget < 0){
-                setLeftPower(defaultpower + distToTarget/100);
-                setRightPower(-defaultpower - distToTarget/100);
+            if (distToTarget < 0) {
+                setLeftPower(defaultpower + distToTarget / 100);
+                setRightPower(-defaultpower - distToTarget / 100);
             }
 
 
@@ -414,8 +412,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
 
     }
+
     /**
      * allows {@link #turn(int, boolean)} to be run without referencing absolute heading
+     *
      * @param degrees target degrees
      * @throws InterruptedException
      */
@@ -425,9 +425,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * gets an adjusted headier that can be reset
+     *
      * @return the adjusted heading
      */
-    int  heading() {
+    int heading() {
         int head;
         head = gyroSensor.getHeading() - lastgyro;
         if (head < 0)
@@ -438,10 +439,12 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * takes multiple ultrasonic readins and throws out anomalies
      * to get a more precise ul;trasonic value
+     *
      * @param sensor the sensor to be read
      * @return the more accurate ultrasonic value
      * @throws InterruptedException
      */
+    //
     double readFixedUltra(UltrasonicSensor sensor) throws InterruptedException {
 
         double val = 0;
@@ -452,7 +455,8 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         for (int i = 0; i < 4; i++) {
             do {
                 tmpVal = sensor.getUltrasonicLevel();
-            }while(tmpVal==0);
+                waitOneFullHardwareCycle();
+            } while (tmpVal == 0);
             if (tmpVal < minVal)
                 minVal = tmpVal;
             if (tmpVal > maxVal)
@@ -467,8 +471,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * uses two ultrasonic sensors to square up against a wall
-     * @see #readFixedUltra(UltrasonicSensor)
+     *
      * @throws InterruptedException
+     * @see #readFixedUltra(UltrasonicSensor)
      */
     void squareUp() throws InterruptedException {
 
@@ -476,7 +481,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
             telemetry.addData("ultra1", readFixedUltra((ultra1)));
             telemetry.addData("ultra2", readFixedUltra((ultra2)));
             double power = (ultra1.getUltrasonicLevel() - ultra2.getUltrasonicLevel()) / 70;
-            power = clip(power, -0.15,0.15);
+            power = clip(power, -0.15, 0.15);
             setLeftPower(-power);
             setRightPower(power);
             waitOneFullHardwareCycle();
@@ -486,6 +491,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * stops all motors and verifies that they are stopped
+     *
      * @throws InterruptedException
      */
     void stopMotors() throws InterruptedException {
@@ -501,10 +507,11 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * drives until the ultrasonic sensors read a certain value
-     * @see #readFixedUltra(UltrasonicSensor)
+     *
      * @param target target distance
-     * @param speed movement speed
+     * @param speed  movement speed
      * @throws InterruptedException
+     * @see #readFixedUltra(UltrasonicSensor)
      */
     void driveUntilUltra(int target, double speed) throws InterruptedException {
         while (readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
@@ -518,21 +525,21 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         double turnheading;
         double currSpeed = speed;
         // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
-            turnheading = heading();
-            if (turnheading > 180)
-                turnheading -= 360;
-            turnheading /= 15;
+        turnheading = heading();
+        if (turnheading > 180)
+            turnheading -= 360;
+        turnheading /= 15;
 
-            if (Math.abs(turnheading) > 3)
-                currSpeed = clip(currSpeed, -0.9, 0.9);
+        if (Math.abs(turnheading) > 3)
+            currSpeed = clip(currSpeed, -0.9, 0.9);
 
-            else if (turnheading != 0)
-                currSpeed = clip(currSpeed, -0.95, 0.95);
+        else if (turnheading != 0)
+            currSpeed = clip(currSpeed, -0.95, 0.95);
 
-            telemetry.addData("heading ", "" + heading());
+        telemetry.addData("heading ", "" + heading());
         telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
         run_using_encoders();
-        setLeftPower(currSpeed + turnheading/3);
+        setLeftPower(currSpeed + turnheading / 3);
         setRightPower(currSpeed - turnheading / 3);
     }
 
@@ -540,9 +547,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
      * uses encoders, ultrasonic sensors and gyro sensors to drive accurately
      * encoders are used for distance
      * ultrasonic sensors do collision avoidance {@link #blocked()}
-     * @param distance distance to travel in encoder clicks
-     * @param speed speed to travel at
-     * @param avoidance if true, it will use collision avoidance
+     *
+     * @param distance   distance to travel in encoder clicks
+     * @param speed      speed to travel at
+     * @param avoidance  if true, it will use collision avoidance
      * @param correction if true, it will do gyro aided course correction
      * @throws InterruptedException
      */
@@ -550,35 +558,55 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         resetEncoderDelta();
         resetGyro();
         // Start the drive wheel motors at full power
-        while (!hasLeftReached(distance) && !hasRightReached(distance)) {
+        setLeftPower(0.5); //otherwise when calculating turn heading from encoders all will be null and program will halt
+        setRightPower(0.5);
+        sleep(20);
+        do {
             double turnheading;
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
-            if (correction==true) {
+            if (correction == true) {
                 turnheading = heading();
-                if (turnheading > 180)
+                turnheading += (
+                        FL.getCurrentPosition() +
+                                BL.getCurrentPosition() -
+                                FR.getCurrentPosition() -
+                                BR.getCurrentPosition()
+                ) / 2;
+                sleep(1);//all of these are required to allow for stopping
+                if (turnheading > 180) {
                     turnheading -= 360;
+                }
                 turnheading /= 15;
+                sleep(1);
 
-                if (Math.abs(turnheading) > 0.5)
+                if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
+                }
+                sleep(1);
 
-                if (blocked() && speed > 0 && avoidance)
+                if (blocked() && speed > 0 && avoidance) {
                     currSpeed = 0;
+                }
+                sleep(1);
 
-                if (turnheading != 0)
+                if (turnheading != 0) {
                     currSpeed = clip(currSpeed, -0.9, 0.9);
+                }
+                sleep(1);
 
                 telemetry.addData("heading ", "" + heading());
                 telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+            } else {
+                turnheading = 0;
             }
-            else
-                turnheading=0;
+            telemetry.addData("encoder values", " FL " + FL.getCurrentPosition() + " BL " + BL.getCurrentPosition() + " FR " + FR.getCurrentPosition() + " BR " + BR.getCurrentPosition());
             run_using_encoders();
             setLeftPower(currSpeed + turnheading);
             setRightPower(currSpeed - turnheading);
+            sleep(1);
             waitOneFullHardwareCycle();
-        }
+        } while (!hasLeftReached(distance) && !hasRightReached(distance));
         stopMotors();
         reset_drive_encoders();
         sleep(100);
@@ -587,8 +615,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * runs {@link #drive(float, double, boolean, boolean)} without needing to input
      * collision avoidance or course correction
+     *
      * @param distance distance to travel in encoder clicks
-     * @param speed speed to travel at
+     * @param speed    speed to travel at
      * @throws InterruptedException
      */
     //Compressed the two drives into one for simplicity - "Ethan ;)"
@@ -599,8 +628,9 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * runs {@link #drive(float, double, boolean, boolean)} without needing to input
      * course correction
+     *
      * @param distance distance to travel in encoder clicks
-     * @param speed speed to travel at
+     * @param speed    speed to travel at
      * @throws InterruptedException
      */
     void drive(float distance, double speed, boolean avoidance) throws InterruptedException {
@@ -609,9 +639,10 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
 
     /**
      * determines whether the robot is blocked
-     * @see #readFixedUltra(UltrasonicSensor)
+     *
      * @return if something is detected within 20 cm, TRUE
      * @throws InterruptedException
+     * @see #readFixedUltra(UltrasonicSensor)
      */
     boolean blocked() throws InterruptedException {
         return (readFixedUltra(ultra1) < 20 || readFixedUltra(ultra2) < 20);
@@ -620,6 +651,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * gets adjusted position of the front right motor
      * reset to 0 using {@link #resetEncoderDelta()}
+     *
      * @return the adjusted value
      */
     int FRposition() {
@@ -629,6 +661,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * gets adjusted position of the back right motor
      * reset to 0 using {@link #resetEncoderDelta()}
+     *
      * @return the adjusted value
      */
     int BRposition() {
@@ -638,6 +671,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * gets adjusted position of the front left motor
      * reset to 0 using {@link #resetEncoderDelta()}
+     *
      * @return the adjusted value
      */
     int FLposition() {
@@ -647,6 +681,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
     /**
      * gets adjusted position of the back left motor
      * reset to 0 using {@link #resetEncoderDelta()}
+     *
      * @return the adjusted value
      */
     int BLposition() {
