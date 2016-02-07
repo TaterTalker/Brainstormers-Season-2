@@ -89,10 +89,6 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     DcMotor ext;
     /**
-     * the servo that controls the climber dumping arm for the red side
-     */
-    Servo clmbrDmprR;
-    /**
      * the servo that controls the climber dumping arm for the blue side
      */
     Servo clmbrDmprB;
@@ -287,18 +283,18 @@ public abstract class TeleOpOctopus extends OpMode {
         if (side == 1) {
             if(gamepad2.y) {
                 clmbrDmprB.setPosition(1);
-                clmbrDmprR.setPosition(1);
+               // clmbrDmprR.setPosition(1);
             } else{
                 clmbrDmprB.setPosition(0);
-                clmbrDmprR.setPosition(1);
+               // clmbrDmprR.setPosition(1);
             }
         } else if(side==-1) {
             if (gamepad2.y) {
                 clmbrDmprB.setPosition(0);
-                clmbrDmprR.setPosition(0);
+               // clmbrDmprR.setPosition(0);
             } else {
                 clmbrDmprB.setPosition(0);
-                clmbrDmprR.setPosition(1);
+              //  clmbrDmprR.setPosition(1);
             }
         }
     }
