@@ -77,7 +77,7 @@ import java.io.Serializable;
 
 import android.hardware.Camera;
 
-public class FtcRobotControllerActivity extends Activity {
+public class FtcRobotControllerActivity extends Activity{
 
     private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
     private static final boolean USE_DEVICE_EMULATION = false;

@@ -9,16 +9,17 @@ import android.hardware.Camera;
 import android.util.Log;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.io.ByteArrayOutputStream;
 
 /**
  * TeleOp Mode
- * <p>
- *Enables control of the robot via the gamepad
+ * <p/>
+ * Enables control of the robot via the gamepad
  */
-public class CameraOp extends OpMode {
+public abstract class CameraOp extends LinearOpMode {
     private Camera camera;
     public CameraPreview preview;
     public Bitmap image;
@@ -27,6 +28,10 @@ public class CameraOp extends OpMode {
     private YuvImage yuvImage = null;
     private int looped = 0;
     private String data;
+    public int color;
+    public int redValue = 0;
+    public int blueValue = 0;
+    public int greenValue = 0;
 
     private int red(int pixel) {
         return (pixel >> 16) & 0xff;
@@ -41,8 +46,7 @@ public class CameraOp extends OpMode {
     }
 
     private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
-        public void onPreviewFrame(byte[] data, Camera camera)
-        {
+        public void onPreviewFrame(byte[] data, Camera camera) {
             Camera.Parameters parameters = camera.getParameters();
             width = parameters.getPreviewSize().width;
             height = parameters.getPreviewSize().height;
@@ -57,17 +61,12 @@ public class CameraOp extends OpMode {
         byte[] imageBytes = out.toByteArray();
         image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
-    /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-    @Override
-    public void init() {
-        camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
+
+    public void startCam() {
+        camera = ((FtcRobotControllerActivity) hardwareMap.appContext).camera;
         camera.setPreviewCallback(previewCallback);
         Camera.Parameters parameters = camera.getParameters();
         data = parameters.flatten();
-
 
         ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
     }
@@ -77,7 +76,7 @@ public class CameraOp extends OpMode {
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
     public int highestColor(int red, int green, int blue) {
-        int[] color = {red,green,blue};
+        int[] color = {red, green, blue};
         int value = 0;
         for (int i = 1; i < 3; i++) {
             if (color[value] < color[i]) {
@@ -87,37 +86,31 @@ public class CameraOp extends OpMode {
         return value;
     }
 
-    @Override
-    public void loop() {
-        if (yuvImage != null) {
-            int redValue = 0;
-            int blueValue = 0;
-            int greenValue = 0;
-            convertImage();
-            for (int x = (width/2)-2; x < (width/2)+2; x++) {
-                for (int y = (height/2)-2; y < (height/2)+2; y++) {
-                    int pixel = image.getPixel(x, y);
-                    redValue += red(pixel);
-                    blueValue += blue(pixel);
-                    greenValue += green(pixel);
-                }
-            }
+    int[] pixel(int x, int y) {
+        int pixelTarg = image.getPixel(x, y);
+        int[] tmpArray = {red(pixelTarg), green(pixelTarg), blue(pixelTarg)};
+        return tmpArray;
+    }
 
-            int color = highestColor(redValue, greenValue, blueValue);
-            String colorString = "";
-            switch (color) {
-                case 0:
-                    colorString = "RED";
-                    break;
-                case 1:
-                    colorString = "GREEN";
-                    break;
-                case 2:
-                    colorString = "BLUE";
+    public int leftRed() {
+        convertImage();
+        int value = 0;
+        for (int x = 0; x < width / 2; x++) {
+            for (int y = 0; y < height; y++) {
+                value += pixel(x, y)[0];
             }
-            telemetry.addData("Color:", "Color detected is: " + colorString);
         }
-        telemetry.addData("Looped","Looped " + Integer.toString(looped) + " times");
-        Log.d("DEBUG:",data);
+        return value;
+    }
+
+    public int rightRed() {
+        convertImage();
+        int value = 0;
+        for (int x = width-1; x > width / 2; x--) {
+            for (int y = 0; y < height; y++) {
+                value += pixel(x, y)[0];
+            }
+        }
+        return value;
     }
 }

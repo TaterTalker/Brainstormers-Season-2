@@ -78,6 +78,7 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         doorR.setPosition(0.8);
         debDumper.setPosition((turnDirection + 1) / 2);
 
+
         sleep(5000);
         telemetry.addData("Init", "done");
         waitForStart(); //everything before this happens when you press init
