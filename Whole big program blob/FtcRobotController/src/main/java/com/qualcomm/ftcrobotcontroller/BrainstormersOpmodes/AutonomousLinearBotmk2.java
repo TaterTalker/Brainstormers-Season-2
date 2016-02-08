@@ -44,9 +44,12 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         if (SLEEP) sleep(5000);;
         drive(500, 1);
         telemetry.addData("starting", "turn");
-        turnTo(25);
-        driveUnilLight(20, 1, true, true);
+        turnTo(45);
+        drive(5000,1);
+        drive(0, 0.5, true, true, 1);
         turnTo(90);
+        stopMotors();
+        sleep(2000);
         if(rightRed()>65000000)
             if(turnDirection==-1)
                 beacon.setPosition(1);
