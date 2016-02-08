@@ -44,10 +44,13 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         if (SLEEP) sleep(5000);;
         drive(500, 1);
         telemetry.addData("starting", "turn");
-        turnTo(45);
+        turnTo(44);
         drive(5000,1);
-        drive(0, 0.5, true, true, 1);
+        sleep(500);
+        drive(1000, 0.25, true, true, 1);
+        sleep(500);
         turnTo(90);
+        sleep(500);
         stopMotors();
         sleep(2000);
         if(rightRed()>65000000)
