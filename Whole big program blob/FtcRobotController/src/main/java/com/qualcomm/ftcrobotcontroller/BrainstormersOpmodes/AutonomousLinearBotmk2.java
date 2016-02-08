@@ -45,10 +45,11 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         drive(500, 1);
         telemetry.addData("starting", "turn");
         turnTo(44);
-        drive(5000,1);
+        drive(6500,1);
         sleep(500);
-        drive(1000, 0.25, true, true, 1);
+        drive(1500, .25, false, false, 1);
         sleep(500);
+        drive(345, .5);
         turnTo(90);
         sleep(500);
         stopMotors();
@@ -64,7 +65,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             else
                 beacon.setPosition(1);
 
-        drive(500, 0.5);
+        drive(350, 0.5);
         stopMotors();
         climberDumperB.setPosition(1);
         sleep(1000);

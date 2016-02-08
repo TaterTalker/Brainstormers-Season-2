@@ -120,12 +120,12 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
                 //turnheading = heading();
-                turnheading -= (
+                turnheading += (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 30;
+                ) / 60;
 
                 if (turnheading > 180) {
                     turnheading -= 360;
@@ -151,8 +151,8 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             }
             telemetry.addData("encoder values", " FL " + FLposition() + " BL " + BLposition() + " FR " + FRposition() + " BR " + BRposition());
             run_using_encoders();
-            setLeftPower(currSpeed + turnheading);
-            setRightPower(currSpeed - turnheading);
+            setLeftPower((currSpeed + turnheading)*currSpeed);
+            setRightPower((currSpeed - turnheading)*currSpeed);
             waitOneFullHardwareCycle();
 
             switch (targetType){
@@ -161,7 +161,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     break;
                 case 1:
                     isComplete=colorSensor2.alpha()>2;
-                    telemetry.addData("red", colorSensor2.red());
+                    telemetry.addData("alpha", colorSensor2.alpha());
                     break;
                 default:
                     telemetry.addData("Invalid input", "stopping");
