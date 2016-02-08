@@ -101,6 +101,14 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     Servo sideArmR;
     /**
+     * lock mech for the hanging
+     */
+    Servo lock;
+    /**
+     * second lock mech
+     */
+    Servo lock1;
+    /**
      * how much the robot should be slowed by
      * higher=slower
      */
@@ -170,11 +178,15 @@ public abstract class TeleOpOctopus extends OpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         extStop = hardwareMap.touchSensor.get("extStop");
         armHook = hardwareMap.servo.get("armHook");
+        lock = hardwareMap.servo.get("lock");
+        lock1 = hardwareMap.servo.get("lock");
 
         ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armextended = false;
         oldarm = 0;
+        lock.setPosition(0);
+        lock1.setPosition(1);
     }
 
     /**
@@ -311,6 +323,13 @@ public abstract class TeleOpOctopus extends OpMode {
          * if the left trigger is pressed, the arm is retracted
          */
         //brings arm in
+
+        if (gamepad1.y && extStop.isPressed())
+        {
+            lock.setPosition(1);
+            lock1.setPosition(0);
+        }
+
         if (gamepad2.left_trigger != 0) {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
