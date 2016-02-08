@@ -172,12 +172,12 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
                 //turnheading = heading();
-                turnheading += (
+                turnheading -= (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 5;
+                ) / 50;
 
                 if (turnheading > 180) {
                     turnheading -= 360;
@@ -227,12 +227,12 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
                 //turnheading = heading();
-                turnheading += (
+                turnheading -= (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 5;
+                ) / 50;
 
                 if (turnheading > 180) {
                     turnheading -= 360;
