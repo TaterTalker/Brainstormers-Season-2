@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
+public abstract class AutonomousLinearBotmk2 extends CameraOp {
 
     //Driving Motors
     DcMotor FL;
@@ -87,82 +87,27 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         //collector.setPower(-1);
         final boolean SLEEP = false;
 
-        //pivotleft(200);
-//        if (SLEEP) sleep(5000);
-//        turnTo(-86);
-//        sleep(1000);
-//        turnTo(-172);
-//        sleep(1000);
-//        turnTo(-258);
-//        sleep(500);
-//        turnTo(-344);
-//        sleep(100000);
-        drive(1000, 1);
-        sleep(500);
-
         if (SLEEP) sleep(5000);
-        drive(1000, 1);
-        sleep(1000);
-
-
-        turn(45);
-        sleep(200);
-        drive(300, 0.2);
-
-        driveUntilUltra(17, 0.2);
-        sleep(100);
-        squareUp();
-        sleep(100);
-        turn(-90);
-
-        resetGyro();
-        while (colorSensor2.alpha() < 15) {
-            driveForeverWitGyro(0.2);
-            waitOneFullHardwareCycle();
-        }
+        drive(500,1);
+        turnTo(25);
+        driveUnilLight(20, 1, true, true);
+        turnTo(90);
+        /*if(rightRed()>foo)
+            if(turndirection==-1)
+                move servo right
+            else
+                mover servo left
+        else
+            if(turndirection==-1)
+                    move servo left
+                else
+                    mover servo right
+*/
+        drive(500, 0.5);
         stopMotors();
-        reset_drive_encoders();
-        resetEncoderDelta();
-        stopMotors();
-        sleep(100);
-        drive(20, -0.5);
-        drive(1000, -0.5);
-        stopMotors();
-        //turn(10);
-        if (turnDirection == -1) {
-            climberDumperB.setPosition(1);
-
-
-        }
-       else {
-
-            climberDumperB.setPosition(0);
-            //climberDumperR.setPosition(0);
-        }
+        climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
-        //climberDumperR.setPosition(1);
-        sleep(200);
-        while (colorSensor2.alpha() < 10) {
-            driveForever(0.2);
-            waitOneFullHardwareCycle();
-        }
-
-        reset_drive_encoders();
-        turn(-135);
-        collector.setPower(0.8);
-
-        drive(3150, 1, false, false);
-
-        //STUFF FROM HERE DOWN IS IN FRONT TO THE RAMP
-        turn(-69);
-        drive(1000, 1);
-        drive(1000, -1);
-        sleep(1000);
-        turn(90);
-        turn(90);
-
-
         //  turn(-10 * turnDirection);
 
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
@@ -623,6 +568,66 @@ public abstract class AutonomousLinearBotmk2 extends LinearOpMode {
         } while (!hasLeftReached(distance) && !hasRightReached(distance));
         stopMotors();
         reset_drive_encoders();
+        stopMotors();
+        sleep(100);
+    }
+
+    void driveUnilLight(float val, double speed, boolean avoidance, boolean correction) throws InterruptedException {
+        resetEncoderDelta();
+        resetGyro();
+        // Start the drive wheel motors at full power
+        setLeftPower(0.5); //otherwise when calculating turn heading from encoders all will be null and program will halt
+        setRightPower(0.5);
+        sleep(20);
+        do {
+            double turnheading;
+            double currSpeed = speed;
+            // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
+            if (correction == true) {
+                turnheading = heading();
+                turnheading += (
+                        FL.getCurrentPosition() +
+                                BL.getCurrentPosition() -
+                                FR.getCurrentPosition() -
+                                BR.getCurrentPosition()
+                ) / 2;
+                sleep(1);//all of these are required to allow for stopping
+                if (turnheading > 180) {
+                    turnheading -= 360;
+                }
+                turnheading /= 15;
+                sleep(1);
+
+                if (Math.abs(turnheading) > 0.5) {
+                    currSpeed = clip(currSpeed, -0.7, 0.7);
+                }
+                sleep(1);
+
+                if (blocked() && speed > 0 && avoidance) {
+                    currSpeed = 0;
+                }
+                sleep(1);
+
+                if (turnheading != 0) {
+                    currSpeed = clip(currSpeed, -0.9, 0.9);
+                }
+                sleep(1);
+
+                telemetry.addData("heading ", "" + heading());
+                telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+            } else {
+                turnheading = 0;
+            }
+            telemetry.addData("encoder values", " FL " + FL.getCurrentPosition() + " BL " + BL.getCurrentPosition() + " FR " + FR.getCurrentPosition() + " BR " + BR.getCurrentPosition());
+            run_using_encoders();
+            setLeftPower(currSpeed + turnheading);
+            setRightPower(currSpeed - turnheading);
+            sleep(1);
+            waitOneFullHardwareCycle();
+        } while (colorSensor2.alpha()<val);
+        stopMotors();
+        reset_drive_encoders();
+        stopMotors();
         sleep(100);
     }
 
