@@ -30,7 +30,7 @@ public class sensorTest extends LinearOpMode{
        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
        gyroSensor = hardwareMap.gyroSensor.get("G1");
        //cdim = hardwareMap.deviceInterfaceModule.get("dim");
-       sensorRGB = hardwareMap.colorSensor.get("cs1");
+       sensorRGB = hardwareMap.colorSensor.get("cs2");
        //cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
        waitForStart();
        gyroSensor.calibrate();
@@ -39,7 +39,7 @@ while (true) {
     //telemetry.addData("ODM", "Sensor1: " + odmtry1.getLightDetectedRaw());
     telemetry.addData("Gyro", "SensorXYZ: " + gyroSensor.rawX() + " " + gyroSensor.rawY() + " " + gyroSensor.rawZ());
     telemetry.addData("Heading: ", gyroSensor.getHeading());
-    telemetry.addData("Color Sensor:", "Clear " + sensorRGB.alpha() + "Red " + sensorRGB.red() + "Green " + sensorRGB.green() + "Blue " + sensorRGB.blue());
+    telemetry.addData("Color Sensor:", "Alpha " + sensorRGB.alpha() + "Red " + sensorRGB.red() + "Green " + sensorRGB.green() + "Blue " + sensorRGB.blue());
     telemetry.addData("Ultrasonic", "SensorL: " + ultra1.getUltrasonicLevel() + "SensorR: " + ultra2.getUltrasonicLevel());
 
     waitOneFullHardwareCycle();
