@@ -152,6 +152,9 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     TouchSensor extStop;
 
+    boolean wasDown=false;
+    boolean lockDown=false;
+
     /**
      * this maps all of our variables to the hardware
      * @param sideInput this is given by our separate programs that reference this file so that autonomous knows weather it is red or blue. 1=blue, -1=red
@@ -179,14 +182,14 @@ public abstract class TeleOpOctopus extends OpMode {
         extStop = hardwareMap.touchSensor.get("extStop");
         armHook = hardwareMap.servo.get("armHook");
         lock = hardwareMap.servo.get("lock");
-        lock1 = hardwareMap.servo.get("lock");
+        lock1 = hardwareMap.servo.get("lock1");
 
         ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armextended = false;
         oldarm = 0;
-        lock.setPosition(0);
-        lock1.setPosition(1);
+        lock.setPosition(1);
+        lock1.setPosition(0);
     }
 
     /**
@@ -237,9 +240,9 @@ public abstract class TeleOpOctopus extends OpMode {
         collector();
         dumping();
         climberDumper();
+        sideArm();
         processArm();
         hook();
-        sideArm();
         angleArm();
     }
 
@@ -272,8 +275,8 @@ public abstract class TeleOpOctopus extends OpMode {
                 doorR.setPosition(0.4);
             } else { //default position
                 dumper.setPosition(0.4);
-                doorR.setPosition(0.8);
-                doorL.setPosition(0.3);
+                doorR.setPosition(0.95);
+                doorL.setPosition(0.15);
             }
         } else {
             if (gamepad2.dpad_left) {
@@ -281,8 +284,8 @@ public abstract class TeleOpOctopus extends OpMode {
                 doorL.setPosition(0.6);
             } else { //default position
                 dumper.setPosition(0);
-                doorL.setPosition(0.3);
-                doorR.setPosition(0.8);
+                doorL.setPosition(0.15);
+                doorR.setPosition(0.95);
             }
         }
     }
@@ -323,14 +326,28 @@ public abstract class TeleOpOctopus extends OpMode {
          * if the left trigger is pressed, the arm is retracted
          */
         //brings arm in
-
-        if (gamepad1.y && extStop.isPressed())
-        {
-            lock.setPosition(1);
-            lock1.setPosition(0);
+        if (gamepad1.y) {
+            if (gamepad1.dpad_down && !wasDown) {
+                wasDown = true;
+                lockDown = !lockDown;
+            }
+            if (!gamepad1.dpad_down && wasDown) {
+                wasDown = false;
+            }
+            if (lockDown) {
+                lock.setPosition(0);
+                lock1.setPosition(1);
+            } else {
+                lock.setPosition(1);
+                lock1.setPosition(0);
+            }
         }
 
+
+
         if (gamepad2.left_trigger != 0) {
+            sideArmL.setPosition(0.5);
+            sideArmR.setPosition(0.5);
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
             armextended = false;
@@ -343,6 +360,8 @@ public abstract class TeleOpOctopus extends OpMode {
          * if the right trigger is pressed, the arm is extended
          */
         else if (gamepad2.right_trigger != 0) {
+            sideArmL.setPosition(0.5);
+            sideArmR.setPosition(0.5);
             ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             //ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             ext.setPower(-1);
@@ -439,25 +458,27 @@ public abstract class TeleOpOctopus extends OpMode {
         }
     }
 
+
     private void sideArm(){
         if (side == 1) {
             if(gamepad1.right_bumper) {
-                sideArmL.setPosition(0);
-                sideArmR.setPosition(0.27);
-            } else{
-                sideArmL.setPosition(0);
+                sideArmL.setPosition(0.8);
                 sideArmR.setPosition(0.8);
+            } else{
+                sideArmL.setPosition(0.8);
+                sideArmR.setPosition(0.05);
             }
         } else if(side==-1) {
             if (gamepad1.right_bumper) {
-                sideArmL.setPosition(.6);
-                sideArmR.setPosition(.8);
+                sideArmL.setPosition(0.1);
+                sideArmR.setPosition(0.05);
             } else {
-                sideArmL.setPosition(0);
-                sideArmR.setPosition(.8);
+                sideArmL.setPosition(0.8);
+                sideArmR.setPosition(0.05);
             }
         }
     }
+
 
     private void hang(){
         if (gamepad1.y) {
