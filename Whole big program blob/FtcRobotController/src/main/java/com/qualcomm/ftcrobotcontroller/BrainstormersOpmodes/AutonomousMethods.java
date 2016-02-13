@@ -25,9 +25,9 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             else if (difference < -180)
                 difference = 360 + difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
-            power = Math.abs(difference / 100.0);
+            power = Math.abs(difference / 90);
             power = clip(power, 0.05, 0.2);
-            if (difference == 0) {
+            if (Math.abs(difference) <= 1) {
                 count++;
                 if (count > 15)
                     break;
@@ -119,26 +119,27 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
-                //turnheading = heading();
+                turnheading = heading();
+
+                if (turnheading > 180) {
+                    turnheading -= 360;
+                }
+                turnheading /= 5.25;
+
                 turnheading += (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 60;
-
-                if (turnheading > 180) {
-                    turnheading -= 360;
-                }
-                turnheading /= 13;
+                ) / 300;
 
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
                 }
-
-                if (blocked() && speed > 0 && avoidance) {
-                    currSpeed = 0;
-                }
+//
+//                if (Qblocked()  &&  speed > 0 && avoidance) {
+//                    currSpeed = 0;
+//                }
 
                 if (turnheading != 0) {
                     currSpeed = clip(currSpeed, -0.9, 0.9);
@@ -151,8 +152,9 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             }
             telemetry.addData("encoder values", " FL " + FLposition() + " BL " + BLposition() + " FR " + FRposition() + " BR " + BRposition());
             run_using_encoders();
-            setLeftPower((currSpeed + turnheading)*currSpeed);
-            setRightPower((currSpeed - turnheading)*currSpeed);
+            setLeftPower(currSpeed + turnheading * currSpeed);
+            setRightPower((currSpeed - turnheading * currSpeed)*0.8);
+            telemetry.addData("left power ", + (currSpeed + turnheading*currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
             waitOneFullHardwareCycle();
 
             switch (targetType){
@@ -160,7 +162,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     isComplete=(hasLeftReached(distance)||hasRightReached(distance));
                     break;
                 case 1:
-                    isComplete=colorSensor2.alpha()>2;
+                    isComplete=colorSensor2.alpha()>1;
                     telemetry.addData("alpha", colorSensor2.alpha());
                     break;
                 default:
@@ -172,7 +174,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
         } while (isComplete==false);
         telemetry.addData("drive", "complete");
         stopMotors();
-        sleep(100);
+        sleep(50);
     }
 
     /**

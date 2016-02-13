@@ -289,11 +289,11 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
             iterations++;
             telemetry.addData("motor status", FR.isBusy() + " " + BR.isBusy() + " " + FL.isBusy() + " " + BL.isBusy());
             run_using_encoders();
-            FR.setPower(0);
             BR.setPower(0);
-            FL.setPower(0);
             BL.setPower(0);
-            waitOneFullHardwareCycle();
+            FL.setPower(0);
+            FR.setPower(0);
+            sleep(1);
         }
         telemetry.addData("stopping", "complete");
     }

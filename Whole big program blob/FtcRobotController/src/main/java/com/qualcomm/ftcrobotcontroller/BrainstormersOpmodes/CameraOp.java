@@ -96,7 +96,7 @@ public abstract class CameraOp extends LinearOpMode {
         convertImage();
         int value = 0;
         for (int x = 0; x < width / 2; x++) {
-            for (int y = 0; y < height; y++) {
+            for (int y = 0; y < height-4; y=y+5) {
                 value += pixel(x, y)[0];
             }
         }
@@ -107,7 +107,7 @@ public abstract class CameraOp extends LinearOpMode {
         convertImage();
         int value = 0;
         for (int x = width-1; x > width / 2; x--) {
-            for (int y = 0; y < height; y++) {
+            for (int y = 0; y < height-4; y=y+5) {
                 value += pixel(x, y)[0];
             }
         }

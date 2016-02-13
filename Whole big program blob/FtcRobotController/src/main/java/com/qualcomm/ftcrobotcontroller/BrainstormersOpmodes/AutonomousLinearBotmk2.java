@@ -24,53 +24,70 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
       //  climberDumperR.setPosition(1);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
-       // sideArmL.setPosition(0.05);
-      //  sideArmR.setPosition(.75);
+       sideArmL.setPosition(0.75);
+         sideArmR.setPosition(0);
         doorL.setPosition(0.3);
         doorR.setPosition(0.8);
         debDumper.setPosition((turnDirection + 1) / 2);
+        startCam();
 
 
         sleep(5000);
         telemetry.addData("Init", "done");
-        startCam();
+
 
         waitForStart(); //everything before this happens when you press init
+        beacon.setPosition(1);
 
 
         //collector.setPower(-1);
         final boolean SLEEP = false;
 
-        if (SLEEP) sleep(5000);;
+        if (SLEEP) sleep(5000);
         drive(500, 1);
         telemetry.addData("starting", "turn");
-        turnTo(44);
-        drive(6500,1);
+        turnTo(37);
+        drive(6500, 1);
         sleep(500);
-        drive(1500, .25, false, false, 1);
-        sleep(500);
-        drive(345, .5);
-        turnTo(90);
-        sleep(500);
+        drive(1500, .15, false, false, 1);
+        drive(820, .20, false, false, 0);
+        turnTo(89);
+        drive(100, -0.5);
+        driveUntilUltra(35,0.15);
+        //drive(500, 0.5);
         stopMotors();
-        sleep(2000);
-        if(rightRed()>65000000)
+        if(rightRed()>18000000)
             if(turnDirection==-1)
-                beacon.setPosition(1);
+                beacon.setPosition(0.6);
             else
-                beacon.setPosition(0);
+                beacon.setPosition(0.5);
         else
             if(turnDirection==-1)
-                beacon.setPosition(0);
+                beacon.setPosition(0.5);
             else
-                beacon.setPosition(1);
+                beacon.setPosition(0.6);
 
-        drive(350, 0.5);
-        stopMotors();
+        sleep(1000);
+        driveUntilUltra(18, 0.2);
+        sleep(200);
+        drive(500, -0.5);
+        beacon.setPosition(1);
+        sleep(500);
+        drive(300, 0.5);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
-        //  turn(-10 * turnDirection);
+        drive(500, -0.5);
+        turnTo(-180);
+        drive(1000,1);
+        turnTo(-135);
+        drive(1800, 1);
+        turnTo(135);
+        collector.setPower(1);
+        drive(1000,1);
+        turnTo(-45);
+        drive(2000,-1);
+
 
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
         sleep(100);
