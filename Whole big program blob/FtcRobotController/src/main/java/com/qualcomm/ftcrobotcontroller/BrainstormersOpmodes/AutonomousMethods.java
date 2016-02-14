@@ -149,7 +149,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             setLeftPower(currSpeed +  turnheading * (currSpeed));
             setRightPower(currSpeed - turnheading * (currSpeed));
             telemetry.addData("left power ", +(currSpeed + turnheading * currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
-            sleep(1);
+            waitOneFullHardwareCycle();
 
             switch (targetType){
                 case 0:
