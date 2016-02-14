@@ -46,7 +46,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         if (SLEEP) sleep(5000);
         drive(500, 1);
         telemetry.addData("starting", "turn");
-        turnTo(36);
+        turnTo(37);
         drive(6500, 1);
         sleep(500);
         drive(1500, .15, false, false, 1);
