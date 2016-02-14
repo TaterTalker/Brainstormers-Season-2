@@ -138,7 +138,7 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
     //Has the left side reached a certain encoder value.
     boolean hasLeftReached(double leftd) {
 
-        return (Math.abs(FLposition()) > leftd) && (Math.abs(BLposition()) > leftd);
+        return (Math.abs(FLposition()) > leftd) || (Math.abs(BLposition()) > leftd);
     }
 
     /**
@@ -150,9 +150,10 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
     //Has the right side reached a certain encoder value.
     boolean hasRightReached(double rightd) {
 
-        return (Math.abs(FRposition()) > rightd) && (Math.abs(BRposition()) > rightd);
+        return (Math.abs(FRposition()) > rightd)  || (Math.abs(BRposition()) > rightd);
     }
     /**
+     * sets the left motors to a specific power, keeping in mind the acceptable limits
      * sets the left motors to a specific power, keeping in mind the acceptable limits
      *
      * @param power target power
