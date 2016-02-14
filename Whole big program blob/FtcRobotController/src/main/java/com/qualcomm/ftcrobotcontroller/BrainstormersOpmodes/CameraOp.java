@@ -29,9 +29,6 @@ public abstract class CameraOp extends LinearOpMode {
     private int looped = 0;
     private String data;
     public int color;
-    public int redValue = 0;
-    public int blueValue = 0;
-    public int greenValue = 0;
 
     private int red(int pixel) {
         return (pixel >> 16) & 0xff;
@@ -69,21 +66,6 @@ public abstract class CameraOp extends LinearOpMode {
         data = parameters.flatten();
 
         ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
-    }
-
-    /*
-     * This method will be called repeatedly in a loop
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-     */
-    public int highestColor(int red, int green, int blue) {
-        int[] color = {red, green, blue};
-        int value = 0;
-        for (int i = 1; i < 3; i++) {
-            if (color[value] < color[i]) {
-                value = i;
-            }
-        }
-        return value;
     }
 
     int[] pixel(int x, int y) {

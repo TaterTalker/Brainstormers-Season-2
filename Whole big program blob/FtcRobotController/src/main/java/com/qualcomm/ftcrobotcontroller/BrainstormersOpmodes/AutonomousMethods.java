@@ -12,7 +12,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @param degrees target degrees
      * @throws InterruptedException
      */
-    void turnTo(int degrees) throws InterruptedException {
+    void turnTo(int degrees, int tollerance) throws InterruptedException {
         int heading, difference, count = 0;
         double power;
         boolean rightTurn = false;
@@ -27,7 +27,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
             power = Math.abs(difference / 90);
             power = clip(power, 0.05, 0.2);
-            if (Math.abs(difference) <= 1) {
+            if (Math.abs(difference) <= tollerance) {
                 count++;
                 if (count > 15)
                     break;
@@ -57,7 +57,6 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
 
     /**
      * drives until the ultrasonic sensors read a certain value
-     *
      * @param target target distance
      * @param speed  movement speed
      * @throws InterruptedException
@@ -119,12 +118,6 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
-//                turnheading = heading();
-//
-//                if (turnheading > 180) {
-//                    turnheading -= 360;
-//                }
-//                turnheading /= 5;
 
                 turnheading -= (
                         FLposition() +
@@ -137,7 +130,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
                 }
 //
-//                if (Qblocked()  &&  speed > 0 && avoidance) {
+//                if (blocked()  &&  speed > 0 && avoidance) {
 //                    currSpeed = 0;
 //                }
 
