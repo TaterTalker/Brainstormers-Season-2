@@ -119,19 +119,19 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
-                turnheading = heading();
+//                turnheading = heading();
+//
+//                if (turnheading > 180) {
+//                    turnheading -= 360;
+//                }
+//                turnheading /= 5;
 
-                if (turnheading > 180) {
-                    turnheading -= 360;
-                }
-                turnheading /= 5.25;
-
-                turnheading += (
+                turnheading -= (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 300;
+                ) / 225.0;
 
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
@@ -142,18 +142,19 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
 //                }
 
                 if (turnheading != 0) {
-                    currSpeed = clip(currSpeed, -0.9, 0.9);
+                    currSpeed = clip(currSpeed, -0.95, 0.95);
                 }
 
                 telemetry.addData("heading ", "" + heading());
                 telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+                telemetry.addData("deviation", turnheading);
             } else {
                 turnheading = 0;
             }
             telemetry.addData("encoder values", " FL " + FLposition() + " BL " + BLposition() + " FR " + FRposition() + " BR " + BRposition());
             run_using_encoders();
-            setLeftPower(currSpeed + turnheading * currSpeed);
-            setRightPower((currSpeed - turnheading * currSpeed)*0.8);
+            setLeftPower(currSpeed + turnheading * (currSpeed*2));
+            setRightPower(currSpeed - turnheading * (currSpeed*2));
             telemetry.addData("left power ", + (currSpeed + turnheading*currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
             waitOneFullHardwareCycle();
 
