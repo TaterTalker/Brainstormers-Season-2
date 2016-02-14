@@ -42,8 +42,19 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
 
         //collector.setPower(-1);
         final boolean SLEEP = false;
+        drive(10000, 1, false, true, 0);
 
-        if (SLEEP) sleep(5000);
+
+       // if (SLEEP) sleep(500000);
+
+//        //test program
+//        turnTo(90, 1);
+//        sleep(100);
+//        turnTo(-90, 1);
+//        sleep(100);
+//        turnTo (150, 1);
+//        sleep(10000);
+
         drive(500, 1);
         telemetry.addData("starting", "turn");
         turnTo(37,0);
@@ -80,14 +91,15 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         climberDumperB.setPosition(0);
         drive(500, -0.5);
         turnTo(-180, 1);
-        drive(1000,1);
+        drive(1000, 1);
         turnTo(-135, 1);
         drive(1800, 1);
         turnTo(135, 1);
         collector.setPower(1);
-        drive(1000,1);
+        drive(1000, 1);
         turnTo(-45, 1);
-        drive(2000,-1);
+        drive(2000, -1);
+        drive(2000, -1, false, false, 0);
 
 
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
