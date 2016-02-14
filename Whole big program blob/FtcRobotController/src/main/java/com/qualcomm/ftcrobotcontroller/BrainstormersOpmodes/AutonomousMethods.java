@@ -124,7 +124,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 150; //must be float
+                ) / 150.0; //must be float
 
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
