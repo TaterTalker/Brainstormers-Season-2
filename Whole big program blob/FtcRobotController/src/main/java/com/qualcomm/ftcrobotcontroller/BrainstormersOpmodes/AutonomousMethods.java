@@ -14,6 +14,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      */
     void turnTo(int degrees, int tollerance) throws InterruptedException {
         int heading, difference, count = 0;
+        degrees*=turnDirection;
         double power;
         boolean rightTurn = false;
         run_using_encoders();
@@ -35,13 +36,13 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                 setRightPower(0);
             } else if (difference > 0) {
                 count=0;
-                setLeftPower(-power);
-                setRightPower(power);
+                setLeftPower(power);
+                setRightPower(-power);
                 rightTurn = true;
             } else {
                 count=0;
-                setLeftPower(power);
-                setRightPower(-power);
+                setLeftPower(-power);
+                setRightPower(power);
                 rightTurn = false;
             }
             waitOneFullHardwareCycle();
@@ -118,13 +119,12 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             double currSpeed = speed;
             // telemetry.addData("encoder values", "right:" + FR.getCurrentPosition() + " left:" + FL.getCurrentPosition());
             if (correction == true) {
-
-                turnheading -= (
+                turnheading += (
                         FLposition() +
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 225.0;
+                ) / 250.0; //must be float
 
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
@@ -144,10 +144,11 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             } else {
                 turnheading = 0;
             }
+            turnheading=clip(turnheading, -0.25, 0.25);
             telemetry.addData("encoder values", " FL " + FLposition() + " BL " + BLposition() + " FR " + FRposition() + " BR " + BRposition());
             run_using_encoders();
-            setLeftPower(currSpeed + turnheading * (currSpeed*2));
-            setRightPower(currSpeed - turnheading * (currSpeed*2));
+            setLeftPower(currSpeed + turnheading * currSpeed);
+            setRightPower(currSpeed - turnheading * currSpeed);
             telemetry.addData("left power ", + (currSpeed + turnheading*currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
             waitOneFullHardwareCycle();
 

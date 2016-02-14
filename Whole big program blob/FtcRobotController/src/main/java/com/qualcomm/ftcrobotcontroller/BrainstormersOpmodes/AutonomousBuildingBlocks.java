@@ -162,8 +162,8 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
 
         power = clip(power, -1, 1);
         run_using_encoders();
-        FL.setPower(-power);
-        BL.setPower(-power);
+        FL.setPower(power);
+        BL.setPower(power);
     }
 
     /**
@@ -174,10 +174,10 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
     //Set the motors power.
     void setRightPower(double power) {
 
-        power = clip(power, -0.95, 0.95); //because david is trash at building robots and it turns by itself we need to slow this side down, you know it would be so much more effective if you did it in hardware you ass - August
+        power = clip(power, -1, 1); //because david is trash at building robots and it turns by itself we need to slow this side down, you know it would be so much more effective if you did it in hardware you ass - August
         run_using_encoders();
-        FR.setPower(power);
-        BR.setPower(power);
+        FR.setPower(-power);
+        BR.setPower(-power);
     }
 
     /**
