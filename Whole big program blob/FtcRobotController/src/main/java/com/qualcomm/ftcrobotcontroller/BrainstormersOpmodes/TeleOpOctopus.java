@@ -526,10 +526,10 @@ public abstract class TeleOpOctopus extends OpMode {
         /**
          * combines the rotation and speed together
          */
-        FRpower = -YPower + rotPower;
-        BRpower = -YPower + rotPower;
-        FLpower = YPower + rotPower;
-        BLpower = YPower + rotPower;
+        FRpower = YPower + rotPower;
+        BRpower = YPower + rotPower;
+        FLpower = -YPower + rotPower;
+        BLpower = -YPower + rotPower;
     }
 
     /**

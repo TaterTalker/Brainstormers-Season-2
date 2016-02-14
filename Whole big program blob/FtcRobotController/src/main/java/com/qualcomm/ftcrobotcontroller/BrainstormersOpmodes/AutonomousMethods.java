@@ -26,8 +26,8 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             else if (difference < -180)
                 difference = 360 + difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
-            power = Math.abs(difference / 90);
-            power = clip(power, 0.05, 0.2);
+            power = Math.abs(difference / 60);
+            power = clip(power, 0.05, 0.5);
             if (Math.abs(difference) <= tollerance) {
                 count++;
                 if (count > 15)
@@ -124,7 +124,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 250.0; //must be float
+                ) / 150; //must be float
 
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
@@ -150,6 +150,12 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             setLeftPower(currSpeed + turnheading * currSpeed);
             setRightPower(currSpeed - turnheading * currSpeed);
             telemetry.addData("left power ", + (currSpeed + turnheading*currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
+            telemetry.addData("encoder values", " FL " + FLposition()+ " " +FL.getCurrentPosition() + " BL " + BLposition()+ " " +BL.getCurrentPosition() + " FR " + FRposition() + " " +FR.getCurrentPosition() + " BR " + BRposition()+ " " +BR.getCurrentPosition() );
+            run_using_encoders();
+            turnheading = clip(turnheading, -1,1);
+            setLeftPower(currSpeed +  turnheading * (currSpeed));
+            setRightPower(currSpeed - turnheading * (currSpeed));
+            telemetry.addData("left power ", +(currSpeed + turnheading * currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
             waitOneFullHardwareCycle();
 
             switch (targetType){
