@@ -129,10 +129,10 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                 if (Math.abs(turnheading) > 0.5) {
                     currSpeed = clip(currSpeed, -0.7, 0.7);
                 }
-//
-//                if (blocked()  &&  speed > 0 && avoidance) {
-//                    currSpeed = 0;
-//                }
+
+                if (blocked()  &&  speed > 0 && avoidance) {
+                    currSpeed = 0;
+                }
 
                 if (turnheading != 0) {
                     currSpeed = clip(currSpeed, -0.95, 0.95);
