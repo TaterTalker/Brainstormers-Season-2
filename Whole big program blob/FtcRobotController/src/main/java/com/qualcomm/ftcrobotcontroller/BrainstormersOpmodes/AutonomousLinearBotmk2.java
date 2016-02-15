@@ -42,10 +42,10 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
 
         //collector.setPower(-1);
         final boolean SLEEP = false;
-        drive(10000, 1, false, true, 0);
 
 
-       // if (SLEEP) sleep(500000);
+
+        if (SLEEP) sleep(500000);
 
 //        //test program
 //        turnTo(90, 1);
@@ -55,20 +55,21 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
 //        turnTo (150, 1);
 //        sleep(10000);
 
-        drive(500, 0);
-        telemetry.addData("starting", "turn");
-        turnTo(37,0);
-        drive(6500, 0);
+        drive(2000, .25, false, false, 0);
         sleep(500);
-        drive(1500, .15, false, false, 1);
-        drive(820, .20, false, false, 0);
-        turnTo(89,1);
-        drive(400, -0.5, false, false,0);
-        driveUntilUltra(35,0.15);
+        telemetry.addData("starting", "turn");
+        turnTo(37, 0);
+        drive(4500, 1, true, true, 0);
+        sleep(500);
+        drive(3500, .15, false, false, 1);
+        drive(725, .20, false, false, 0);
+        turnTo(88, 0);
+        drive(350, -0.2, false, false, 0);
+        driveUntilUltra(35, 0.15);
         //drive(500, 0.5);
         stopMotors();
         if(rightRed()>18000000)
-            if(turnDirection==-1)
+            if(turnDirect   ion==-1)
                 beacon.setPosition(0.6);
             else
                 beacon.setPosition(0.5);
@@ -79,27 +80,19 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.6);
 
         sleep(1000);
-        driveUntilUltra(18, 0.2);
-        sleep(200);
-        drive(500, -0.5);
-        turnTo(89, 1);
-        beacon.setPosition(1);
-        sleep(500);
-        drive(300, 0.5);
+        driveUntilUltra(23, 0.2);
         climberDumperB.setPosition(1);
-        sleep(1000);
+        sleep(500);
         climberDumperB.setPosition(0);
-        drive(500, -0.5);
-        turnTo(-180, 1);
-        drive(1000, 1);
-        turnTo(-135, 1);
-        drive(1800, 1);
-        turnTo(135, 1);
+        drive(500, -0.25, false, false, 0);
+        turnTo(-170, 1);
+        drive(3000, 1, false, false, 0);
         collector.setPower(1);
-        drive(1000, 1);
-        turnTo(-45, 1);
-        drive(2000, -1);
-        drive(2000, -1, false, false, 0);
+        turnTo(135, 1);
+        drive(500, -1, false, false, 0);
+        turnTo(-49, 1);
+        drive(10000, -1, false, false, 0);
+
 
 
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());

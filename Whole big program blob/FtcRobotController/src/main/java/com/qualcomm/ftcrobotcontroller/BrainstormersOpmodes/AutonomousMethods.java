@@ -13,12 +13,13 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @throws InterruptedException
      */
     void turnTo(int degrees, int tollerance) throws InterruptedException {
-        int heading, difference, count = 0;
+        int heading, difference, countwithintolerence = 0, count = 0;
         degrees*=turnDirection;
         double power;
         boolean rightTurn = false;
         run_using_encoders();
         while (true) {
+            count++;
             heading = gyroSensor.getHeading();
             difference = (degrees - heading) % 360;
             if (difference > 180)
@@ -27,20 +28,23 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                 difference = 360 + difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
             power = Math.abs(difference / 60);
-            power = clip(power, 0.05, 0.5);
+            power = clip(power, 0.05, 0.35);
+            if (count < 6){ //maxs out power to speed up turn during the beginning of the turn
+                power = 1;
+            }
             if (Math.abs(difference) <= tollerance) {
-                count++;
-                if (count > 15)
+                countwithintolerence++;
+                if (countwithintolerence > 25)
                     break;
                 setLeftPower(0);
                 setRightPower(0);
             } else if (difference > 0) {
-                count=0;
+                countwithintolerence=0;
                 setLeftPower(power);
                 setRightPower(-power);
                 rightTurn = true;
             } else {
-                count=0;
+                countwithintolerence=0;
                 setLeftPower(-power);
                 setRightPower(power);
                 rightTurn = false;
@@ -105,6 +109,8 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @throws InterruptedException
      */
     void drive(float distance, double speed, boolean avoidance, boolean correction, int targetType) throws InterruptedException {
+        int count;
+        count = 0;
         resetEncoderDelta();
         resetGyro();
         run_using_encoders();
@@ -114,6 +120,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
         sleep(20);
         boolean isComplete=false;
         do {
+            count ++;
             telemetry.addData("drive", "working");
             double turnheading = 0;
             double currSpeed = speed;
@@ -124,10 +131,11 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 150.0; //must be float
+                ) / 60.0; //must be float
 
-                if (Math.abs(turnheading) > 0.5) {
-                    currSpeed = clip(currSpeed, -0.7, 0.7);
+                //ramping up speed so it doesn't jerk
+                if (Math.abs(turnheading) > 0.5 || count < 50) {
+                    currSpeed = clip(currSpeed, -0.6, 0.6);
                 }
 
                 if (blocked()  &&  speed > 0 && avoidance) {
