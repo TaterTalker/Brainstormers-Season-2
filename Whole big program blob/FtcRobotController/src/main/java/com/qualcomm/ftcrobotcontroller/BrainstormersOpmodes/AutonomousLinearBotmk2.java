@@ -63,7 +63,13 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         drive(3500, .15, false, false, 1);
        //old value 725
         drive(600, .20, false, false, 0);
-        turnTo(88, 0);
+        if (turnDirectionInput == 1){
+            turnTo(88, 0);
+        }
+        else{
+            turnTo(86,0);
+        }
+
       //  drive(350, -0.2, false, false, 0);
        // driveUntilUltra(35, 0.15);
         //drive(500, 0.5);
@@ -71,7 +77,9 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         collector.setPower(0);
         int leftred = leftRed();
         int rightred = rightRed();
-        telemetry.addData("Colors", "Left " + leftred +" Right: " + rightred );
+        telemetry.addData("Colors", "Left " + leftred + " Right: " + rightred);
+       //Added Sleep  to look at values
+        sleep(2000);
         if(leftred>rightred)
             if(turnDirection==-1)
                 beacon.setPosition(0.1);
@@ -83,9 +91,10 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             else
                 beacon.setPosition(0.1);
 
-        sleep(1000);
-        driveUntilUltra(20, 0.2);
-        sleep(10000);
+        sleep(500);
+        drive(200 ,0.5, false, false, 0);
+       // driveUntilUltra(20, 0.2);
+        sleep(500);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
@@ -98,7 +107,13 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         collector.setPower(1);
         turnTo(135, 1);
         //drive(700, -1, false, false, 0);
-        turnTo(-52, 1);
+
+        if (turnDirectionInput == 1) {
+            turnTo(-52, 1);
+        }
+        else{
+            turnTo(-55, 1);
+        }
 
         //up positions
         //sideArmL.setPosition(0.75);
