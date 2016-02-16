@@ -29,7 +29,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
             power = Math.abs(difference / 60);
             power = clip(power, 0.05, 0.35);
-            if (count < 6){ //maxs out power to speed up turn during the beginning of the turn
+            if (count < 6 && difference> 30){ //maxs out power to speed up turn during the beginning of the turn
                 power = 1;
             }
             if (Math.abs(difference) <= tollerance) {

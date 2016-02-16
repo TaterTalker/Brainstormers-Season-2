@@ -97,6 +97,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     Servo sideArmL;
     /**
+     * Arm that presses the beacon
+     */
+    Servo beacon;
+    /**
      * right side arm control servo
      */
     Servo sideArmR;
@@ -179,6 +183,7 @@ public abstract class TeleOpOctopus extends OpMode {
         clmbrDmprB = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
+        beacon = hardwareMap.servo.get("beacon");
         extStop = hardwareMap.touchSensor.get("extStop");
         armHook = hardwareMap.servo.get("armHook");
         lock = hardwareMap.servo.get("lock");
@@ -187,9 +192,12 @@ public abstract class TeleOpOctopus extends OpMode {
         ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armextended = false;
+
         oldarm = 0;
         lock.setPosition(1);
         lock1.setPosition(0);
+
+        beacon.setPosition(0.5);
     }
 
     /**
@@ -491,10 +499,10 @@ public abstract class TeleOpOctopus extends OpMode {
                 ext.setPower(0);
             oldarm = ext.getCurrentPosition();
 
-            fr.setPower(-.75);
-            br.setPower(-.75);
-            fl.setPower(.75);
-            bl.setPower(.75);
+            fr.setPower(.75);
+            br.setPower(.75);
+            fl.setPower(-.75);
+            bl.setPower(-.75);
 
             telemetry.addData("hang", "" + ext.getCurrentPosition());
 

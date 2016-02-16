@@ -77,8 +77,8 @@ public abstract class CameraOp extends LinearOpMode {
     public int leftRed() {
         convertImage();
         int value = 0;
-        for (int x = 0; x < width / 2; x++) {
-            for (int y = 0; y < height-4; y=y+5) {
+        for (int x = 0; x < width / 2; x+= 4) {
+            for (int y = 0; y < height-4; y+=4) {
                 value += pixel(x, y)[0];
             }
         }
@@ -88,8 +88,8 @@ public abstract class CameraOp extends LinearOpMode {
     public int rightRed() {
         convertImage();
         int value = 0;
-        for (int x = width-1; x > width / 2; x--) {
-            for (int y = 0; y < height-4; y=y+5) {
+        for (int x = width - 1; x > width / 2; x -= 4) {
+            for (int y = 0; y < height - 4; y = y + 4) {
                 value += pixel(x, y)[0];
             }
         }

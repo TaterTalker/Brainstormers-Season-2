@@ -7,48 +7,10 @@ public class AutonomousTesting extends AutonomousMethods {
     @Override
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
-        beacon.setPosition(0.5); //left
+        beacon.setPosition(0.4); //right
         sleep(2000);
-        beacon.setPosition(0.6); //right
+        beacon.setPosition(0.1); //left
 
-while (true) {
-    run_using_encoders();
-    FR.setPower(1);
-    sleep(1000);
-    FR.setPower(0);
-
-
-    FL.setPower(1);
-    sleep(1000);
-    FL.setPower(0);
-
-
-    BR.setPower(1);
-    sleep(1000);
-    BR.setPower(0);
-
-
-    BL.setPower(1);
-    sleep(1000);
-    BL.setPower(0);
-
-    BL.setPower(1);
-    FL.setPower(1);
-    sleep(1000);
-    BL.setPower(0);
-    FL.setPower(0);
-
-    sleep(1000);
-    BR.setPower(1);
-    FR.setPower(1);
-    sleep(1000);
-    BR.setPower(0);
-    FR.setPower(0);
-
-    sleep(5000);
-    waitOneFullHardwareCycle();
-
-}
 
     }
 }
