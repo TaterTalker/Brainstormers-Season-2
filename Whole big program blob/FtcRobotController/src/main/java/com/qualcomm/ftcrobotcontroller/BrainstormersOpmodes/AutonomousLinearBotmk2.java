@@ -79,7 +79,6 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         int rightred = rightRed();
         telemetry.addData("Colors", "Left " + leftred + " Right: " + rightred);
        //Added Sleep  to look at values
-        sleep(2000);
         if(leftred>rightred)
             if(turnDirection==-1)
                 beacon.setPosition(0.1);
@@ -92,7 +91,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.1);
 
         sleep(500);
-        drive(200 ,0.5, false, false, 0);
+        drive(300 ,0.5, false, false, 0);
        // driveUntilUltra(20, 0.2);
         sleep(500);
         climberDumperB.setPosition(1);
