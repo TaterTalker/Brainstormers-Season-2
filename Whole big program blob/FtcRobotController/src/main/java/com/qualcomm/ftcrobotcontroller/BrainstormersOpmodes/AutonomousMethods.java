@@ -28,13 +28,13 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                 difference = 360 + difference;
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
             power = Math.abs(difference / 45);
-            power = clip(power, 0.05, 0.35);
+            power = clip(power, 0.075, 0.35);
             if (count < 6 && Math.abs(difference)> 20){ //maxs out power to speed up turn during the beginning of the turn
                 power = 1;
             }
             if (Math.abs(difference) <= tollerance) {
                 countwithintolerence++;
-                if (countwithintolerence > 25)
+                if (countwithintolerence > 15)
                     break;
                 setLeftPower(0);
                 setRightPower(0);
@@ -67,9 +67,9 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @throws InterruptedException
      * @see #readFixedUltra(UltrasonicSensor)
      */
-    void driveUntilUltra(int target, double speed) throws InterruptedException {
+    void driveUntilUltra(int target, double speed, int maxdistance) throws InterruptedException {
+        drive(maxdistance, speed, false, false, 0);
         while (readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
-            driveForever(speed);
             waitOneFullHardwareCycle();
         }
         stopMotors();
@@ -109,8 +109,8 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @throws InterruptedException
      */
     void drive(float distance, double speed, boolean avoidance, boolean correction, int targetType) throws InterruptedException {
-        int count;
-        count = 0;
+        int count = 0;
+        int blockcount = 0;
         resetEncoderDelta();
         resetGyro();
         run_using_encoders();
@@ -139,10 +139,15 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                 }
 
                 if (blocked()  &&  speed > 0 && avoidance) {
-                    currSpeed = 0;
-                    telemetry.addData("Blocked", "Blocked!!!!");
+                    blockcount ++;
+                    if (blockcount > 3) {
+                        currSpeed = 0;
+                        telemetry.addData("Blocked", "Blocked!!!!");
+                    }
                 }
-
+                else {
+                    blockcount = 0;
+                }
                 if (turnheading != 0) {
                     currSpeed = clip(currSpeed, -0.95, 0.95);
                 }
@@ -172,7 +177,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     isComplete=(hasLeftReached(distance)||hasRightReached(distance));
                     break;
                 case 1:
-                    isComplete=colorSensor2.alpha()>1;
+                    isComplete=colorSensor2.alpha()>1||hasLeftReached(distance)||hasRightReached(distance);
                     telemetry.addData("alpha", colorSensor2.alpha());
                     break;
                 default:

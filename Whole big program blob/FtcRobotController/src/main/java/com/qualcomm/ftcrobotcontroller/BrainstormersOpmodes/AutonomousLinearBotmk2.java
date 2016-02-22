@@ -46,7 +46,6 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         final boolean SLEEP = false;
         if (SLEEP) sleep(500000);
 
-
         drive(2000, .25, false, false, 0);
         sleep(500);
         telemetry.addData("starting", "turn");
@@ -60,7 +59,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         drive(4600, 1, true, true, 0);
         sleep(500);
         turnTo(25, 1);
-        drive(3500, .15, false, false, 1);
+        drive(550, .15, false, false, 1);
        //old value 725
         drive(600, .20, false, false, 0);
         if (turnDirectionInput == 1){
@@ -91,8 +90,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.1);
 
         sleep(500);
-        drive(300 ,0.5, false, false, 0);
-       // driveUntilUltra(20, 0.2);
+        driveUntilUltra(20, 0.2, 500);
         sleep(500);
         climberDumperB.setPosition(1);
         sleep(1000);
@@ -132,4 +130,17 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
         sleep(100);
         waitOneFullHardwareCycle();
-    }}
+    }
+    public void turnTest() throws InterruptedException {
+        long start= System.currentTimeMillis();
+        turnTo(36, 0);
+        turnTo(25, 1);
+        turnTo(88, 0);
+        turnTo(-170, 1);
+        turnTo(135, 1);
+        turnTo(-52, 1);
+        long end=System.currentTimeMillis();
+        telemetry.addData("timing", Long.toString(end-start));
+        sleep(150000);
+    }
+}
