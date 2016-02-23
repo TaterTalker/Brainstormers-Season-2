@@ -195,6 +195,8 @@ public abstract class TeleOpOctopus extends OpMode {
         lock1.setPosition(0);
         clmbrDmprB.setPosition(0.1);
         beacon.setPosition(0.5);
+        sideArmL.setPosition(0.8);
+        sideArmR.setPosition(0.05);
     }
 
     /**
@@ -261,7 +263,7 @@ public abstract class TeleOpOctopus extends OpMode {
             collect.setPower(1);
             //collection out
         } else if (gamepad2.left_bumper) {
-            collect.setPower(-1);
+            collect.setPower(-0.4);
             //resting
         } else collect.setPower(0);
     }
@@ -457,22 +459,28 @@ public abstract class TeleOpOctopus extends OpMode {
 
 
     private void sideArm(){
-        if (side == 1) {
-            if(gamepad1.right_bumper || gamepad1.right_trigger !=0) {
-                sideArmL.setPosition(0.8);
-                sideArmR.setPosition(0.8);
-            } else{
-                sideArmL.setPosition(0.8);
-                sideArmR.setPosition(0.05);
+        if (fr.getPower()>0) {
+            if (side == 1) {
+                if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
+                    sideArmL.setPosition(0.8);
+                    sideArmR.setPosition(1);//0.8
+                } else {
+                    sideArmL.setPosition(0.8);
+                    sideArmR.setPosition(0.05);
+                }
+            } else if (side == -1) {
+                if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
+                    sideArmL.setPosition(0);//0.1
+                    sideArmR.setPosition(0.05);
+                } else {
+                    sideArmL.setPosition(0.8);
+                    sideArmR.setPosition(0.05);
+                }
             }
-        } else if(side==-1) {
-            if (gamepad1.right_bumper || gamepad1.right_trigger !=0) {
-                sideArmL.setPosition(0.1);
-                sideArmR.setPosition(0.05);
-            } else {
-                sideArmL.setPosition(0.8);
-                sideArmR.setPosition(0.05);
-            }
+        }
+        else {
+            sideArmL.setPosition(0.8);
+            sideArmR.setPosition(0.05);
         }
     }
 

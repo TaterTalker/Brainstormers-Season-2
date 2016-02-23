@@ -39,7 +39,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
 
         waitForStart(); //everything before this happens when you press init
         beacon.setPosition(1);
-        collector.setPower(-1);
+        collector.setPower(-0.7);
 
 
         //collector.setPower(-1);
