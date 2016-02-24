@@ -71,6 +71,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         stopMotors();
         collector.setPower(0);
         driveUntilUltra(35, 0.1, 500);
+        sleep (500);
         int leftred = leftRed();
         int rightred = rightRed();
         telemetry.addData("Colors", "Left " + leftred/1000 + " Right: " + rightred/1000);
