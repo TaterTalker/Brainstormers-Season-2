@@ -13,7 +13,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @throws InterruptedException
      */
     void turnTo(int degrees, int tollerance) throws InterruptedException {
-        int heading, difference, countwithintolerence = 0, count = 0;
+        int heading, difference, countwithintolerence = 0, count = 0, cyclesMaxPower = 0;
         degrees*=turnDirection;
         double power;
         boolean rightTurn = false;
@@ -29,7 +29,9 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn);
             power = Math.abs(difference / 45);
             power = clip(power, 0.075, 0.35);
-            if (count < 6 && Math.abs(difference)> 20){ //maxs out power to speed up turn during the beginning of the turn
+            if (cyclesMaxPower==0)
+                cyclesMaxPower=Math.abs(difference/30)+3;
+            if (count < cyclesMaxPower && Math.abs(difference)> 20){ //maxs out power to speed up turn during the beginning of the turn
                 power = 1;
             }
             if (Math.abs(difference) <= tollerance) {
