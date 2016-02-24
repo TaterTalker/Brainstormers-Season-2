@@ -70,8 +70,8 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
      * @see #readFixedUltra(UltrasonicSensor)
      */
     void driveUntilUltra(int target, double speed, int maxdistance) throws InterruptedException {
-        drive(maxdistance, speed, false, false, 0);
-        while (readFixedUltra(ultra1) > target || readFixedUltra(ultra1) < 1) {
+        while (readFixedUltra(ultra2) > target || readFixedUltra(ultra2) < 1) {
+            driveForever(speed);
             waitOneFullHardwareCycle();
         }
         stopMotors();

@@ -289,7 +289,7 @@ public abstract class TeleOpOctopus extends OpMode {
             // red side
             if (gamepad2.dpad_left) {
                 dumper.setPosition(0.4);
-                doorL.setPosition(0.6);
+                doorL.setPosition(0.7);
             } else { //default position
                 dumper.setPosition(0);
                 doorL.setPosition(0.15);
@@ -555,11 +555,13 @@ public abstract class TeleOpOctopus extends OpMode {
      * if {@link #gamepad1} right trigger is pressed, it causes the robot to slow down
      */
     private void slowRobot() {
-        if (gamepad1.right_trigger == 1) {
+        if (gamepad1.right_trigger == 1 && fr.getPower()>0){
             driveMod = 1.2f;
-        } else {
-            driveMod = 1;
+        }else if (gamepad1.right_trigger == 1 && fr.getPower()<0) {
+            driveMod = 2f;
         }
+        else
+            driveMod = 1;
     }
 }
 

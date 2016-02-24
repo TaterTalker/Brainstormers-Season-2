@@ -70,9 +70,10 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         //drive(500, 0.5);
         stopMotors();
         collector.setPower(0);
+        driveUntilUltra(35, 0.1, 500);
         int leftred = leftRed();
         int rightred = rightRed();
-        telemetry.addData("Colors", "Left " + leftred + " Right: " + rightred);
+        telemetry.addData("Colors", "Left " + leftred/1000 + " Right: " + rightred/1000);
        //Added Sleep  to look at values
         if(leftred>rightred)
             if(turnDirection==-1)
@@ -86,7 +87,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.1);
 
         sleep(500);
-        driveUntilUltra(20, 0.1, 500);
+        driveUntilUltra(15, 0.1, 500);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
