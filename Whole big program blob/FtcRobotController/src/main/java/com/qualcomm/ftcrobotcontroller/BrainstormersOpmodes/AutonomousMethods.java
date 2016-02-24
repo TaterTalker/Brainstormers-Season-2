@@ -133,7 +133,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                                 BLposition() -
                                 FRposition() -
                                 BRposition()
-                ) / 60.0; //must be float
+                ) / 80.0; //must be float
 
                 //ramping up speed so it doesn't jerk
                 if (Math.abs(turnheading) > 0.5 || count < 50) {

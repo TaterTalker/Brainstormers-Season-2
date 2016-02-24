@@ -48,16 +48,16 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
 
         drive(2000, .25, false, false, 0);
         if (turnDirectionInput == 1){
-            turnTo(38, 0);
+            turnTo(36, 0);
         }
         else{
             turnTo(38,0);
         }
-        drive(4600, 1, true, true, 0);
+        drive(4600, 0.8, true, true, 0);
         turnTo(25, 1);
         drive(900, .15, false, false, 1);
        //old value 725
-        drive(600, .20, false, false, 0);
+        drive(700, .20, false, false, 0);
         if (turnDirectionInput == 1){
             turnTo(88, 0);
         }
@@ -86,7 +86,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.1);
 
         sleep(500);
-        driveUntilUltra(20, 0.2, 700);
+        driveUntilUltra(20, 0.1, 500);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
