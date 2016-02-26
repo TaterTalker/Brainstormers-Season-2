@@ -193,7 +193,7 @@ public abstract class TeleOpOctopus extends OpMode {
         oldarm = 0;
         lock.setPosition(1);
         lock1.setPosition(0);
-        clmbrDmprB.setPosition(0.1);
+        clmbrDmprB.setPosition(0);
         beacon.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
