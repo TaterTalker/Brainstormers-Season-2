@@ -8,21 +8,19 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
      * @param turnDirectionInput 1=blue -1=red
      * @throws InterruptedException
      */
-    boolean startNearRamp=false;
+    boolean startNearRamp=false;  //Decides where starting position is
+
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
-        //Adjusts turns based on team color.
-        turnDirection = turnDirectionInput;
 
-        //Map Motors and Sensors.
-        getRobotConfig();
+        turnDirection = turnDirectionInput; //adjusts turns based on team color
+        getRobotConfig();//Map Motors and Sensors
 
-        //Configure and Reset.
+        //Configure and Reset
         run_using_encoders();
         reset_drive_encoders();
         gyroSensor.calibrate();
         climberDumperB.setPosition(0);
-      //  climberDumperR.setPosition(1);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
        sideArmL.setPosition(0.75);
@@ -34,7 +32,8 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         startCam();
         sleep(5000);
         telemetry.addData("Init", "done");
-        while (!gamepad1.a && !gamepad1.b) {
+
+        while (!gamepad1.a && !gamepad1.b) { //adds in delay from button press
             if (gamepad1.dpad_up)
                 delay = delay + 1000;
             else if (gamepad1.dpad_down)
@@ -42,7 +41,8 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             telemetry.addData("Delay Seconds:", delay / 1000);
             sleep(250);
         }
-        if (gamepad1.a)
+
+        if (gamepad1.a)  //sets starting position of robot
             startNearRamp=true;
 
         if (startNearRamp)
@@ -51,16 +51,14 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             telemetry.addData("Far From Ramp", "");
         telemetry.addData("Ready", "");
 
-
-
         waitForStart(); //everything before this happens when you press init
+
         beacon.setPosition(1);
         sleep(300);
         sleep(delay);
         collector.setPower(-0.7);
 
-        //collector.setPower(-1);
-        if (startNearRamp) {
+        if (startNearRamp) { //near ramp position
             drive(2000, .4, false, false, 0);
             if (turnDirectionInput == 1) {
                 turnTo(36, 0);
@@ -69,7 +67,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             }
             drive(4600, 1, true, true, 0);
         }
-        else {
+        else { //far ramp position
             drive(1600, .4, false, false, 0);
             if (turnDirectionInput == 1) {
                 turnTo(50, 0);
@@ -78,9 +76,9 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             }
             drive(7000, 1, true, true, 0);
         }
+
         turnTo(25, 1);
         drive(900, .15, false, false, 1);
-       //old value 725
         drive(700, .20, false, false, 0);
         if (turnDirectionInput == 1){
             turnTo(88, 0);
@@ -88,24 +86,22 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         else{
             turnTo(86,0);
         }
-
-      //  drive(350, -0.2, false, false, 0);
-       // driveUntilUltra(35, 0.15);
-        //drive(500, 0.5);
         stopMotors();
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 500);
         sleep (700);
+
+        //use camera to analyze the image and get the left and right red values
         int leftred = leftRed();
         int rightred = rightRed();
+
         telemetry.addData("Colors", "Left " + leftred/1000 + " Right: " + rightred/1000);
-       //Added Sleep  to look at values
-        if(leftred>rightred)
+        if(leftred>rightred) //left side is red
             if(turnDirection==-1)
                 beacon.setPosition(0.1);
             else
                 beacon.setPosition(0.5);
-        else
+        else //right side is red
             if(turnDirection==-1)
                 beacon.setPosition(0.5);
             else
@@ -123,7 +119,6 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         drive(3000, 1, false, false, 0);
         collector.setPower(1);
         turnTo(135, 1);
-        //drive(700, -1, false, false, 0);
 
         if (turnDirectionInput == 1) {
             turnTo(-52, 1);
@@ -132,11 +127,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             turnTo(-55, 1);
         }
 
-        //up positions
-        //sideArmL.setPosition(0.75);
-        //sideArmR.setPosition(0);
-
-
+        //sets the beacon trigger arm depending on team color.
         if (turnDirectionInput ==1){
             sideArmR.setPosition(0.6);
         }
@@ -144,13 +135,13 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             sideArmL.setPosition(0.1);
         }
 
-        drive(10000, -0.7, false, false, 0);
-
-
+        drive(10000, -0.7, false, false, 0); //climbs ramp.
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
         sleep(100);
         waitOneFullHardwareCycle();
     }
+
+    //separate turn test function not in use.
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();
         turnTo(36, 0);
