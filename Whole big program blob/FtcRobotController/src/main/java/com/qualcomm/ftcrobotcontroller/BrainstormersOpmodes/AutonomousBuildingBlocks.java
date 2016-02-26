@@ -19,7 +19,7 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
     DcMotor BR;
     DcMotor BL;
 
-    int FRold, BRold, FLold, BLold;
+    int FRold, BRold, FLold, BLold, delay=0;
 
     //Sensors
     Servo beacon;
@@ -160,7 +160,6 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
      */
     //Set the motors power.
     void setLeftPower(double power) {
-
         power = clip(power, -1, 1);
         run_using_encoders();
         FL.setPower(power);
@@ -174,7 +173,6 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
      */
     //Set the motors power.
     void setRightPower(double power) {
-
         power = clip(power, -1, 1); //because david is trash at building robots and it turns by itself we need to slow this side down, you know it would be so much more effective if you did it in hardware you ass - August
         run_using_encoders();
         FR.setPower(-power);

@@ -194,7 +194,7 @@ public abstract class TeleOpOctopus extends OpMode {
         lock.setPosition(1);
         lock1.setPosition(0);
         clmbrDmprB.setPosition(0.1);
-        beacon.setPosition(0.5);
+        beacon.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
     }
@@ -308,6 +308,7 @@ public abstract class TeleOpOctopus extends OpMode {
                // clmbrDmprR.setPosition(1);
             } else{
                 clmbrDmprB.setPosition(0.1);
+                beacon.setPosition(1);
                // clmbrDmprR.setPosition(1);
             }
     }
@@ -333,12 +334,14 @@ public abstract class TeleOpOctopus extends OpMode {
                 wasDown = false;
             }
             if (lockDown) {
-                lock.setPosition(0);
+                lock.setPosition(0.1);
                 lock1.setPosition(1);
             } else {
                 lock.setPosition(1);
                 lock1.setPosition(0);
             }
+            if (lock1.getPosition()>0.9)
+                clmbrDmprB.setPosition(0.5);
 
             if (side == 1) {
                 sideArmL.setPosition(0.8);
@@ -406,8 +409,8 @@ public abstract class TeleOpOctopus extends OpMode {
          */
         //tension the pullUp motor
         if (gamepad2.a) {
-            pullUp1.setPower(0.2);
-            pullUp2.setPower(-0.2);
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
         }
         /**
          * if b is pressed, this loosens the pull up motor

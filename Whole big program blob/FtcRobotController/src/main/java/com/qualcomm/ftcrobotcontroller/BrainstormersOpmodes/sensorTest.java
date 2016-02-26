@@ -35,7 +35,7 @@ public class sensorTest extends LinearOpMode{
        sensorRGB = hardwareMap.colorSensor.get("cs2");
        beacon = hardwareMap.servo.get("beacon");
 
-       beacon.setPosition(0.6);
+       beacon.setPosition(0.1);
        //cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
        waitForStart();
        gyroSensor.calibrate();
