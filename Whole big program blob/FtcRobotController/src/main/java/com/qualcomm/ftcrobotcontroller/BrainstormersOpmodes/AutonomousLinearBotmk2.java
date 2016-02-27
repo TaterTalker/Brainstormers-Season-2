@@ -29,7 +29,6 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         doorR.setPosition(0.8);
         beacon.setPosition(0);
         debDumper.setPosition((turnDirection + 1) / 2);
-        startCam();
         sleep(5000);
         telemetry.addData("Init", "done");
 
@@ -57,7 +56,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         sleep(300);
         sleep(delay);
         collector.setPower(-0.7);
-
+        climberDumperB.setPosition(0.1);
         if (startNearRamp) { //near ramp position
             drive(2000, .4, false, false, 0);
             if (turnDirectionInput == 1) {
@@ -76,7 +75,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             }
             drive(7000, 1, true, true, 0);
         }
-
+        startCam();
         turnTo(25, 1);
         drive(900, .15, false, false, 1);
         drive(700, .20, false, false, 0);
@@ -95,20 +94,21 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         int leftred = leftRed();
         int rightred = rightRed();
 
-        telemetry.addData("Colors", "Left " + leftred/1000 + " Right: " + rightred/1000);
+        telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
         if(leftred>rightred) //left side is red
             if(turnDirection==-1)
-                beacon.setPosition(0.1);
+                beacon.setPosition(0.2);
             else
-                beacon.setPosition(0.5);
+                beacon.setPosition(0.6);
         else //right side is red
             if(turnDirection==-1)
-                beacon.setPosition(0.5);
+                beacon.setPosition(0.6);
             else
-                beacon.setPosition(0.1);
+                beacon.setPosition(0.2);
 
         sleep(500);
         driveUntilUltra(15, 0.1, 500);
+        drive(100, -0.3, false, false, 0);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
@@ -119,7 +119,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         drive(3000, 1, false, false, 0);
         collector.setPower(1);
         turnTo(135, 1);
-
+        /*
         if (turnDirectionInput == 1) {
             turnTo(-52, 1);
         }
@@ -135,10 +135,11 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             sideArmL.setPosition(0.1);
         }
 
-        drive(10000, -0.7, false, false, 0); //climbs ramp.
+        //drive(10000, -0.7, false, false, 0); //climbs ramp.
         telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
         sleep(100);
         waitOneFullHardwareCycle();
+        */
     }
 
     //separate turn test function not in use.
