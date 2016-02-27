@@ -62,7 +62,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             if (turnDirectionInput == 1) {
                 turnTo(36, 0);
             } else {
-                turnTo(38, 0);
+                turnTo(37, 0);
             }
             drive(4600, 1, true, true, 0);
         }
@@ -71,7 +71,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
             if (turnDirectionInput == 1) {
                 turnTo(50, 0);
             } else {
-                turnTo(52, 0);
+                turnTo(51, 0);
             }
             drive(7000, 1, true, true, 0);
         }
@@ -87,7 +87,7 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         }
         stopMotors();
         collector.setPower(0);
-        driveUntilUltra(30, 0.1, 500);
+        driveUntilUltra(30, 0.1, 600);
         sleep (700);
 
         //use camera to analyze the image and get the left and right red values
@@ -107,8 +107,10 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
                 beacon.setPosition(0.2);
 
         sleep(500);
-        driveUntilUltra(15, 0.1, 500);
-        drive(100, -0.3, false, false, 0);
+        driveUntilUltra(15, 0.1, 200);
+        waitForNextHardwareCycle();
+        driveUntilUltra(15, 0.1, 200);
+        drive(80, -0.2, false, false, 0);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);
