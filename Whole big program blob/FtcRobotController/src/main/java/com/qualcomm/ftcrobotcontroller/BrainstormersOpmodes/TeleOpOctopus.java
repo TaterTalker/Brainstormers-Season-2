@@ -561,7 +561,7 @@ public abstract class TeleOpOctopus extends OpMode {
         if (gamepad1.right_trigger == 1 && fr.getPower()>0){
             driveMod = 1.2f;
         }else if (gamepad1.right_trigger == 1 && fr.getPower()<0) {
-            driveMod = 2f;
+            driveMod = 2.4f;
         }
         else
             driveMod = 1;
