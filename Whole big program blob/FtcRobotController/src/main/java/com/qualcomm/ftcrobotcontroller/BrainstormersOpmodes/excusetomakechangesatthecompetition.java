@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousLinearBotmk2 extends advancedMethods {
+public abstract class excusetomakechangesatthecompetition extends AutonomousMethods {
     /**
      * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
@@ -52,12 +52,6 @@ public abstract class AutonomousLinearBotmk2 extends advancedMethods {
         else
             telemetry.addData("Far From Ramp", "");
         telemetry.addData("Ready", "");
-        if(tigBacon){
-            telemetry.addData("Beacon" , "Activated");
-        }
-        else{
-            telemetry.addData(" No Beacon" , "Deactivated");
-        }
 
         waitForStart(); //everything before this happens when you press init
 
@@ -86,7 +80,7 @@ public abstract class AutonomousLinearBotmk2 extends advancedMethods {
         }
         startCam();
         turnTo(25, 1);
-        drive(873, .15, false, false, 1);
+        drive(900, .15, false, false, 1);
         drive(700, .20, false, false, 0);
         if (turnDirectionInput == 1){
             turnTo(88, 0);
@@ -97,31 +91,29 @@ public abstract class AutonomousLinearBotmk2 extends advancedMethods {
         stopMotors();
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 600);
-
+        sleep (700);
 
         //use camera to analyze the image and get the left and right red values
         if (tigBacon==true) {
-            sleep (700);
             int leftred = leftRed();
             int rightred = rightRed();
 
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred) //left side is red
                 if (turnDirection == -1)
-                    beacon.setPosition(0.3);
+                    beacon.setPosition(0.2);
                 else
-                    beacon.setPosition(0.7);
+                    beacon.setPosition(0.6);
             else //right side is red
                 if (turnDirection == -1)
-                    beacon.setPosition(0.7);
+                    beacon.setPosition(0.6);
                 else
-                    beacon.setPosition(0.3);
-            sleep(500);
+                    beacon.setPosition(0.2);
         }
+        sleep(500);
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
         driveUntilUltra(15, 0.1, 200);
-        drive(65, -0.2, false, false, 0);
         climberDumperB.setPosition(1);
         sleep(1000);
         climberDumperB.setPosition(0);

@@ -177,7 +177,16 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     isComplete = (hasLeftReached(distance) || hasRightReached(distance));
                     break;
                 case 1:
-                    isComplete = colorSensor2.alpha() > 1 || hasLeftReached(distance) || hasRightReached(distance);
+
+                    boolean colorvalue = false;
+                    try{
+                      colorvalue = colorSensor2.alpha() > 1;
+
+                    }catch(Exception fuck){
+
+                    }
+
+                    isComplete = colorvalue || hasLeftReached(distance) || hasRightReached(distance);
                     telemetry.addData("alpha", colorSensor2.alpha());
                     break;
                 default:

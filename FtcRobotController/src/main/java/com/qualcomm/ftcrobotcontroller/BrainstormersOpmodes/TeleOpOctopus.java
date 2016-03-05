@@ -185,10 +185,10 @@ public abstract class TeleOpOctopus extends OpMode {
         lock = hardwareMap.servo.get("lock");
         lock1 = hardwareMap.servo.get("lock1");
 
-        ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         oldarm = 0;
         lock.setPosition(1);
@@ -209,6 +209,7 @@ public abstract class TeleOpOctopus extends OpMode {
         drive();
         attachments();
         hang();
+
         telemetry.addData("Ext", "" + ext.getCurrentPosition());
         telemetry.addData("PullUp1", "" + pullUp1.getCurrentPosition());
     }
@@ -275,26 +276,37 @@ public abstract class TeleOpOctopus extends OpMode {
     * as this happens the proper release door ({@link #doorR} or {@link #doorL})  opens
     */
     private void dumping() {
+
         if (side == 1) {
             // blue side
             if (gamepad2.dpad_right) {
                 dumper.setPosition(0);
                 doorR.setPosition(0.3);
-            } else { //default position
-                dumper.setPosition(0.4);
+            }
+            else if (gamepad2.dpad_left)
+            {
+                dumper.setPosition(1);
+            }
+            else { //default position
+                dumper.setPosition(0.5);
                 doorR.setPosition(0.85);
                 doorL.setPosition(0.15);
             }
         } else {
             // red side
             if (gamepad2.dpad_left) {
-                dumper.setPosition(0.4);
+                dumper.setPosition(1);
                 doorL.setPosition(0.7);
-            } else { //default position
-                dumper.setPosition(0);
-                doorL.setPosition(0.15);
-                doorR.setPosition(0.95);
             }
+            else if (gamepad2.dpad_right) {
+                dumper.setPosition(0);
+            }
+            else{ //default position
+                    dumper.setPosition(0.5);
+                    doorL.setPosition(0.15);
+                    doorR.setPosition(0.95);
+                }
+
         }
     }
 
@@ -359,7 +371,7 @@ public abstract class TeleOpOctopus extends OpMode {
             sideArmR.setPosition(0.5);
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
-            ext.setPower(1);
+            //ext.setPower(1);
             //oldarm = ext.getCurrentPosition();
         }
         //sends arm out
@@ -370,22 +382,21 @@ public abstract class TeleOpOctopus extends OpMode {
         else if (gamepad2.right_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
-            ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            //ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-            ext.setPower(-1);
+            //ext.setPower(-1);
             //oldarm = ext.getCurrentPosition();
-            if (pullUp1.getCurrentPosition()>ext.getCurrentPosition()-200) {
+            //if (pullUp1.getCurrentPosition()>ext.getCurrentPosition()-200) {
                 //pullUp1.setPower(-0.13);
                 //pullUp2.setPower(0.13);
-                pullUp1.setPower(-0.5);
-                pullUp2.setPower(0.5);
-            } else {
-                pullUp1.setPower(0);
-                pullUp2.setPower(0);
-            }
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
+           // } else {
+                //pullUp1.setPower(0);
+              //  pullUp2.setPower(0);
+           // }
         } else {
-            ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
             //oldarm = ext.getCurrentPosition();
@@ -395,12 +406,11 @@ public abstract class TeleOpOctopus extends OpMode {
          * if the arm is fully retracted this stops it from trying to retract further
          * it is controlled by touch sensor {@link #extStop}
          */
+
         if (extStop.isPressed() && gamepad2.left_trigger != 0) {
-            ext.setPower(0);
             pullUp1.setPower(0);
             pullUp2.setPower(0);
-            oldarm = ext.getCurrentPosition();
-            ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            //oldarm = ext.getCurrentPosition();
             pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
 
@@ -416,8 +426,8 @@ public abstract class TeleOpOctopus extends OpMode {
          * if b is pressed, this loosens the pull up motor
          */
         if (gamepad2.b) {
-            pullUp1.setPower(-0.2);
-            pullUp2.setPower(0.2);
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
         }
     }
 
@@ -426,27 +436,12 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
-        if(gamepad2.left_stick_y > .5) {
-            armAngle1.setPosition(1);
-        }
-        else if(gamepad2.left_stick_y < -.5) {
-            armAngle1.setPosition(0);
-            sideArmR.setPosition(0.6);
-            sideArmL.setPosition(0.2);
-        } else {
-            armAngle1.setPosition(0.5);
-        }
-
-        if(gamepad2.right_stick_y > .5) {
-            armAngle2.setPosition(1);
-        }
-        else if(gamepad2.right_stick_y < -.5) {
-            armAngle2.setPosition(0);
-            sideArmR.setPosition(0.6);
-            sideArmL.setPosition(0.2);
-        } else {
-            armAngle2.setPosition(0.5);
-        }
+        if(gamepad2.dpad_up)
+            ext.setPower(1);
+        else if(gamepad2.dpad_down)
+            ext.setPower(-1);
+        else
+            ext.setPower(0);
     }
 
     /**
@@ -456,7 +451,7 @@ public abstract class TeleOpOctopus extends OpMode {
         if (gamepad1.left_bumper){
             armHook.setPosition(0.6);
         } else {
-            armHook.setPosition(0.1);
+            armHook.setPosition(0.3);
         }
     }
 
