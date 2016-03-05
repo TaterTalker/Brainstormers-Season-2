@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
+public abstract class AutonomousLinearBotmk2 extends advancedMethods {
     /**
      * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
@@ -23,8 +23,8 @@ public abstract class AutonomousLinearBotmk2 extends AutonomousMethods {
         climberDumperB.setPosition(0);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
-       sideArmL.setPosition(0.75);
-         sideArmR.setPosition(0);
+        sideArmL.setPosition(0.75);
+        sideArmR.setPosition(0);
         doorL.setPosition(0.3);
         doorR.setPosition(0.8);
         beacon.setPosition(0);
