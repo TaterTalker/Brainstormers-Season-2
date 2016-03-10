@@ -275,36 +275,68 @@ public abstract class TeleOpOctopus extends OpMode {
      * slides {@link #dumper} across the hopper, bringing the debris with it
     * as this happens the proper release door ({@link #doorR} or {@link #doorL})  opens
     */
+
+    int movecount = 0;
     private void dumping() {
+        telemetry.addData("Moving", "move: " + movecount);
 
         if (side == 1) {
             // blue side
             if (gamepad2.dpad_right) {
                 dumper.setPosition(0);
                 doorR.setPosition(0.3);
+                movecount++;
+                if(movecount>250){
+                    movecount = 250;
+                }
+
             }
             else if (gamepad2.dpad_left)
             {
                 dumper.setPosition(1);
             }
             else { //default position
-                dumper.setPosition(0.5);
-                doorR.setPosition(0.85);
-                doorL.setPosition(0.15);
+
+                if(movecount>50){
+                    dumper.setPosition(1);
+                    movecount--;
+                }
+                else {
+                    dumper.setPosition(0.5);
+                }
+
+                if(movecount<200) {
+                    doorR.setPosition(0.85);
+                    doorL.setPosition(0.15);
+                }
             }
         } else {
             // red side
             if (gamepad2.dpad_left) {
+                movecount++;
                 dumper.setPosition(1);
+
                 doorL.setPosition(0.7);
+
+                if(movecount>250){
+                    movecount = 250;
+                }
             }
             else if (gamepad2.dpad_right) {
                 dumper.setPosition(0);
             }
             else{ //default position
+                if(movecount>50){
+                    dumper.setPosition(0);
+                    movecount--;
+                } else {
                     dumper.setPosition(0.5);
+                }
+
+                if(movecount<200) {
                     doorL.setPosition(0.15);
                     doorR.setPosition(0.95);
+                }
                 }
 
         }
