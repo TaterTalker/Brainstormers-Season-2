@@ -30,12 +30,15 @@ public class AdafruitIMUmanager extends OpMode {
             telemetry.addData("2","");
             boschBNO055 = new AdafruitIMU(hardwareMap, "bno055"
 
+
                     //The following was required when the definition of the "I2cDevice" class was incomplete.
                     //, "cdim", 5
 
                     , (byte)(AdafruitIMU.BNO055_ADDRESS_A * 2)//By convention the FTC SDK always does 8-bit I2C bus
                     //addressing
                     , (byte)AdafruitIMU.OPERATION_MODE_IMU);
+                    boschBNO055.startIMU();
+                    telemetry.addData("passed", "passed");
         } catch (RobotCoreException e){
             Log.i("FtcRobotController", "Exception: " + e.getMessage());
             telemetry.addData("3", "");
@@ -48,6 +51,7 @@ public class AdafruitIMUmanager extends OpMode {
         //ADDRESS_A IS THE IMU'S OPERATIVE I2C BUS ADDRESS
         //IMU is an appropriate operational mode for FTC competitions. (See the IMU datasheet, Table
         // 3-3, p.20 and Table 3-5, p.21.)
+        telemetry.addData("gotit","");
     }
 
     /************************************************************************************************
@@ -57,6 +61,7 @@ public class AdafruitIMUmanager extends OpMode {
     @Override
     public void start() {
         telemetry.addData("4","");
+
         /*
       	* Use the hardwareMap to get the dc motors, servos and other sensors by name. Note
       	* that the names of the devices must match the names used when you
@@ -82,6 +87,7 @@ public class AdafruitIMUmanager extends OpMode {
      */
     @Override
     public void loop() {
+        boschBNO055.startIMU();
         telemetry.addData("5","");
         //Log.i("FtcRobotController", "Loop method starting at: " +
         //      -(systemTime - (systemTime = System.nanoTime())) + " since last loop start.");
@@ -94,13 +100,11 @@ public class AdafruitIMUmanager extends OpMode {
 		 * Send whatever telemetry data you want back to driver station.
 		 */
         //telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("Headings(yaw): ",
-                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-        telemetry.addData("Pitches: ",
-                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
-        telemetry.addData("Max I2C read interval: ",
-                String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
-                        , boschBNO055.avgReadInterval));
+        telemetry.addData("Roll: ",
+                String.format("Euler= %f, Quaternion calculated= %f", rollAngle[0], rollAngle[1]));
+        telemetry.addData("Pitch: ",
+                String.format("Euler= %f, Quaternion calculated= %f", pitchAngle[0], pitchAngle[1]));
+       // telemetry.addData("Max I2C read interval: ", String.format("%f ms. Average interval: %f ms.", boschBNO055.maxReadInterval, boschBNO055.avgReadInterval));
         telemetry.addData("yaw 2", yaw());
     }
 
@@ -118,7 +122,7 @@ public class AdafruitIMUmanager extends OpMode {
                 + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
     }
 
-    public double yaw(){ //READ THIS IGNORE THE REST OF THIS FILE
-        return Double.valueOf(String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
+    public String yaw(){ //READ THIS IGNORE THE REST OF THIS FILE
+        return String.format("Euler= %f, Quaternion calculated= %f", yawAngle[0], yawAngle[1]);
     }
 }
