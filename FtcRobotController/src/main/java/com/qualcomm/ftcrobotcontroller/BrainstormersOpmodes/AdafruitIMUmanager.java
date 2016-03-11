@@ -87,7 +87,7 @@ public class AdafruitIMUmanager extends OpMode {
      */
     @Override
     public void loop() {
-        boschBNO055.startIMU();
+        //boschBNO055.startIMU();
         telemetry.addData("5","");
         //Log.i("FtcRobotController", "Loop method starting at: " +
         //      -(systemTime - (systemTime = System.nanoTime())) + " since last loop start.");
