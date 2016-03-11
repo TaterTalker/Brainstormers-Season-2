@@ -48,14 +48,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * the motor that powers the collector
      */
     DcMotor collect;
-    /**
-     * arm angler 1
-     */
-    Servo armAngle1;
-    /**
-     * arm angler 2
-     */
-    Servo armAngle2;
+
     /**
      * the servo which controls the sliding dumper block
      */
@@ -170,8 +163,6 @@ public abstract class TeleOpOctopus extends OpMode {
         doorR = hardwareMap.servo.get("doorR");
         doorL = hardwareMap.servo.get("doorL");
         collect = hardwareMap.dcMotor.get("collect");
-        armAngle1 = hardwareMap.servo.get("armAngle1");
-        armAngle2 = hardwareMap.servo.get("armAngle2");
         dumper = hardwareMap.servo.get("dumper");
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
@@ -209,8 +200,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     @Override
     public void loop() {
-        drive();
+        pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         attachments();
+        drive();
         hang();
 
         telemetry.addData("Ext", "" + ext.getCurrentPosition());
@@ -416,7 +409,6 @@ public abstract class TeleOpOctopus extends OpMode {
             sideArmR.setPosition(0.5);
             pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
             pullUp1.setPower(-gamepad2.right_trigger);
             pullUp2.setPower(gamepad2.right_trigger);
         } else {
@@ -433,10 +425,7 @@ public abstract class TeleOpOctopus extends OpMode {
          * if a is pressed, this tightens the pull up motor
          */
         //tension the pullUp motor
-        if (gamepad2.a) {
-            pullUp1.setPower(1);
-            pullUp2.setPower(-1);
-        }
+
         /**
          * if b is pressed, this loosens the pull up motor
          */
@@ -444,13 +433,26 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(-1);
             pullUp2.setPower(1);
         }
+        else if (gamepad2.a) {
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
+        }
+        else if ( Math.abs(pullUp1.getCurrentPosition())<100 && gamepad1.right_trigger == 0) {
 
-        else if ( Math.abs(pullUp1.getCurrentPosition())<50 && Math.abs(pullUp2.getCurrentPosition())<50 && gamepad2.left_trigger != 0) {
+            pullUp1.setPower(-gamepad2.right_trigger);
+            pullUp2.setPower(gamepad2.right_trigger);
 
-            pullUp1.setPower(0);
-            pullUp2.setPower(0);
         }
     }
+
+    double clip(double variable, double min, double max) {
+
+        if (variable < min) variable = min;
+        if (variable > max) variable = max;
+
+        return variable;
+    }
+
 
     /**
      * sets the angle of the arm
@@ -506,10 +508,14 @@ public abstract class TeleOpOctopus extends OpMode {
 
     private void hang(){
         if (gamepad1.y) {
+
+
+
             pullUp1.setPower(0.8);
             pullUp2.setPower(-0.8);
-            if (ext.getCurrentPosition()<0)
-                ext.setPower(.5);
+            //switched ext less thn to greater than
+            if (ext.getCurrentPosition()>0)
+                ext.setPower(-.5);
             else
                 ext.setPower(0);
             oldarm = ext.getCurrentPosition();
@@ -521,8 +527,6 @@ public abstract class TeleOpOctopus extends OpMode {
 
             telemetry.addData("hang", "" + ext.getCurrentPosition());
 
-            armAngle1.setPosition(1);
-            armAngle2.setPosition(1);
         }
     }
 
@@ -564,10 +568,10 @@ public abstract class TeleOpOctopus extends OpMode {
      * @see #bl
      */
     private void setPower() {
-        fr.setPower(Range.clip(FRpower, -1, 1)/driveMod);
-        br.setPower(Range.clip(BRpower, -1, 1)/driveMod);
-        fl.setPower(Range.clip(FLpower, -1, 1)/driveMod);
-        bl.setPower(Range.clip(BLpower, -1, 1)/driveMod);
+        fr.setPower(Range.clip(FRpower, -1, 1)*driveMod);
+        br.setPower(Range.clip(BRpower, -1, 1)*driveMod);
+        fl.setPower(Range.clip(FLpower, -1, 1)*driveMod);
+        bl.setPower(Range.clip(BLpower, -1, 1)*driveMod);
     }
 
     /**
@@ -576,16 +580,27 @@ public abstract class TeleOpOctopus extends OpMode {
     private void slowRobot() {
 
         if(gamepad1.right_trigger ==1) {
+
             if (fr.getPower() > 0) {
-                driveMod = 1.2f;
+                driveMod = 1f;
+                if( Math.abs( pullUp1.getCurrentPosition()) < 2500){
+                    pullUp1.setPower(-1);
+                    pullUp2.setPower(1);
+                }
+                else{
+                    pullUp1.setPower(0);
+                    pullUp2.setPower(0);
+                }
+
+
+
             } else if (fr.getPower() < 0) {
-                driveMod = 2.4f;
+                driveMod = 0.5f;
+
             }
-            if( Math.abs( pullUp1.getCurrentPosition()) < 4000 && Math.abs( pullUp2.getCurrentPosition() ) < 4000  ){
-                pullUp1.setPower(-1);
-                pullUp2.setPower(1);
-            }
+
         }
+
         else
             driveMod = 1;
     }
