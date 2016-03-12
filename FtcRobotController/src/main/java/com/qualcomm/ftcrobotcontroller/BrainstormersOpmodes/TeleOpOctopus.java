@@ -244,8 +244,8 @@ public abstract class TeleOpOctopus extends OpMode {
         collector();
         dumping();
         climberDumper();
-        sideArm();
         processArm();
+        sideArm();
         hook();
         angleArm();
     }
