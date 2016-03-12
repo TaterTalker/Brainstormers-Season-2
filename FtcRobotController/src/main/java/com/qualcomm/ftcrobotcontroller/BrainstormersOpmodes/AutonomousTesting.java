@@ -11,12 +11,10 @@ public class AutonomousTesting extends AvancedMethods {
         BR = hardwareMap.dcMotor.get("br");
         BL = hardwareMap.dcMotor.get("bl");
         advancedgyro = new AdafruitIMUmanager();
-
         advancedgyro.init();
-        advancedgyro.start();
-
         sleep(5000);
         waitForStart();
+        advancedgyro.start();
 
         newturnTo(90,0.5);
         sleep(1000);
