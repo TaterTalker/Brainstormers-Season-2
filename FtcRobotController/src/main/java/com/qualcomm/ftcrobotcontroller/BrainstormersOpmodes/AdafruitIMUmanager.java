@@ -125,6 +125,7 @@ public class AdafruitIMUmanager extends OpMode {
     }
 
     public double getYaw(){ //READ THIS IGNORE THE REST OF THIS FILE
+        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
         return yawAngle[1];
     }
 }

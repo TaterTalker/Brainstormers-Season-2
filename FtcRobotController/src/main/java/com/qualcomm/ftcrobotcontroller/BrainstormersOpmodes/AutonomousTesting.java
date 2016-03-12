@@ -6,20 +6,21 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 public class AutonomousTesting extends AvancedMethods {
     @Override
     public void runOpMode() throws InterruptedException {
-        getRobotConfig();
-        beacon.setPosition(0);
+        FR = hardwareMap.dcMotor.get("fr");
+        FL = hardwareMap.dcMotor.get("fl");
+        BR = hardwareMap.dcMotor.get("br");
+        BL = hardwareMap.dcMotor.get("bl");
         advancedgyro = new AdafruitIMUmanager();
 
         advancedgyro.init();
+        advancedgyro.start();
+
         sleep(5000);
-        telemetry.addData("init", " done");
         waitForStart();
 
-
-            beacon.setPosition(0.4); //right
-            sleep(2000);
-            beacon.setPosition(0.1); //left
-            sleep(2000);
+        newturnTo(90,0.5);
+        sleep(1000);
+        PIdrive(1000,0.9);
 
 
     }

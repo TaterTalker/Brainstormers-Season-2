@@ -59,6 +59,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         //manager.register("ramp detection", rampDetection.class);
         //manager.register("autonomous test", AutonomousTesting.class);
         manager.register("new gyo test", AdafruitIMUmanager.class);
+        manager.register("autonmoose test", AutonomousTesting.class);
 
     }
 }

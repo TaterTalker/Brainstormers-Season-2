@@ -21,7 +21,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
         }
     }
 
-    void newturnTo(int degrees, int tolerance) throws InterruptedException {
+    void newturnTo(double degrees, double tolerance) throws InterruptedException {
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
 
@@ -36,9 +36,9 @@ public abstract class AvancedMethods extends AutonomousMethods {
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)
-                difference = difference - 360;
+                difference = difference - 360.0;
             } else if (difference < -180) {
-                difference = 360 + difference;
+                difference = 360.0 + difference;
             }
 
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
@@ -46,7 +46,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
             power = clip(power, 0.075, 0.35);
 
             if (cyclesMaxPower == 0) {
-                cyclesMaxPower = Math.abs(difference / 30) + 3;
+                cyclesMaxPower = Math.abs(difference / 30.0) + 3;
             }
 
             if (count < cyclesMaxPower && Math.abs(difference) > 20) { //speeds up out power to speed up turn during the beginning of the turn
