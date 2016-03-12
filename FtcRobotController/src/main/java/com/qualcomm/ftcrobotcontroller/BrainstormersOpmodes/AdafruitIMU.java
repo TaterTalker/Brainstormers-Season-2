@@ -663,4 +663,19 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
     public void close() {
     }
 
+    public double getXOffset() {
+         double xOffset;
+         xOffset = (double) ((short)
+                 ((i2cReadCache[GYRO_OFFSET_X_MSB_ADDR - readCacheOffset] & 0XFF) << 8)
+                 | (i2cReadCache[GYRO_OFFSET_X_LSB_ADDR - readCacheOffset] & 0XFF)) / 16384.0; //Quaternion component "X"
+        return xOffset;
+    }
+
+    public double getYOffset() {
+        double yOffset;
+        yOffset = (double) ((short)
+                ((i2cReadCache[GYRO_OFFSET_Y_MSB_ADDR - readCacheOffset] & 0XFF) << 8)
+                | (i2cReadCache[GYRO_OFFSET_Y_LSB_ADDR - readCacheOffset] & 0XFF)) / 16384.0; //Quaternion component "X"
+        return yOffset;
+    }
 }
