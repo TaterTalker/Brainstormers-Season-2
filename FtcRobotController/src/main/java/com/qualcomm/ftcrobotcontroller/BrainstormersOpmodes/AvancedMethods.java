@@ -3,7 +3,7 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
 /**
  * Created by August on 3/5/2016.
  */
-public abstract class advancedMethods extends AutonomousMethods {
+public abstract class AvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power){
         double deviationGain=1;
         double overshootGain=0.5;
