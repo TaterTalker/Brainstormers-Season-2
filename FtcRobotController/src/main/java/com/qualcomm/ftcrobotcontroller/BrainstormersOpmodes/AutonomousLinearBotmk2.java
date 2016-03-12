@@ -13,11 +13,6 @@ public abstract class AutonomousLinearBotmk2 extends AvancedMethods {
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
 
-
-         advancedgyro = new AdafruitIMUmanager();
-
-        advancedgyro.init();
-
         turnDirection = turnDirectionInput; //adjusts turns based on team color
         getRobotConfig();//Map Motors and Sensors
 
@@ -163,12 +158,12 @@ public abstract class AutonomousLinearBotmk2 extends AvancedMethods {
     //separate turn test function not in use.
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();
-        turnTo(36, 0);
-        turnTo(25, 1);
-        turnTo(88, 0);
-        turnTo(-170, 1);
-        turnTo(135, 1);
-        turnTo(-52, 1);
+        newturnTo(36, 0.5);
+        newturnTo(25, 0.5);
+        newturnTo(88, 0.5);
+        newturnTo(-170, 0.5);
+        newturnTo(135, 0.5);
+        newturnTo(-52, 0.5);
         long end=System.currentTimeMillis();
         telemetry.addData("timing", Long.toString(end-start));
         sleep(150000);

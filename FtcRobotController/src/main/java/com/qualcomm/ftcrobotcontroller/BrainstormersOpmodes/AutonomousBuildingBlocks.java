@@ -3,15 +3,13 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
  * Created by August on 2/8/2016.
  */
-public abstract class AutonomousBuildingBlocks extends CameraOp {
-
+public abstract class AutonomousBuildingBlocks extends AdafruitIMUmethods {
 
     //Driving Motors
     DcMotor FL;
@@ -21,7 +19,6 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
 
     int FRold, BRold, FLold, BLold, delay=0;
 
-    AdafruitIMUmanager advancedgyro;
     //Sensors
     Servo beacon;
     int lastgyro;
@@ -355,5 +352,7 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
         FLold = FL.getCurrentPosition();
         BLold = BL.getCurrentPosition();
     }
+
+
 
 }

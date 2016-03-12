@@ -5,16 +5,16 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
  */
 public abstract class AvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power){
+        startIUM();
         double deviationGain=1;
         double overshootGain=0.5;
         double overShoot=0;
-        double oldYaw=advancedgyro.getYaw();
         boolean hasReached=Math.abs(FRposition()+FLposition()+BRposition()+BLposition())/4<Math.abs(distance);
 
         while(hasReached){
-            double yaw=advancedgyro.getYaw();
-            double deviation=(yaw-oldYaw)*deviationGain;
-            overShoot+=yaw-oldYaw;
+            double yaw=getYaw();
+            double deviation=(yaw)*deviationGain;
+            overShoot+=yaw;
             overShoot*=overshootGain;
             setLeftPower(power+deviation+overShoot);
             setRightPower(power-deviation-overShoot);
@@ -22,6 +22,8 @@ public abstract class AvancedMethods extends AutonomousMethods {
     }
 
     void newturnTo(double degrees, double tolerance) throws InterruptedException {
+        startIUM();
+        double gain=0.02;
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
 
@@ -32,7 +34,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
-            heading = advancedgyro.getYaw();
+            heading = getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)
@@ -42,8 +44,8 @@ public abstract class AvancedMethods extends AutonomousMethods {
             }
 
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
-            power = Math.abs(difference / 45);
-            power = clip(power, 0.075, 0.35);
+            power = Math.abs(difference * gain);
+            power = clip(power, 0, 0.35);
 
             if (cyclesMaxPower == 0) {
                 cyclesMaxPower = Math.abs(difference / 30.0) + 3;
@@ -53,6 +55,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
                 power = 1;
             }
 
+            telemetry.addData("power", "" + power);
             if (Math.abs(difference) <= tolerance) { //how far off the turn can be while still being successful (tolerance of turn)
                 countwithintolerence++;
                 if (countwithintolerence > 15) {
