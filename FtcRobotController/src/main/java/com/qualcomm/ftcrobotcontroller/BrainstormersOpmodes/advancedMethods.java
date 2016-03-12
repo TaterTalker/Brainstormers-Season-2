@@ -1,5 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
-
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
 /**
  * Created by August on 3/5/2016.
  */
@@ -15,7 +15,7 @@ public abstract class advancedMethods extends AutonomousMethods {
         }
     }
 
-    void turnTo(int degrees, int tolerance) throws InterruptedException {
+    void newturnTo(int degrees, int tolerance) throws InterruptedException {
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
 
@@ -26,7 +26,7 @@ public abstract class advancedMethods extends AutonomousMethods {
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
-            heading = gyroSensor.getHeading();
+            heading = advancedgyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)

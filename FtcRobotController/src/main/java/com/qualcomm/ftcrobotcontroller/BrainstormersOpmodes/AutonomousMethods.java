@@ -22,7 +22,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
-            heading = gyroSensor.getHeading();
+           heading = 0;
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)
@@ -105,7 +105,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
         int count = 0; //how many times the loop has run
         int blockedcount = 0; //determines how long the robot has been blocked for
         resetEncoderDelta();
-        resetGyro();
+      //  resetGyro();
 
         //start the drive wheel motors at full power otherwise when calculating turn heading from encoders all will be null and program will halt
         run_using_encoders();
@@ -147,9 +147,9 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
                     currSpeed = clip(currSpeed, -0.95, 0.95);
                 }
 
-                telemetry.addData("heading ", "" + heading());
-                telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
-                telemetry.addData("deviation", turnheading);
+//                telemetry.addData("heading ", "" + heading());
+//                telemetry.addData("absolute heading", " " + gyroSensor.getHeading());
+//                telemetry.addData("deviation", turnheading);
             } else {
                 turnheading = 0;
             }

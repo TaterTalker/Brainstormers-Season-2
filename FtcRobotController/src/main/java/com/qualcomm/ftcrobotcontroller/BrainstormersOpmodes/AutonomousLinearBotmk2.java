@@ -13,13 +13,16 @@ public abstract class AutonomousLinearBotmk2 extends advancedMethods {
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
 
+
+         advancedgyro = new AdafruitIMUmanager();
+
         turnDirection = turnDirectionInput; //adjusts turns based on team color
         getRobotConfig();//Map Motors and Sensors
 
         //Configure and Reset
         run_using_encoders();
         reset_drive_encoders();
-        gyroSensor.calibrate();
+      //  gyroSensor.calibrate();
         climberDumperB.setPosition(0);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);

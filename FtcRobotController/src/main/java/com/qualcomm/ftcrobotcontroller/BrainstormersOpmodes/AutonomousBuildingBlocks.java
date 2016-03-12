@@ -21,9 +21,9 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
 
     int FRold, BRold, FLold, BLold, delay=0;
 
+    AdafruitIMUmanager advancedgyro;
     //Sensors
     Servo beacon;
-    GyroSensor gyroSensor;
     int lastgyro;
     ColorSensor colorSensor2;
     DcMotor collector;
@@ -58,7 +58,6 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
         //lock = hardwareMap.servo.get("lock");
 
         //Sensors
-        gyroSensor = hardwareMap.gyroSensor.get("G1");
         climberDumperB = hardwareMap.servo.get("climberDumper");
         // colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor2 = hardwareMap.colorSensor.get("cs2");
@@ -203,26 +202,26 @@ public abstract class AutonomousBuildingBlocks extends CameraOp {
      * @throws InterruptedException
      * @see #heading()
      */
-    //Resets the gyro based on the old heading.
-    void resetGyro() throws InterruptedException {
-
-        while (gyroSensor.getHeading() - lastgyro != 0) {
-            lastgyro = gyroSensor.getHeading();
-            waitOneFullHardwareCycle();
-        }
-    }
-    /**
-     * gets an adjusted headier that can be reset
-     *
-     * @return the adjusted heading
-     */
-    int heading() {
-        int head;
-        head = gyroSensor.getHeading() - lastgyro;
-        if (head < 0)
-            head += 360;
-        return (head);
-    }
+//    //Resets the gyro based on the old heading.
+//    void resetGyro() throws InterruptedException {
+//
+//        while (gyroSensor.getHeading() - lastgyro != 0) {
+//            lastgyro = gyroSensor.getHeading();
+//            waitOneFullHardwareCycle();
+//        }
+//    }
+//    /**
+//     * gets an adjusted headier that can be reset
+//     *
+//     * @return the adjusted heading
+//     */
+//    int heading() {
+//        int head;
+//        head = gyroSensor.getHeading() - lastgyro;
+//        if (head < 0)
+//            head += 360;
+//        return (head);
+//    }
 
     /**
      * takes multiple ultrasonic readins and throws out anomalies
