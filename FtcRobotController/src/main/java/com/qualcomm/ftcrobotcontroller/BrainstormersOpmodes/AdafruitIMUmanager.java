@@ -107,6 +107,7 @@ public class AdafruitIMUmanager extends OpMode {
        // telemetry.addData("Max I2C read interval: ", String.format("%f ms. Average interval: %f ms.", boschBNO055.maxReadInterval, boschBNO055.avgReadInterval));
         telemetry.addData("yaw",
                 String.format("Euler= %f, Quaternion calculated= %f", yawAngle[0], yawAngle[1]));
+        telemetry.addData("getYaw yaw ", ""+getYaw());
     }
 
     /*

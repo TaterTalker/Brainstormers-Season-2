@@ -16,6 +16,8 @@ public abstract class AutonomousLinearBotmk2 extends advancedMethods {
 
          advancedgyro = new AdafruitIMUmanager();
 
+        advancedgyro.init();
+
         turnDirection = turnDirectionInput; //adjusts turns based on team color
         getRobotConfig();//Map Motors and Sensors
 

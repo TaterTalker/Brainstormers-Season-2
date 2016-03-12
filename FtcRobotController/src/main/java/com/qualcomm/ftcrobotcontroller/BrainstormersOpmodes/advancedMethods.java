@@ -5,13 +5,19 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
  */
 public abstract class advancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power){
-        int deviationGain=1;
-        int overShoot=0;
+        double deviationGain=1;
+        double overshootGain=0.5;
+        double overShoot=0;
+        double oldYaw=advancedgyro.getYaw();
         boolean hasReached=Math.abs(FRposition()+FLposition()+BRposition()+BLposition())/4<Math.abs(distance);
 
         while(hasReached){
-            int deviation=FRposition()+BRposition()-FLposition()-BLposition();
-
+            double yaw=advancedgyro.getYaw();
+            double deviation=(yaw-oldYaw)*deviationGain;
+            overShoot+=yaw-oldYaw;
+            overShoot*=overshootGain;
+            setLeftPower(power+deviation+overShoot);
+            setRightPower(power-deviation-overShoot);
         }
     }
 
