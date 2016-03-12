@@ -105,7 +105,8 @@ public class AdafruitIMUmanager extends OpMode {
         telemetry.addData("Pitch: ",
                 String.format("Euler= %f, Quaternion calculated= %f", pitchAngle[0], pitchAngle[1]));
        // telemetry.addData("Max I2C read interval: ", String.format("%f ms. Average interval: %f ms.", boschBNO055.maxReadInterval, boschBNO055.avgReadInterval));
-        telemetry.addData("yaw 2", yaw());
+        telemetry.addData("yaw",
+                String.format("Euler= %f, Quaternion calculated= %f", yawAngle[0], yawAngle[1]));
     }
 
     /*
@@ -122,7 +123,7 @@ public class AdafruitIMUmanager extends OpMode {
                 + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
     }
 
-    public String yaw(){ //READ THIS IGNORE THE REST OF THIS FILE
-        return String.format("Euler= %f, Quaternion calculated= %f", yawAngle[0], yawAngle[1]);
+    public double getYaw(){ //READ THIS IGNORE THE REST OF THIS FILE
+        return yawAngle[1];
     }
 }
