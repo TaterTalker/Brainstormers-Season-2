@@ -23,7 +23,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
 
     void newturnTo(double degrees, double tolerance) throws InterruptedException {
         startIUM();
-        double gain=0.02;
+        double gain=0.015;
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
 
@@ -44,8 +44,8 @@ public abstract class AvancedMethods extends AutonomousMethods {
             }
 
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
-            power = Math.abs(difference * gain);
-            power = clip(power, 0, 0.35);
+            power = Math.abs(difference*gain);
+            power = clip(power, 0.03, 0.35);
 
             if (cyclesMaxPower == 0) {
                 cyclesMaxPower = Math.abs(difference / 30.0) + 3;
@@ -53,6 +53,7 @@ public abstract class AvancedMethods extends AutonomousMethods {
 
             if (count < cyclesMaxPower && Math.abs(difference) > 20) { //speeds up out power to speed up turn during the beginning of the turn
                 power = 1;
+                telemetry.addData("1", "power");
             }
 
             telemetry.addData("power", "" + power);
