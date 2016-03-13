@@ -244,8 +244,8 @@ public abstract class TeleOpOctopus extends OpMode {
         collector();
         dumping();
         climberDumper();
-        processArm();
         sideArm();
+        processArm();
         hook();
         angleArm();
     }
@@ -438,10 +438,8 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp2.setPower(-1);
         }
         else if ( Math.abs(pullUp1.getCurrentPosition())<100 && gamepad1.right_trigger == 0) {
-
             pullUp1.setPower(-gamepad2.right_trigger);
             pullUp2.setPower(gamepad2.right_trigger);
-
         }
     }
 
@@ -459,9 +457,9 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
-        if(gamepad2.dpad_up)
+        if(gamepad2.left_stick_y > .03)
             ext.setPower(1);
-        else if(gamepad2.dpad_down)
+        else if (gamepad2.left_stick_y < -.03)
             ext.setPower(-1);
         else
             ext.setPower(0);
