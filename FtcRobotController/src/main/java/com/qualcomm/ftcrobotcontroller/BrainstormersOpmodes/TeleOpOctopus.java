@@ -393,7 +393,15 @@ public abstract class TeleOpOctopus extends OpMode {
 
 
         //sends arm in
-        if (gamepad2.left_trigger != 0) {
+        if (gamepad2.b) {
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
+        }
+        else if (gamepad2.a) {
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
+        }
+        else if (gamepad2.left_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
             pullUp1.setPower(gamepad2.left_trigger);
@@ -407,11 +415,12 @@ public abstract class TeleOpOctopus extends OpMode {
         else if (gamepad2.right_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
-            pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-            pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            //pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+           // pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             pullUp1.setPower(-gamepad2.right_trigger);
             pullUp2.setPower(gamepad2.right_trigger);
-        } else {
+        }
+        else if (gamepad1.y == false) {
             pullUp1.setPower(0);
             pullUp2.setPower(0);
         }
@@ -429,18 +438,11 @@ public abstract class TeleOpOctopus extends OpMode {
         /**
          * if b is pressed, this loosens the pull up motor
          */
-        if (gamepad2.b) {
-            pullUp1.setPower(-1);
-            pullUp2.setPower(1);
-        }
-        else if (gamepad2.a) {
-            pullUp1.setPower(1);
-            pullUp2.setPower(-1);
-        }
-        else if ( Math.abs(pullUp1.getCurrentPosition())<100 && gamepad1.right_trigger == 0) {
-            pullUp1.setPower(-gamepad2.right_trigger);
-            pullUp2.setPower(gamepad2.right_trigger);
-        }
+
+        //else if ( Math.abs(pullUp1.getCurrentPosition())<100 && gamepad1.right_trigger == 0) {
+          //  pullUp1.setPower(-gamepad2.right_trigger);
+            //pullUp2.setPower(gamepad2.right_trigger);
+        //}
     }
 
     double clip(double variable, double min, double max) {
@@ -506,17 +508,13 @@ public abstract class TeleOpOctopus extends OpMode {
 
     private void hang(){
         if (gamepad1.y) {
-
-
-
-            pullUp1.setPower(0.8);
-            pullUp2.setPower(-0.8);
+            pullUp1.setPower(.8);
+            pullUp2.setPower(-.8);
             //switched ext less thn to greater than
             if (ext.getCurrentPosition()>0)
                 ext.setPower(-.5);
             else
                 ext.setPower(0);
-            oldarm = ext.getCurrentPosition();
 
             fr.setPower(.75);
             br.setPower(.75);
@@ -590,15 +588,11 @@ public abstract class TeleOpOctopus extends OpMode {
                     pullUp2.setPower(0);
                 }
 
-
-
             } else if (fr.getPower() < 0) {
                 driveMod = 0.5f;
 
             }
-
         }
-
         else
             driveMod = 1;
     }
