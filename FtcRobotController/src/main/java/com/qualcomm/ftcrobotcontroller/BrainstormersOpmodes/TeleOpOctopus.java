@@ -76,7 +76,7 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * extender control motor
      */
-    DcMotor ext;
+    DcMotor armAngleMotor;
     /**
      * the servo that controls the climber dumping arm for the blue side
      */
@@ -166,7 +166,7 @@ public abstract class TeleOpOctopus extends OpMode {
         dumper = hardwareMap.servo.get("dumper");
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
-        ext = hardwareMap.dcMotor.get("ext");
+        armAngleMotor = hardwareMap.dcMotor.get("ext");
         clmbrDmprB = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
@@ -176,8 +176,8 @@ public abstract class TeleOpOctopus extends OpMode {
         lock = hardwareMap.servo.get("lock");
         lock1 = hardwareMap.servo.get("lock1");
 
-        ext.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        ext.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        armAngleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        armAngleMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
@@ -206,7 +206,7 @@ public abstract class TeleOpOctopus extends OpMode {
         drive();
         hang();
 
-        telemetry.addData("Ext", "" + ext.getCurrentPosition());
+        telemetry.addData("Ext", "" + armAngleMotor.getCurrentPosition());
         telemetry.addData("PullUp1", "" + pullUp1.getCurrentPosition());
     }
 
@@ -361,7 +361,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * runs everything involving extending and retracting the main dumper arm {@link #ext} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
+     * runs everything involving extending and retracting the main dumper arm {@link #armAngleMotor} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
      * the arm is extended by {@link #gamepad2} right trigger and retracted by {@link #gamepad2} left trigger
      * {@link #gamepad2} a button tightens the arm
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
@@ -407,20 +407,25 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(gamepad2.left_trigger);
             pullUp2.setPower(-gamepad2.left_trigger);
         }
-        //sends arm out
-
+        else if (gamepad1.right_trigger==1 && fr.getPower()>0) {
+            if (Math.abs(pullUp1.getCurrentPosition()) < 2500) {
+                pullUp1.setPower(-1);
+                pullUp2.setPower(1);
+            } else {
+                pullUp1.setPower(0);
+                pullUp2.setPower(0);
+            }
+        }
         /**
          * if the right trigger is pressed, the arm is extended
          */
         else if (gamepad2.right_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
-            //pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-           // pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             pullUp1.setPower(-gamepad2.right_trigger);
             pullUp2.setPower(gamepad2.right_trigger);
         }
-        else if (gamepad1.y == false) {
+        else if (!gamepad1.y) {
             pullUp1.setPower(0);
             pullUp2.setPower(0);
         }
@@ -438,11 +443,6 @@ public abstract class TeleOpOctopus extends OpMode {
         /**
          * if b is pressed, this loosens the pull up motor
          */
-
-        //else if ( Math.abs(pullUp1.getCurrentPosition())<100 && gamepad1.right_trigger == 0) {
-          //  pullUp1.setPower(-gamepad2.right_trigger);
-            //pullUp2.setPower(gamepad2.right_trigger);
-        //}
     }
 
     double clip(double variable, double min, double max) {
@@ -460,11 +460,11 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void angleArm() {
         if(gamepad2.left_stick_y > .03)
-            ext.setPower(1);
+            armAngleMotor.setPower(1);
         else if (gamepad2.left_stick_y < -.03)
-            ext.setPower(-1);
+            armAngleMotor.setPower(-1);
         else
-            ext.setPower(0);
+            armAngleMotor.setPower(0);
     }
 
     /**
@@ -508,20 +508,20 @@ public abstract class TeleOpOctopus extends OpMode {
 
     private void hang(){
         if (gamepad1.y) {
-            pullUp1.setPower(.8);
-            pullUp2.setPower(-.8);
-            //switched ext less thn to greater than
-            if (ext.getCurrentPosition()>0)
-                ext.setPower(-.5);
+            pullUp1.setPower(1);
+            pullUp2.setPower(-1);
+            //switched armAngleMotor less thn to greater than
+            if (armAngleMotor.getCurrentPosition()>0)
+                armAngleMotor.setPower(-.5);
             else
-                ext.setPower(0);
+                armAngleMotor.setPower(0);
 
-            fr.setPower(.75);
-            br.setPower(.75);
-            fl.setPower(-.75);
-            bl.setPower(-.75);
+            fr.setPower(1);
+            br.setPower(1);
+            fl.setPower(-1);
+            bl.setPower(-1);
 
-            telemetry.addData("hang", "" + ext.getCurrentPosition());
+            telemetry.addData("hang", "" + armAngleMotor.getCurrentPosition());
 
         }
     }
@@ -564,10 +564,12 @@ public abstract class TeleOpOctopus extends OpMode {
      * @see #bl
      */
     private void setPower() {
-        fr.setPower(Range.clip(FRpower, -1, 1)*driveMod);
-        br.setPower(Range.clip(BRpower, -1, 1)*driveMod);
-        fl.setPower(Range.clip(FLpower, -1, 1)*driveMod);
-        bl.setPower(Range.clip(BLpower, -1, 1)*driveMod);
+        if (!gamepad1.y){
+            fr.setPower(Range.clip(FRpower, -1, 1) * driveMod);
+            br.setPower(Range.clip(BRpower, -1, 1) * driveMod);
+            fl.setPower(Range.clip(FLpower, -1, 1) * driveMod);
+            bl.setPower(Range.clip(BLpower, -1, 1) * driveMod);
+        }
     }
 
     /**
@@ -579,14 +581,6 @@ public abstract class TeleOpOctopus extends OpMode {
 
             if (fr.getPower() > 0) {
                 driveMod = 1f;
-                if( Math.abs( pullUp1.getCurrentPosition()) < 2500){
-                    pullUp1.setPower(-1);
-                    pullUp2.setPower(1);
-                }
-                else{
-                    pullUp1.setPower(0);
-                    pullUp2.setPower(0);
-                }
 
             } else if (fr.getPower() < 0) {
                 driveMod = 0.5f;
