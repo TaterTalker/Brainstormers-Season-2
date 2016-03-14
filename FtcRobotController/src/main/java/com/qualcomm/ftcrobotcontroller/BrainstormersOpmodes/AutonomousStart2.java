@@ -79,8 +79,8 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 500);
         sleep (700);
-        int leftred = cameraController.leftRed();
-        int rightred = cameraController.rightRed();
+        int leftred = cameraController.getLeftRed();
+        int rightred = cameraController.getRightRed();
         telemetry.addData("Colors", "Left " + leftred/1000 + " Right: " + rightred/1000);
         //Added Sleep  to look at values
         if(leftred>rightred)

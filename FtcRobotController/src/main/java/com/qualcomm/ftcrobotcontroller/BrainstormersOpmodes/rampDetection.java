@@ -18,7 +18,7 @@ public class rampDetection extends LinearOpMode {
         cameraController.startCam();
         waitForStart();
         while (true){
-            telemetry.addData("left ", cameraController.leftRed() + " right: " + cameraController.rightRed());
+            telemetry.addData("left ", cameraController.getLeftRed() + " right: " + cameraController.getRightRed());
         }
     }
 }

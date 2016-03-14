@@ -6,11 +6,9 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.util.Log;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.io.ByteArrayOutputStream;
 
@@ -48,29 +46,29 @@ public class CameraController {
 
 
     /**
-     * gets the red value of a pixel
-     * @param pixel the target pixel
-     * @return the pixel's red value
+     * gets the red value of a getPixelColors
+     * @param pixel the target getPixelColors
+     * @return the getPixelColors's getRedInPixel value
      */
-    private int red(int pixel) {
+    private int getRedInPixel(int pixel) {
         return (pixel >> 16) & 0xff;
     }
 
     /**
-     * gets the green value of a pixel
-     * @param pixel the target pixel
-     * @return the pixel's green value
+     * gets the green value of a getPixelColors
+     * @param pixel the target getPixelColors
+     * @return the getPixelColors's getGreen value
      */
-    private int green(int pixel) {
+    private int getGreen(int pixel) {
         return (pixel >> 8) & 0xff;
     }
 
     /**
-     * gets the blue value of a pixel
-     * @param pixel the target pixel
-     * @return the pixel's blue value
+     * gets the blue value of a getPixelColors
+     * @param pixel the target getPixelColors
+     * @return the getPixelColors's getBlue value
      */
-    private int blue(int pixel) {
+    private int getBlue(int pixel) {
         return pixel & 0xff;
     }
 
@@ -113,42 +111,42 @@ public class CameraController {
     }
 
     /**
-     * allows for the easy reading of a pixel by other functions
-     * @param x the x coorinate of the pixel
-     * @param y the y coordinate of the pixel
-     * @return outputs the red, green, and blue vlues of the pixel
+     * allows for the easy reading of a getPixelColors by other functions
+     * @param x the x coorinate of the getPixelColors
+     * @param y the y coordinate of the getPixelColors
+     * @return outputs the getRedInPixel, getGreen, and getBlue vlues of the getPixelColors
      */
-    int[] pixel(int x, int y) {
+    int[] getPixelColors(int x, int y) {
         int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
-        int[] tmpArray = {red(pixelTarg), green(pixelTarg), blue(pixelTarg)}; //gets values from pixel
+        int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
         return tmpArray; //exports rbg values
     }
 
     /**
-     * exports the red value minus the blue value from the bottom left quadrant of the camera frame
-     * @return total red-total blue
+     * exports the getRedInPixel value minus the getBlue value from the bottom left quadrant of the camera frame
+     * @return total getRedInPixel-total getBlue
      */
-    public int leftRed() {
+    public int getLeftRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = 0; x < width / 2; x+= 5) { //reads the values of all of the pixels in the proper quadrant
             for (int y = height/2; y < height; y+=5) {
-                value += pixel(x, y)[0]-pixel(x, y)[2];
+                value += getPixelColors(x, y)[0]- getPixelColors(x, y)[2];
             }
         }
         return value;
     }
 
     /**
-     * exports the red value minus the blue value from the bottom right quadrant of the camera frame
-     * @return total red minus total blue
+     * exports the getRedInPixel value minus the getBlue value from the bottom right quadrant of the camera frame
+     * @return total getRedInPixel minus total getBlue
      */
-    public int rightRed() {
+    public int getRightRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = width - 1; x > width / 2; x -= 5) { //reads the values of all of the pixels in the proper quadrant
             for (int y = height/2; y < height; y = y + 5) {
-                value += pixel(x, y)[0]-pixel(x, y)[2];
+                value += getPixelColors(x, y)[0]- getPixelColors(x, y)[2];
             }
         }
         return value;

@@ -102,8 +102,8 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         //use camera to analyze the image and get the left and right red values
         if (tigBacon==true) {
             sleep (700);
-            int leftred = cameraController.leftRed();
-            int rightred = cameraController.rightRed();
+            int leftred = cameraController.getLeftRed();
+            int rightred = cameraController.getRightRed();
 
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred) //left side is red
