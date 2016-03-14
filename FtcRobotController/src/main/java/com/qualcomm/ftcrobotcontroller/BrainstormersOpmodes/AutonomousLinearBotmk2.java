@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousLinearBotmk2 extends AvancedMethods {
+public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
     /**
      * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
@@ -158,12 +158,12 @@ public abstract class AutonomousLinearBotmk2 extends AvancedMethods {
     //separate turn test function not in use.
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();
-        newturnTo(36, 0.5);
-        newturnTo(25, 0.5);
-        newturnTo(88, 0.5);
-        newturnTo(-170, 0.5);
-        newturnTo(135, 0.5);
-        newturnTo(-52, 0.5);
+        newGyroTurn(36, 0.5);
+        newGyroTurn(25, 0.5);
+        newGyroTurn(88, 0.5);
+        newGyroTurn(-170, 0.5);
+        newGyroTurn(135, 0.5);
+        newGyroTurn(-52, 0.5);
         long end=System.currentTimeMillis();
         telemetry.addData("timing", Long.toString(end-start));
         sleep(150000);

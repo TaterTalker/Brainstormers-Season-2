@@ -3,27 +3,35 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
 /**
  * Created by August on 3/5/2016.
  */
-public abstract class AvancedMethods extends AutonomousMethods {
-    void PIdrive(int distance, double power){
+public abstract class AdvancedMethods extends AutonomousMethods {
+    void PIdrive(int distance, double power) throws InterruptedException {
         startIUM();
-        double deviationGain=1;
-        double overshootGain=0.5;
+        resetEncoderDelta();
+        final double deviationGain=0.5;
+        final double overshootGain=0.0;
         double overShoot=0;
-        boolean hasReached=Math.abs(FRposition()+FLposition()+BRposition()+BLposition())/4<Math.abs(distance);
-
-        while(hasReached){
-            double yaw=getYaw();
-            double deviation=(yaw)*deviationGain;
+        double deviation=0;
+        boolean hasReached=false;
+        while(hasReached==false){
+            telemetry.addData("encoder positions", " back right "+BRposition()+" back left "+BLposition());
+            telemetry.addData("overShoot", overShoot);
+            telemetry.addData("deviation", deviation);
+            double yaw = getYaw();
+            deviation=yaw*deviationGain;
             overShoot+=yaw;
             overShoot*=overshootGain;
-            setLeftPower(power+deviation+overShoot);
-            setRightPower(power-deviation-overShoot);
+            run_using_encoders();
+            setLeftPower(power - deviation - overShoot);
+            setRightPower(power + deviation + overShoot);
+            hasReached=Math.abs(BRposition()+BLposition())/2>Math.abs(distance);
+            waitOneFullHardwareCycle();
         }
+        stopMotors();
     }
 
-    void newturnTo(double degrees, double tolerance) throws InterruptedException {
-        startIUM();
-        double gain=0.015;
+    void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
+        startIUM(); //0s gyro
+        final double gain=0.015;
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
 
