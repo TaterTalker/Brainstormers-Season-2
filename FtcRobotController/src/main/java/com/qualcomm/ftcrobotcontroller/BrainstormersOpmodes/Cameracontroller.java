@@ -130,8 +130,8 @@ public class CameraController {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = 0; x < width / 2; x+= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = height/2; y < height; y+=5) {
-                value += getPixelColors(x, y)[0]- getPixelColors(x, y)[2];
+            for (int y = height / 2; y < height; y+=5) {
+                value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }
         return value;
@@ -145,8 +145,8 @@ public class CameraController {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = width - 1; x > width / 2; x -= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = height/2; y < height; y = y + 5) {
-                value += getPixelColors(x, y)[0]- getPixelColors(x, y)[2];
+            for (int y = height / 2; y < height; y = y + 5) {
+                value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }
         return value;
