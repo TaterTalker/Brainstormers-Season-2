@@ -7,9 +7,7 @@ public abstract class AdvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power) throws InterruptedException {
         adafruitgyro.startIUM();
         resetEncoderDelta();
-        final double deviationGain=0.1;
-        final double overshootDecay=0.1;
-        final double overshootGain=0.05;
+        final double deviationGain=.25; //how much deviation effects the robot
         double overShoot=0;
         double deviation=0;
         boolean hasReached=false;
@@ -19,15 +17,14 @@ public abstract class AdvancedMethods extends AutonomousMethods {
             telemetry.addData("deviation", deviation);
             double yaw = adafruitgyro.getYaw();
             deviation=yaw*deviationGain;
-            overShoot+=yaw*overshootGain;
-            overShoot*=overshootDecay;
+
             run_using_encoders();
-            double leftPower=(deviation - overShoot)*Math.abs(power);
-            double rightPower=(deviation + overShoot)*Math.abs(power);
+            double leftPower=(-deviation)*Math.abs(power);
+            double rightPower=(deviation)*Math.abs(power);
             leftPower+=power;
-            leftPower+=power;
-            rightPower+=clip(1-(power+deviation+overShoot), 0, 2);
-            leftPower-=clip(1-(power+deviation+overShoot), 0, 2);
+            rightPower+=power;
+//            rightPower+=clip(1-(power+deviation+overShoot)*Math.abs(power), 0, 2);
+//            leftPower-=clip(1-(power+deviation+overShoot)*Math.abs(power), 0, 2);
             setLeftPower(leftPower);
             setRightPower(rightPower);
             hasReached=Math.abs(BRposition()+BLposition())/2>Math.abs(distance);
