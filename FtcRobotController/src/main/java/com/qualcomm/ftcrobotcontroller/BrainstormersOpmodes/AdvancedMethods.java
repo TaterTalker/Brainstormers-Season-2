@@ -7,8 +7,9 @@ public abstract class AdvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power) throws InterruptedException {
         startIUM();
         resetEncoderDelta();
-        final double deviationGain=0.5;
-        final double overshootGain=0.0;
+        final double deviationGain=0.1;
+        final double overshootDecay=0.1;
+        final double overshootGain=0.05;
         double overShoot=0;
         double deviation=0;
         boolean hasReached=false;
@@ -18,11 +19,17 @@ public abstract class AdvancedMethods extends AutonomousMethods {
             telemetry.addData("deviation", deviation);
             double yaw = getYaw();
             deviation=yaw*deviationGain;
-            overShoot+=yaw;
-            overShoot*=overshootGain;
+            overShoot+=yaw*overshootGain;
+            overShoot*=overshootDecay;
             run_using_encoders();
-            setLeftPower(power - deviation - overShoot);
-            setRightPower(power + deviation + overShoot);
+            double leftPower=(deviation - overShoot)*Math.abs(power);
+            double rightPower=(deviation + overShoot)*Math.abs(power);
+            leftPower+=power;
+            leftPower+=power;
+            rightPower+=clip(1-power+deviation+overShoot, 0, 2);
+            leftPower-=clip(1-power+deviation+overShoot, 0, 2);
+            setLeftPower(leftPower);
+            setRightPower(rightPower);
             hasReached=Math.abs(BRposition()+BLposition())/2>Math.abs(distance);
             waitOneFullHardwareCycle();
         }
