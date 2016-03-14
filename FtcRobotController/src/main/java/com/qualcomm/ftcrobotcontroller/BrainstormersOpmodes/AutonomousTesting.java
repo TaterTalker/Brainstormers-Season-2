@@ -10,6 +10,7 @@ public class AutonomousTesting extends AdvancedMethods {
         while (!isStarted()) {
             initIMU();
         }
+        sleep(100);
         PIdrive(4000,1);
         sleep(150000);
     }

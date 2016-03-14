@@ -26,8 +26,8 @@ public abstract class AdvancedMethods extends AutonomousMethods {
             double rightPower=(deviation + overShoot)*Math.abs(power);
             leftPower+=power;
             leftPower+=power;
-            rightPower+=clip(1-power+deviation+overShoot, 0, 2);
-            leftPower-=clip(1-power+deviation+overShoot, 0, 2);
+            rightPower+=clip(1-(power+deviation+overShoot), 0, 2);
+            leftPower-=clip(1-(power+deviation+overShoot), 0, 2);
             setLeftPower(leftPower);
             setRightPower(rightPower);
             hasReached=Math.abs(BRposition()+BLposition())/2>Math.abs(distance);
