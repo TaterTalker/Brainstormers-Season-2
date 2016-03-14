@@ -12,9 +12,9 @@ public class ElephantTeleOp extends OpMode{
         DcMotor br;
         DcMotor bl;
         DcMotor fr;
-        float YVal;
+        float yVal;
         float rotVal;
-        float YPower;
+        float yPower;
         float rotPower;
         float FRpower;
         float FLpower;
@@ -37,14 +37,14 @@ public class ElephantTeleOp extends OpMode{
 
 
         private void drive() {
-            getInput();
+            recieveInput();
             processInput();
-            setPower();
+            applyPower();
         }
 
 
-        private void getInput() {
-            YVal = gamepad1.left_stick_y;
+        private void recieveInput() {
+            yVal = gamepad1.left_stick_y;
             rotVal = gamepad1.right_stick_x;
         }
 
@@ -53,16 +53,16 @@ public class ElephantTeleOp extends OpMode{
          * it also  the input values to avoid errors
          */
         private void processInput() {
-            YPower = Range.clip(YVal, -1, 1);
+            yPower = Range.clip(yVal, -1, 1);
             rotPower = Range.clip(rotVal, -1, 1);
 
             /**
              * combines the rotation and speed together
              */
-            FRpower = YPower + rotPower;
-            BRpower = YPower + rotPower;
-            FLpower = -YPower + rotPower;
-            BLpower = -YPower + rotPower;
+            FRpower = yPower + rotPower;
+            BRpower = yPower + rotPower;
+            FLpower = -yPower + rotPower;
+            BLpower = -yPower + rotPower;
         }
 
         /**
@@ -73,7 +73,7 @@ public class ElephantTeleOp extends OpMode{
          * @see #fl
          * @see #bl
          */
-        private void setPower() {
+        private void applyPower() {
             fr.setPower(Range.clip(FRpower, -1, 1));
             br.setPower(Range.clip(BRpower, -1, 1));
             fl.setPower(Range.clip(FLpower, -1, 1));
