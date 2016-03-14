@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 /**
  * Created by Owner on 8/31/2015.
  */
-public class AdafruitIMUmanager extends OpMode {
+public class AdafruitIMUTest extends OpMode {
 
     AdafruitIMU boschBNO055;
 
@@ -107,7 +107,6 @@ public class AdafruitIMUmanager extends OpMode {
        // telemetry.addData("Max I2C read interval: ", String.format("%f ms. Average interval: %f ms.", boschBNO055.maxReadInterval, boschBNO055.avgReadInterval));
         telemetry.addData("yaw",
                 String.format("Euler= %f, Quaternion calculated= %f", yawAngle[0], yawAngle[1]));
-        telemetry.addData("getYaw yaw ", ""+getYaw());
     }
 
     /*
@@ -122,10 +121,5 @@ public class AdafruitIMUmanager extends OpMode {
         systemTime = System.nanoTime();
         Log.i("FtcRobotController", "IMU Stop method finished in: "
                 + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
-    }
-
-    public double getYaw(){ //READ THIS IGNORE THE REST OF THIS FILE
-        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-        return yawAngle[1];
     }
 }
