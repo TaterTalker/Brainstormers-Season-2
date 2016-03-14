@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -9,7 +10,11 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * Created by August on 2/8/2016.
  */
-public abstract class AutonomousBuildingBlocks extends AdafruitIMUmethods {
+public abstract class AutonomousBuildingBlocks extends LinearOpMode {
+
+   //Controllers
+    AdafruitIMUmethods adafruitgyro;
+    Cameracontroller cameracontroller;
 
     //Driving Motors
     DcMotor FL;
@@ -43,6 +48,14 @@ public abstract class AutonomousBuildingBlocks extends AdafruitIMUmethods {
     Servo armAngle1; //I have no idea what these are supposed to do --> bad name
     Servo armAngle2;
 
+
+    public AutonomousBuildingBlocks (){
+        super();
+        adafruitgyro = new AdafruitIMUmethods(this);
+        cameracontroller = new Cameracontroller(this);
+
+    }
+
     //Our Main Function that Controls the Robots Actions\
 
     /**
@@ -53,6 +66,9 @@ public abstract class AutonomousBuildingBlocks extends AdafruitIMUmethods {
         //sideArmL = hardwareMap.servo.get("sideArmL");
         //sideArmR = hardwareMap.servo.get("sideArmR");
         //lock = hardwareMap.servo.get("lock");
+
+
+
 
         //Sensors
         climberDumperB = hardwareMap.servo.get("climberDumper");

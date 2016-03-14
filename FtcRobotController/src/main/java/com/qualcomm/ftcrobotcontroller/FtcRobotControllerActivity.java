@@ -62,7 +62,7 @@ import com.qualcomm.ftccommon.FtcRobotControllerService.FtcRobotControllerBinder
 import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.Restarter;
 import com.qualcomm.ftccommon.UpdateUI;
-import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.CameraOp;
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.Cameracontroller;
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FtcOpModeRegister;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
@@ -440,7 +440,7 @@ public class FtcRobotControllerActivity extends Activity{
         return cam;
     }
 
-    public void initPreview(final Camera camera, final CameraOp context, final Camera.PreviewCallback previewCallback) {
+    public void initPreview(final Camera camera, final Cameracontroller context, final Camera.PreviewCallback previewCallback) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

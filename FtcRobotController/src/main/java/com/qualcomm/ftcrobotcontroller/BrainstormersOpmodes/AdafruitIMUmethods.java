@@ -2,13 +2,20 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 
 /**
  * Created by Owner on 8/31/2015.
  */
-public abstract class AdafruitIMUmethods extends CameraOp{
+public  class AdafruitIMUmethods{
+
+    LinearOpMode opmode;
+
+    public  AdafruitIMUmethods(LinearOpMode opmode)  {
+        this.opmode = opmode;
+    }
 
     AdafruitIMU boschBNO055;
 
@@ -23,11 +30,11 @@ public abstract class AdafruitIMUmethods extends CameraOp{
      * before "start" runs.
      */
     public void initIMU() {
-        telemetry.addData("1","");
+        opmode.telemetry.addData("1","");
         systemTime = System.nanoTime();
         try {
-            telemetry.addData("2","");
-            boschBNO055 = new AdafruitIMU(hardwareMap, "bno055"
+            opmode.telemetry.addData("2","");
+            boschBNO055 = new AdafruitIMU(opmode.hardwareMap, "bno055"
 
 
                     //The following was required when the definition of the "I2cDevice" class was incomplete.
@@ -37,10 +44,10 @@ public abstract class AdafruitIMUmethods extends CameraOp{
                     //addressing
                     , (byte)AdafruitIMU.OPERATION_MODE_IMU);
                     boschBNO055.startIMU();
-                    telemetry.addData("passed", "passed");
+            opmode.telemetry.addData("passed", "passed");
         } catch (RobotCoreException e){
             Log.i("FtcRobotController", "Exception: " + e.getMessage());
-            telemetry.addData("3", "");
+            opmode.telemetry.addData("3", "");
         }
         Log.i("FtcRobotController", "IMU Init method finished in: "
                 + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
@@ -50,7 +57,7 @@ public abstract class AdafruitIMUmethods extends CameraOp{
         //ADDRESS_A IS THE IMU'S OPERATIVE I2C BUS ADDRESS
         //IMU is an appropriate operational mode for FTC competitions. (See the IMU datasheet, Table
         // 3-3, p.20 and Table 3-5, p.21.)
-        telemetry.addData("gotit", "");
+        opmode.telemetry.addData("gotit", "");
     }
 
     /************************************************************************************************
@@ -58,7 +65,7 @@ public abstract class AdafruitIMUmethods extends CameraOp{
      * @see OpMode#start()
      */
     public void startIUM() {
-        telemetry.addData("4","");
+        opmode.telemetry.addData("4","");
 
         /*
       	* Use the hardwareMap to get the dc motors, servos and other sensors by name. Note

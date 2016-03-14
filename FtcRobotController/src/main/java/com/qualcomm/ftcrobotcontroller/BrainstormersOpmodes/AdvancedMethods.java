@@ -5,7 +5,7 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
  */
 public abstract class AdvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power) throws InterruptedException {
-        startIUM();
+        adafruitgyro.startIUM();
         resetEncoderDelta();
         final double deviationGain=0.1;
         final double overshootDecay=0.1;
@@ -17,7 +17,7 @@ public abstract class AdvancedMethods extends AutonomousMethods {
             telemetry.addData("encoder positions", " back right "+BRposition()+" back left "+BLposition());
             telemetry.addData("overShoot", overShoot);
             telemetry.addData("deviation", deviation);
-            double yaw = getYaw();
+            double yaw = adafruitgyro.getYaw();
             deviation=yaw*deviationGain;
             overShoot+=yaw*overshootGain;
             overShoot*=overshootDecay;
@@ -37,7 +37,7 @@ public abstract class AdvancedMethods extends AutonomousMethods {
     }
 
     void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
-        startIUM(); //0s gyro
+       adafruitgyro.startIUM(); //0s gyro
         final double gain=0.015;
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
@@ -49,7 +49,7 @@ public abstract class AdvancedMethods extends AutonomousMethods {
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
-            heading = getYaw();
+            heading = adafruitgyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)

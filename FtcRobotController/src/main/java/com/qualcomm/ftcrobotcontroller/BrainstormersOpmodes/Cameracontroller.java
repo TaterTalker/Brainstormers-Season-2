@@ -19,7 +19,10 @@ import java.io.ByteArrayOutputStream;
  * <p/>
  * Enables control of the robot via the gamepad
  */
-public abstract class CameraOp extends LinearOpMode {
+public class Cameracontroller {
+
+    LinearOpMode opMode;
+
     private Camera camera;
     public CameraPreview preview;
     /**
@@ -38,6 +41,11 @@ public abstract class CameraOp extends LinearOpMode {
     private int looped = 0;
     private String data;
     public int color;
+
+    public Cameracontroller(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
+
 
     /**
      * gets the red value of a pixel
@@ -96,12 +104,12 @@ public abstract class CameraOp extends LinearOpMode {
      * initializes the camera
      */
     public void startCam() {
-        camera = ((FtcRobotControllerActivity) hardwareMap.appContext).camera;
+        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).camera;
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters
 
-        ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
+        ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
     }
 
     /**
