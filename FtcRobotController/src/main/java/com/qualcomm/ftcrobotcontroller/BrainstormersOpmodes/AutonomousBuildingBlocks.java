@@ -63,21 +63,13 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      */
     //Configures the Robots Motors and Sensors.
     void getRobotConfig() {
-        //sideArmL = hardwareMap.servo.get("sideArmL");
-        //sideArmR = hardwareMap.servo.get("sideArmR");
-        //lock = hardwareMap.servo.get("lock");
-
-
-
 
         //Sensors
         climberDumper = hardwareMap.servo.get("climberDumper");
-        // colorSensor = hardwareMap.colorSensor.get("cs1");
         colorSensor = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
         ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
-        //   odm = hardwareMap.opticalDistanceSensor.get("odm");
         debDumper = hardwareMap.servo.get("dumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
@@ -104,15 +96,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         runUsingEncoders();
         setLeftPower(speed);
         setRightPower(speed);
-    }
-
-    void pivotleft(double distance) throws InterruptedException {
-        runUsingEncoders();
-        while (!hasLeftReached(distance)) {
-            setLeftPower(0.5);
-            waitOneFullHardwareCycle();
-        }
-        stopMotors();
     }
 
     /**
@@ -149,7 +132,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      */
     //Has the left side reached a certain encoder value.
     boolean hasLeftReached(double leftdistance) {
-
         return (Math.abs(fLPosition()) > leftdistance) || (Math.abs(blPosition()) > leftdistance);
     }
 
@@ -161,7 +143,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      */
     //Has the right side reached a certain encoder value.
     boolean hasRightReached(double rightdistance) {
-
         return (Math.abs(frPosition()) > rightdistance)  || (Math.abs(brPosition()) > rightdistance);
     }
     /**
@@ -196,15 +177,19 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * if the variable is outside the one of the bounds, instead it returns that bound
      *
      * @param variable the variable to be clipped
-     * @param min      the minimum exeptable value
-     * @param max      the maximum exeptable value
+     * @param MIN      the minimum exeptable value
+     * @param MAX      the maximum exeptable value
      * @return returns the variable, exept it is inside the exeptable vlues
      */
     //Clip the values.
-    double clip(double variable, double min, double max) {
+    double clip(double variable,final double MIN,final double MAX) {
 
-        if (variable < min) variable = min;
-        if (variable > max) variable = max;
+        if (variable < MIN) {
+            variable = MIN;
+        }
+        if (variable > MAX) {
+            variable = MAX;
+        }
 
         return variable;
     }
