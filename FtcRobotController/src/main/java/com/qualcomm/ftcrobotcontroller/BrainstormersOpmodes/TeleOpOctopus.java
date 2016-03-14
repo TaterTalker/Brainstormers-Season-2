@@ -12,8 +12,9 @@ import com.qualcomm.robotcore.util.Range;
  */
 public abstract class TeleOpOctopus extends OpMode {
 
-
-    //drive
+    //Drive
+    final int RED = -1;
+    final int BLUE = 1;
     /**
      * front left drive motor
      */
@@ -33,26 +34,24 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * the forwards backwards power
      */
-    float YPower;
+    float yPower;
     /**
      * the rotational power
      */
-    float rotPower;
+    float xPower;
     /**
      * the arm's last value
      */
-    int oldarm;
 
-    //scoring
+    //Scoring
     /**
      * the motor that powers the collector
      */
     DcMotor collect;
-
     /**
-     * the servo which controls the sliding dumper block
+     * the servo which controls the sliding dumpingBlock block
      */
-    Servo dumper;
+    Servo dumpingBlock;
     /**
      * the right hopper door control servo
      */
@@ -80,7 +79,7 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * the servo that controls the climber dumping arm for the blue side
      */
-    Servo clmbrDmprB;
+    Servo climberDumperB;
     /**
      * left side arm control servo
      */
@@ -94,13 +93,13 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     Servo sideArmR;
     /**
-     * lock mech for the hanging
-     */
-    Servo lock;
-    /**
-     * second lock mech
+     * lock1 mech for the hanging
      */
     Servo lock1;
+    /**
+     * second lock1 mech
+     */
+    Servo lock2;
     /**
      * how much the robot should be slowed by
      * higher=slower
@@ -115,30 +114,29 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * power of {@link #fr} which can be altered
      */
-    float FRpower;
+    float frPower;
     /**
      * power of {@link #br} which can be altered
      */
-    float BRpower;
+    float brPower;
     /**
      * power of {@link #fl} which can be altered
      */
-    float FLpower;
+    float flPower;
     /**
      * power of {@link #bl} which can be altered
      */
-    float BLpower;
+    float blPower;
     /**
      * the value of {@link #gamepad1} joystick 1 y
-     * later written to {@link #YPower}
+     * later written to {@link #yPower}
      */
-    float YVal;
+    float yVal;
     /**
      * the value of {@link #gamepad1} joystick 2 x
-     * latter written to {@link #rotPower}
+     * latter written to {@link #xPower}
      */
-    float rotVal;
-    //Sensing
+    float xVal;
     /**
      * this is pressed when the arm is fully retracted
      * it is used by {@link #processArm()}
@@ -163,18 +161,18 @@ public abstract class TeleOpOctopus extends OpMode {
         doorR = hardwareMap.servo.get("doorR");
         doorL = hardwareMap.servo.get("doorL");
         collect = hardwareMap.dcMotor.get("collect");
-        dumper = hardwareMap.servo.get("dumper");
+        dumpingBlock = hardwareMap.servo.get("dumper");
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         armAngleMotor = hardwareMap.dcMotor.get("ext");
-        clmbrDmprB = hardwareMap.servo.get("climberDumper");
+        climberDumperB = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         beacon = hardwareMap.servo.get("beacon");
         extStop = hardwareMap.touchSensor.get("extStop");
         armHook = hardwareMap.servo.get("armHook");
-        lock = hardwareMap.servo.get("lock");
         lock1 = hardwareMap.servo.get("lock1");
+        lock2 = hardwareMap.servo.get("lock2");
 
         armAngleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armAngleMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -184,10 +182,9 @@ public abstract class TeleOpOctopus extends OpMode {
 
         pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        oldarm = 0;
-        lock.setPosition(1);
-        lock1.setPosition(0);
-        clmbrDmprB.setPosition(0);
+        lock1.setPosition(1);
+        lock2.setPosition(0);
+        climberDumperB.setPosition(0);
         beacon.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
@@ -268,80 +265,79 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
     * pressing {@link #gamepad2} dpad right while blue or {@link #gamepad2} dpad left while red
-     * slides {@link #dumper} across the hopper, bringing the debris with it
+     * slides {@link #dumpingBlock} across the hopper, bringing the debris with it
     * as this happens the proper release door ({@link #doorR} or {@link #doorL})  opens
     */
 
-    int movecount = 0;
-    int oldcount = 51;
+    int moveCount = 0;
+    int oldCount = 51;
+
+    final int MAXDUMPINGPOSISTION = 250;
+    final int MAXCOUNT =  51;
+    final int MAXMOVECOUNT = 250;
+
     private void dumping() {
-        telemetry.addData("Moving", "move: " + movecount + "old: " + oldcount);
+        telemetry.addData("Moving", "move: " + moveCount + "old: " + oldCount);
 
-        if (side == 1) {
-            // blue side
+        if (side == BLUE) {
             if (gamepad2.dpad_right) {
-                dumper.setPosition(0);
+                dumpingBlock.setPosition(0);
                 doorR.setPosition(0.3);
-                movecount++;
+                moveCount++;
 
-                if(movecount>250){
-                    movecount = 250;
+                if(moveCount > MAXDUMPINGPOSISTION){
+                    moveCount = MAXDUMPINGPOSISTION;
                 }
-                oldcount = movecount;
 
+                oldCount = moveCount;
             }
-            else if (gamepad2.dpad_left)
-            {
-                dumper.setPosition(1);
+            else if (gamepad2.dpad_left) {
+                dumpingBlock.setPosition(1);
             }
             else { //default position
 
-                if(movecount>0){
-                    dumper.setPosition(1);
-                    movecount--;
-
+                if(moveCount >0){
+                    dumpingBlock.setPosition(1);
+                    moveCount--;
                 }
                 else {
-                    dumper.setPosition(0.5);
-                    oldcount = 51;
+                    dumpingBlock.setPosition(0.5);
+                    oldCount = MAXCOUNT;
                 }
-
-                if((oldcount - movecount) > 50) {
+                if((oldCount - moveCount) > 50) {
                     doorR.setPosition(0.85);
                     doorL.setPosition(0.15);
                 }
             }
-        } else {
-            // red side
+        }
+        else if(side == RED) {
             if (gamepad2.dpad_left) {
-                movecount++;
-                dumper.setPosition(1);
-
+                moveCount++;
+                dumpingBlock.setPosition(1);
                 doorL.setPosition(0.7);
 
-                if(movecount>250){
-                    movecount = 250;
-                }
-                oldcount = movecount;
-            }
-            else if (gamepad2.dpad_right) {
-                dumper.setPosition(0);
-            }
-            else{ //default position
-                if(movecount>0){
-                    dumper.setPosition(0);
-                    movecount--;
-                } else {
-                    dumper.setPosition(0.5);
-                    oldcount = 51;
+                if(moveCount > MAXMOVECOUNT){
+                    moveCount = MAXMOVECOUNT;
                 }
 
-                if((oldcount - movecount) > 50) {
+                oldCount = moveCount;
+            }
+            else if (gamepad2.dpad_right) {
+                dumpingBlock.setPosition(0);
+            }
+            else{
+                if(moveCount > 0){
+                    dumpingBlock.setPosition(0);
+                    moveCount--;
+                } else {
+                    dumpingBlock.setPosition(0.5);
+                    oldCount = 51;
+                }
+                if((oldCount - moveCount) > 50) {
                     doorL.setPosition(0.15);
                     doorR.setPosition(0.95);
                 }
-                }
-
+            }
         }
     }
 
@@ -349,19 +345,17 @@ public abstract class TeleOpOctopus extends OpMode {
      * dumps the climber if the {@link #gamepad2} y button is pressed
      */
     private void climberDumper() {
-        // climber dumper
-            if(gamepad2.y) {
-                clmbrDmprB.setPosition(1);
-               // clmbrDmprR.setPosition(1);
-            } else{
-                clmbrDmprB.setPosition(0.1);
+        // climber dumpingBlock
+            if (gamepad2.y) {
+                climberDumperB.setPosition(1);
+            } else {
+                climberDumperB.setPosition(0.1);
                 beacon.setPosition(1);
-               // clmbrDmprR.setPosition(1);
             }
     }
 
     /**
-     * runs everything involving extending and retracting the main dumper arm {@link #armAngleMotor} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
+     * runs everything involving extending and retracting the main dumpingBlock arm {@link #armAngleMotor} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
      * the arm is extended by {@link #gamepad2} right trigger and retracted by {@link #gamepad2} left trigger
      * {@link #gamepad2} a button tightens the arm
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
@@ -381,14 +375,14 @@ public abstract class TeleOpOctopus extends OpMode {
                 wasDown = false;
             }
             if (lockDown) {
-                lock.setPosition(0.1);
-                lock1.setPosition(1);
+                lock1.setPosition(0.1);
+                lock2.setPosition(1);
             } else {
-                lock.setPosition(1);
-                lock1.setPosition(0);
+                lock1.setPosition(1);
+                lock2.setPosition(0);
             }
-            if (lock1.getPosition()>0.9)
-                clmbrDmprB.setPosition(0.5);
+            if (lock2.getPosition()>0.9)
+                climberDumperB.setPosition(0.5);
         }
 
 
@@ -534,8 +528,8 @@ public abstract class TeleOpOctopus extends OpMode {
      * {@link #gamepad1} right stick x axis controls rotation
      */
     private void getInput() {
-        YVal = gamepad1.left_stick_y;
-        rotVal = gamepad1.right_stick_x;
+        yVal = gamepad1.left_stick_y;
+        xVal = gamepad1.right_stick_x;
     }
 
     /**
@@ -543,16 +537,16 @@ public abstract class TeleOpOctopus extends OpMode {
      * it also  the input values to avoid errors
      */
     private void processInput() {
-        YPower = Range.clip(YVal, -1, 1);
-        rotPower = Range.clip(rotVal, -1, 1);
+        yPower = Range.clip(yVal, -1, 1);
+        xPower = Range.clip(xVal, -1, 1);
 
         /**
          * combines the rotation and speed together
          */
-        FRpower = YPower + rotPower;
-        BRpower = YPower + rotPower;
-        FLpower = -YPower + rotPower;
-        BLpower = -YPower + rotPower;
+        frPower = yPower + xPower;
+        brPower = yPower + xPower;
+        flPower = -yPower + xPower;
+        blPower = -yPower + xPower;
     }
 
     /**
@@ -565,10 +559,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void setPower() {
         if (!gamepad1.y){
-            fr.setPower(Range.clip(FRpower, -1, 1) * driveMod);
-            br.setPower(Range.clip(BRpower, -1, 1) * driveMod);
-            fl.setPower(Range.clip(FLpower, -1, 1) * driveMod);
-            bl.setPower(Range.clip(BLpower, -1, 1) * driveMod);
+            fr.setPower(Range.clip(frPower, -1, 1) * driveMod);
+            br.setPower(Range.clip(brPower, -1, 1) * driveMod);
+            fl.setPower(Range.clip(flPower, -1, 1) * driveMod);
+            bl.setPower(Range.clip(blPower, -1, 1) * driveMod);
         }
     }
 
@@ -577,7 +571,7 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void slowRobot() {
 
-        if(gamepad1.right_trigger ==1) {
+        if(gamepad1.right_trigger == 1) {
 
             if (fr.getPower() > 0) {
                 driveMod = 1f;
