@@ -13,31 +13,31 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
    //Controllers
-    AdafruitIMUmethods adafruitgyro;
+    AdafruitIMUmethods adaFruitGyro;
     CameraController cameraController;
 
     //Driving Motors
-    DcMotor FL;
-    DcMotor FR;
-    DcMotor BR;
-    DcMotor BL;
-
-    int FRold, BRold, FLold, BLold, delay=0;
-
-    //Sensors
-    Servo beacon;
-    int lastgyro;
-    ColorSensor colorSensor2;
+    DcMotor fl;
+    DcMotor fr;
+    DcMotor br;
+    DcMotor bl;
     DcMotor collector;
+
+    int fRold;
+    int bRold;
+    int fLold;
+    int bLold;
+    int delay=0;
+
+    ColorSensor colorSensor;
     UltrasonicSensor ultra1;
     UltrasonicSensor ultra2;
 
-
-    //Servos
-    Servo climberDumperB;
-    //Servo climberDumperR;
-    Servo sideArmL;
+    //Servo
+    Servo beacon;
+    Servo climberDumper;
     Servo debDumper;
+    Servo sideArmL;
     Servo sideArmR;
     Servo doorR;
     Servo doorL;
@@ -51,7 +51,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
     public AutonomousBuildingBlocks (){
         super();
-        adafruitgyro = new AdafruitIMUmethods(this);
+        adaFruitGyro = new AdafruitIMUmethods(this);
         cameraController = new CameraController(this);
 
     }
@@ -71,9 +71,9 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
 
         //Sensors
-        climberDumperB = hardwareMap.servo.get("climberDumper");
+        climberDumper = hardwareMap.servo.get("climberDumper");
         // colorSensor = hardwareMap.colorSensor.get("cs1");
-        colorSensor2 = hardwareMap.colorSensor.get("cs2");
+        colorSensor = hardwareMap.colorSensor.get("cs2");
         collector = hardwareMap.dcMotor.get("collect");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
         ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
@@ -84,10 +84,10 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         beacon = hardwareMap.servo.get("beacon");
 
         //Motors
-        FR = hardwareMap.dcMotor.get("fr");
-        FL = hardwareMap.dcMotor.get("fl");
-        BR = hardwareMap.dcMotor.get("br");
-        BL = hardwareMap.dcMotor.get("bl");
+        fr = hardwareMap.dcMotor.get("fr");
+        fl = hardwareMap.dcMotor.get("fl");
+        br = hardwareMap.dcMotor.get("br");
+        bl = hardwareMap.dcMotor.get("bl");
         armAngle1 = hardwareMap.servo.get("armAngle1");
         armAngle2 = hardwareMap.servo.get("armAngle2");
         doorR = hardwareMap.servo.get("doorR");
@@ -101,13 +101,13 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      */
     void driveForever(double speed) {
         // Start the drive wheel motors at full power
-        run_using_encoders();
+        runUsingEncoders();
         setLeftPower(speed);
         setRightPower(speed);
     }
 
     void pivotleft(double distance) throws InterruptedException {
-        run_using_encoders();
+        runUsingEncoders();
         while (!hasLeftReached(distance)) {
             setLeftPower(0.5);
             waitOneFullHardwareCycle();
@@ -121,10 +121,10 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     //Resets the Drive Encoders.
     void reset_drive_encoders() {
 
-        FL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        FR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        BL.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        BR.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        fl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        fr.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        bl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        br.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         didEncodersReset = false;
     }
@@ -133,36 +133,36 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * sets all drive encoders to run using encoders mode
      */
     //Run using Encoders.
-    void run_using_encoders() {
+    void runUsingEncoders() {
 
-        FL.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        FR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        BL.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        BR.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        fl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        fr.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        bl.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        br.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     /**
      * determines if the left side has reached the target disance
      *
-     * @param leftd target distance
+     * @param leftdistance target distance
      * @return if the encoders are greater than or equal to the target distance
      */
     //Has the left side reached a certain encoder value.
-    boolean hasLeftReached(double leftd) {
+    boolean hasLeftReached(double leftdistance) {
 
-        return (Math.abs(FLposition()) > leftd) || (Math.abs(BLposition()) > leftd);
+        return (Math.abs(fLPosition()) > leftdistance) || (Math.abs(blPosition()) > leftdistance);
     }
 
     /**
      * determines if the left side has reached the target disance
      *
-     * @param rightd target distance
+     * @param rightdistance target distance
      * @return if the encoders are greater than or equal to the target distance
      */
     //Has the right side reached a certain encoder value.
-    boolean hasRightReached(double rightd) {
+    boolean hasRightReached(double rightdistance) {
 
-        return (Math.abs(FRposition()) > rightd)  || (Math.abs(BRposition()) > rightd);
+        return (Math.abs(frPosition()) > rightdistance)  || (Math.abs(brPosition()) > rightdistance);
     }
     /**
      * sets the left motors to a specific power, keeping in mind the acceptable limits
@@ -173,9 +173,9 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     //Set the motors power.
     void setLeftPower(double power) {
         power = clip(power, -1, 1);
-        run_using_encoders();
-        FL.setPower(power);
-        BL.setPower(power);
+        runUsingEncoders();
+        fl.setPower(power);
+        bl.setPower(power);
     }
 
     /**
@@ -186,9 +186,9 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     //Set the motors power.
     void setRightPower(double power) {
         power = clip(power, -1, 1); //because david is trash at building robots and it turns by itself we need to slow this side down, you know it would be so much more effective if you did it in hardware you ass - August
-        run_using_encoders();
-        FR.setPower(-power);
-        BR.setPower(-power);
+        runUsingEncoders();
+        fr.setPower(-power);
+        br.setPower(-power);
     }
 
     /**
@@ -208,33 +208,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
         return variable;
     }
-
-    /**
-     * resets the gyro delta
-     *
-     * @throws InterruptedException
-     * @see #heading()
-     */
-//    //Resets the gyro based on the old heading.
-//    void resetGyro() throws InterruptedException {
-//
-//        while (gyroSensor.getHeading() - lastgyro != 0) {
-//            lastgyro = gyroSensor.getHeading();
-//            waitOneFullHardwareCycle();
-//        }
-//    }
-//    /**
-//     * gets an adjusted headier that can be reset
-//     *
-//     * @return the adjusted heading
-//     */
-//    int heading() {
-//        int head;
-//        head = gyroSensor.getHeading() - lastgyro;
-//        if (head < 0)
-//            head += 360;
-//        return (head);
-//    }
 
     /**
      * takes multiple ultrasonic readins and throws out anomalies
@@ -270,40 +243,20 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     }
 
     /**
-     * uses two ultrasonic sensors to square up against a wall
-     *
-     * @throws InterruptedException
-     * @see #readFixedUltra(UltrasonicSensor)
-     */
-    void squareUp() throws InterruptedException {
-
-        while (Math.abs(readFixedUltra(ultra1) - readFixedUltra(ultra2)) > 1) {
-            telemetry.addData("ultra1", readFixedUltra((ultra1)));
-            telemetry.addData("ultra2", readFixedUltra((ultra2)));
-            double power = (ultra1.getUltrasonicLevel() - ultra2.getUltrasonicLevel()) / 70;
-            power = clip(power, -0.15, 0.15);
-            setLeftPower(-power);
-            setRightPower(power);
-            waitOneFullHardwareCycle();
-        }
-        stopMotors();
-    }
-
-    /**
      * stops all motors and verifies that they are stopped
      *
      * @throws InterruptedException
      */
     void stopMotors() throws InterruptedException {
         int iterations=0;
-        while ((FR.isBusy() || BR.isBusy() || FL.isBusy() || BL.isBusy())&&iterations<10) {
+        while ((fr.isBusy() || br.isBusy() || fl.isBusy() || bl.isBusy())&&iterations<10) {
             iterations++;
-            telemetry.addData("motor status", FR.isBusy() + " " + BR.isBusy() + " " + FL.isBusy() + " " + BL.isBusy());
-            run_using_encoders();
-            BR.setPower(0);
-            BL.setPower(0);
-            FL.setPower(0);
-            FR.setPower(0);
+            telemetry.addData("motor status", fr.isBusy() + " " + br.isBusy() + " " + fl.isBusy() + " " + bl.isBusy());
+            runUsingEncoders();
+            br.setPower(0);
+            bl.setPower(0);
+            fl.setPower(0);
+            fr.setPower(0);
             sleep(1);
         }
         telemetry.addData("stopping", "complete");
@@ -316,7 +269,9 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * @see #readFixedUltra(UltrasonicSensor)
      */
     boolean blocked() throws InterruptedException {
-        return (readFixedUltra(ultra1) < 20 || readFixedUltra(ultra2) < 20);
+        final int STOPDIST = 20;
+
+        return (readFixedUltra(ultra1) < STOPDIST || readFixedUltra(ultra2) < STOPDIST);
     }
 
     /**
@@ -325,8 +280,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      *
      * @return the adjusted value
      */
-    int FRposition() {
-        return (FR.getCurrentPosition() - FRold);
+    int frPosition() {
+        return (fr.getCurrentPosition() - fRold);
     }
 
     /**
@@ -335,8 +290,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      *
      * @return the adjusted value
      */
-    int BRposition() {
-        return (BR.getCurrentPosition() - BRold);
+    int brPosition() {
+        return (br.getCurrentPosition() - bRold);
     }
 
     /**
@@ -345,8 +300,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      *
      * @return the adjusted value
      */
-    int FLposition() {
-        return (FLold-FL.getCurrentPosition());
+    int fLPosition() {
+        return (fLold - fl.getCurrentPosition());
     }
 
     /**
@@ -355,18 +310,18 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      *
      * @return the adjusted value
      */
-    int BLposition() {
-        return (BLold-BL.getCurrentPosition());
+    int blPosition() {
+        return (bLold - bl.getCurrentPosition());
     }
 
     /**
-     * resets {@link #FRposition()} {@link #BRposition()} {@link #FLposition()} {@link #BLposition()}
+     * resets {@link #frPosition()} {@link #brPosition()} {@link #fLPosition()} {@link #blPosition()}
      */
     void resetEncoderDelta() {
-        FRold = FR.getCurrentPosition();
-        BRold = BR.getCurrentPosition();
-        FLold = FL.getCurrentPosition();
-        BLold = BL.getCurrentPosition();
+        fRold = fr.getCurrentPosition();
+        bRold = br.getCurrentPosition();
+        fLold = fl.getCurrentPosition();
+        bLold = bl.getCurrentPosition();
     }
 
 

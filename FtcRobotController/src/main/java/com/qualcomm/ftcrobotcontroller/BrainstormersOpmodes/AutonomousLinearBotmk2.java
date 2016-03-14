@@ -17,10 +17,10 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         getRobotConfig();//Map Motors and Sensors
 
         //Configure and Reset
-        run_using_encoders();
+        runUsingEncoders();
         reset_drive_encoders();
       //  gyroSensor.calibrate();
-        climberDumperB.setPosition(0);
+        climberDumper.setPosition(0);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
         sideArmL.setPosition(0.75);
@@ -65,7 +65,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         sleep(300);
         sleep(delay);
         collector.setPower(-0.7);
-        climberDumperB.setPosition(0.1);
+        climberDumper.setPosition(0.1);
         if (startNearRamp) { //near ramp position
             drive(2000, .4, false, false, 0);
             if (turnDirectionInput == 1) {
@@ -122,9 +122,9 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         waitForNextHardwareCycle();
         driveUntilUltra(15, 0.1, 200);
         drive(65, -0.2, false, false, 0);
-        climberDumperB.setPosition(1);
+        climberDumper.setPosition(1);
         sleep(1000);
-        climberDumperB.setPosition(0);
+        climberDumper.setPosition(0);
         drive(500, -0.25, false, false, 0);
         beacon.setPosition(0.9);
         turnTo(-170, 1);
@@ -149,7 +149,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         }
 
         //drive(10000, -0.7, false, false, 0); //climbs ramp.
-        telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
+        telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
         waitOneFullHardwareCycle();
         */

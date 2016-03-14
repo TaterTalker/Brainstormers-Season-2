@@ -5,20 +5,20 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
  */
 public abstract class AdvancedMethods extends AutonomousMethods {
     void PIdrive(int distance, double power) throws InterruptedException {
-        adafruitgyro.startIUM();
+        adaFruitGyro.startIUM();
         resetEncoderDelta();
         final double deviationGain=.25; //how much deviation effects the robot
         double overShoot=0;
         double deviation=0;
         boolean hasReached=false;
         while(hasReached==false){
-            telemetry.addData("encoder positions", " back right "+BRposition()+" back left "+BLposition());
+            telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
             telemetry.addData("overShoot", overShoot);
             telemetry.addData("deviation", deviation);
-            double yaw = adafruitgyro.getYaw();
+            double yaw = adaFruitGyro.getYaw();
             deviation=yaw*deviationGain;
 
-            run_using_encoders();
+            runUsingEncoders();
             double leftPower=(-deviation)*Math.abs(power);
             double rightPower=(deviation)*Math.abs(power);
             leftPower+=power;
@@ -27,14 +27,14 @@ public abstract class AdvancedMethods extends AutonomousMethods {
 //            leftPower-=clip(1-(power+deviation+overShoot)*Math.abs(power), 0, 2);
             setLeftPower(leftPower);
             setRightPower(rightPower);
-            hasReached=Math.abs(BRposition()+BLposition())/2>Math.abs(distance);
+            hasReached=Math.abs(brPosition()+ blPosition())/2>Math.abs(distance);
             waitOneFullHardwareCycle();
         }
         stopMotors();
     }
 
     void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
-       adafruitgyro.startIUM(); //0s gyro
+       adaFruitGyro.startIUM(); //0s gyro
         final double gain=0.015;
         int  countwithintolerence = 0, count = 0;
         double heading,difference, cyclesMaxPower = 0;
@@ -42,11 +42,11 @@ public abstract class AdvancedMethods extends AutonomousMethods {
         degrees *= turnDirection;
         double power;
         boolean rightTurn = false;
-        run_using_encoders();
+        runUsingEncoders();
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
-            heading = adafruitgyro.getYaw();
+            heading = adaFruitGyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (difference > 180) { //determines which way the robot will turn (left or right)

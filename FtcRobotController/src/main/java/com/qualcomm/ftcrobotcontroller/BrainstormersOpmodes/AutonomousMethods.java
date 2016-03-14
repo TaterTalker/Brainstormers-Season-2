@@ -18,7 +18,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
         degrees *= turnDirection;
         double power;
         boolean rightTurn = false;
-        run_using_encoders();
+        runUsingEncoders();
 
         while (true) { //while the turn hasn't been completed we run through this loop
             count++;
@@ -108,7 +108,7 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
       //  resetGyro();
 
         //start the drive wheel motors at full power otherwise when calculating turn heading from encoders all will be null and program will halt
-        run_using_encoders();
+        runUsingEncoders();
         setLeftPower(0.5);
         setRightPower(0.5);
 
@@ -122,10 +122,10 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
 
             if (correction == true) { //using encoder values to correct offsets/drift
                 turnheading += (
-                        FLposition() +
-                                BLposition() -
-                                FRposition() -
-                                BRposition()
+                        fLPosition() +
+                                blPosition() -
+                                frPosition() -
+                                brPosition()
                 ) / 80.0; //MUST BE FLOAT
 
                 //ramping up speed to avoid jerk
@@ -158,13 +158,13 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
             turnheading = clip(turnheading, -0.25, 0.25); //clips the turn heading
 
             //sets the power (repeated to avoid glitching)
-            telemetry.addData("encoder values", " FL " + FLposition() + " BL " + BLposition() + " FR " + FRposition() + " BR " + BRposition());
-            run_using_encoders();
+            telemetry.addData("encoder values", " fl " + fLPosition() + " bl " + blPosition() + " fr " + frPosition() + " br " + brPosition());
+            runUsingEncoders();
             setLeftPower(currSpeed + turnheading * currSpeed);
             setRightPower(currSpeed - turnheading * currSpeed);
             telemetry.addData("left power ", +(currSpeed + turnheading * currSpeed) + " right power: " + (currSpeed - turnheading * currSpeed));
-            telemetry.addData("encoder values", " FL " + FLposition() + " " + FL.getCurrentPosition() + " BL " + BLposition() + " " + BL.getCurrentPosition() + " FR " + FRposition() + " " + FR.getCurrentPosition() + " BR " + BRposition() + " " + BR.getCurrentPosition());
-            run_using_encoders();
+            telemetry.addData("encoder values", " fl " + fLPosition() + " " + fl.getCurrentPosition() + " bl " + blPosition() + " " + bl.getCurrentPosition() + " fr " + frPosition() + " " + fr.getCurrentPosition() + " br " + brPosition() + " " + br.getCurrentPosition());
+            runUsingEncoders();
             turnheading = clip(turnheading, -1, 1);
             setLeftPower(currSpeed + turnheading * (currSpeed));
             setRightPower(currSpeed - turnheading * (currSpeed));
@@ -180,14 +180,14 @@ public abstract class AutonomousMethods extends AutonomousBuildingBlocks {
 
                     boolean colorvalue = false;
                     try{
-                      colorvalue = colorSensor2.alpha() > 1;
+                      colorvalue = colorSensor.alpha() > 1;
 
                     }catch(Exception fuck){
 
                     }
 
                     isComplete = colorvalue || hasLeftReached(distance) || hasRightReached(distance);
-                    telemetry.addData("alpha", colorSensor2.alpha());
+                    telemetry.addData("alpha", colorSensor.alpha());
                     break;
                 default:
                     telemetry.addData("Invalid input", "stopping");

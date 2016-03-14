@@ -17,10 +17,10 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
         getRobotConfig();
 
         //Configure and Reset.
-        run_using_encoders();
+        runUsingEncoders();
         reset_drive_encoders();
         //gyroSensor.calibrate();
-        climberDumperB.setPosition(0);
+        climberDumper.setPosition(0);
         //  climberDumperR.setPosition(1);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
@@ -96,9 +96,9 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
 
         sleep(500);
         driveUntilUltra(15, 0.1, 500);
-        climberDumperB.setPosition(1);
+        climberDumper.setPosition(1);
         sleep(1000);
-        climberDumperB.setPosition(0);
+        climberDumper.setPosition(0);
         drive(500, -0.25, false, false, 0);
         beacon.setPosition(0.9);
         turnTo(-170, 1);
@@ -130,7 +130,7 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
         drive(10000, -0.7, false, false, 0);
 
 
-        telemetry.addData("Red, Blue", " " + colorSensor2.blue() + " " + colorSensor2.red());
+        telemetry.addData("Red, Blue", " " + colorSensor.blue() + " " + colorSensor.red());
         sleep(100);
         waitOneFullHardwareCycle();
     }

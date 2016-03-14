@@ -8,7 +8,7 @@ public class AutonomousTesting extends AdvancedMethods {
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
         while (!isStarted()) {
-            adafruitgyro.initIMU();
+            adaFruitGyro.initIMU();
         }
         sleep(100);
         PIdrive(4000,1);
