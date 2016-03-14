@@ -1,5 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
-import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.AdafruitIMUmanager;
+
 /**
  * Created by August on 3/5/2016.
  */

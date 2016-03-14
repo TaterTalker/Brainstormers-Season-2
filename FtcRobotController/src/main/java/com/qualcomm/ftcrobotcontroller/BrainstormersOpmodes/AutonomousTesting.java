@@ -13,7 +13,7 @@ public class AutonomousTesting extends AdvancedMethods {
         sleep(100);
         PIdrive(4000,1);
         sleep(150000);
-    }
+}
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();
         newGyroTurn(36, 0.5);

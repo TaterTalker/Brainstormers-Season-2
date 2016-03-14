@@ -91,19 +91,6 @@ public  class AdafruitIMUmethods{
      * THIS "loop" METHOD IS THE ONLY ONE THAT "TOUCHES" ANY SENSOR OR MOTOR HARDWARE.
      */
 
-    /*
-    * Code to run when the op mode is first disabled goes here
-    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-    */
-    public void stopIMU(){
-        //When the FTC Driver Station's "Start with Timer" button commands autonomous mode to start,
-        //then stop after 30 seconds, stop the motors immediately!
-        //Following this method, the underlying FTC system will call a "stop" routine of its own
-        systemTime = System.nanoTime();
-        Log.i("FtcRobotController", "IMU Stop method finished in: "
-                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
-    }
-
     public double getYaw(){ //READ THIS IGNORE THE REST OF THIS FILE
         boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
         return yawAngle[1]*-1.0; //needs * -1 b/c gyro is upside down (thx rob)
