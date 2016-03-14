@@ -3,31 +3,29 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * Created by August on 3/5/2016.
  */
-public abstract class AdvancedMethods extends AutonomousMethods {
+public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
     void PIdrive(int distance, double power) throws InterruptedException {
         adaFruitGyro.startIUM();
         resetEncoderDelta();
-        final double deviationGain=.25; //how much deviation effects the robot
-        double overShoot=0;
-        double deviation=0;
+        final double deviationGain = 0.25; //how much deviation effects the robot
+        double overShoot = 0;
+        double deviation = 0;
         boolean hasReached=false;
         while(hasReached==false){
             telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
             telemetry.addData("overShoot", overShoot);
             telemetry.addData("deviation", deviation);
             double yaw = adaFruitGyro.getYaw();
-            deviation=yaw*deviationGain;
+            deviation = yaw * deviationGain;
 
             runUsingEncoders();
-            double leftPower=(-deviation)*Math.abs(power);
-            double rightPower=(deviation)*Math.abs(power);
-            leftPower+=power;
-            rightPower+=power;
-//            rightPower+=clip(1-(power+deviation+overShoot)*Math.abs(power), 0, 2);
-//            leftPower-=clip(1-(power+deviation+overShoot)*Math.abs(power), 0, 2);
+            double leftPower = -deviation * Math.abs(power);
+            double rightPower = deviation * Math.abs(power);
+            leftPower += power;
+            rightPower += power;
             setLeftPower(leftPower);
             setRightPower(rightPower);
-            hasReached=Math.abs(brPosition()+ blPosition())/2>Math.abs(distance);
+            hasReached = Math.abs(brPosition() + blPosition()) / 2 > Math.abs(distance);
             waitOneFullHardwareCycle();
         }
         stopMotors();
@@ -35,16 +33,19 @@ public abstract class AdvancedMethods extends AutonomousMethods {
 
     void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
        adaFruitGyro.startIUM(); //0s gyro
-        final double gain=0.015;
-        int  countwithintolerence = 0, count = 0;
-        double heading,difference, cyclesMaxPower = 0;
+        final double gain = 0.015;
+        int  countWithinTolerence = 0, count = 0;
+        double heading;
+        double difference;
+        double cyclesMaxPower = 0;
 
         degrees *= turnDirection;
         double power;
         boolean rightTurn = false;
         runUsingEncoders();
+        boolean hasTurned=false;
 
-        while (true) { //while the turn hasn't been completed we run through this loop
+        while (!hasTurned) { //while the turn hasn't been completed we run through this loop
             count++;
             heading = adaFruitGyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
@@ -70,19 +71,19 @@ public abstract class AdvancedMethods extends AutonomousMethods {
 
             telemetry.addData("power", "" + power);
             if (Math.abs(difference) <= tolerance) { //how far off the turn can be while still being successful (tolerance of turn)
-                countwithintolerence++;
-                if (countwithintolerence > 15) {
-                    break;
+                countWithinTolerence++;
+                if (countWithinTolerence > 15) {
+                    hasTurned=true;
                 }
                 setLeftPower(0);
                 setRightPower(0);
             } else if (difference > 0) {
-                countwithintolerence = 0;
+                countWithinTolerence = 0;
                 setLeftPower(power);
                 setRightPower(-power);
                 rightTurn = true;
             } else {
-                countwithintolerence = 0;
+                countWithinTolerence = 0;
                 setLeftPower(-power);
                 setRightPower(power);
                 rightTurn = false;
