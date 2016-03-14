@@ -18,7 +18,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
 
         //Configure and Reset
         runUsingEncoders();
-        reset_drive_encoders();
+        resetDriveEncoders();
       //  gyroSensor.calibrate();
         climberDumper.setPosition(0);
         armAngle1.setPosition(0.5);

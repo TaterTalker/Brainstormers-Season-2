@@ -18,7 +18,7 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
 
         //Configure and Reset.
         runUsingEncoders();
-        reset_drive_encoders();
+        resetDriveEncoders();
         //gyroSensor.calibrate();
         climberDumper.setPosition(0);
         //  climberDumperR.setPosition(1);

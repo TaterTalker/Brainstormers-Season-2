@@ -102,7 +102,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * sets all drive encoders to 0
      */
     //Resets the Drive Encoders.
-    void reset_drive_encoders() {
+    void resetDriveEncoders() {
 
         fl.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         fr.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -127,23 +127,23 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     /**
      * determines if the left side has reached the target disance
      *
-     * @param leftdistance target distance
+     * @param leftDistance target distance
      * @return if the encoders are greater than or equal to the target distance
      */
     //Has the left side reached a certain encoder value.
-    boolean hasLeftReached(double leftdistance) {
-        return (Math.abs(fLPosition()) > leftdistance) || (Math.abs(blPosition()) > leftdistance);
+    boolean hasLeftReached(double leftDistance) {
+        return (Math.abs(fLPosition()) > leftDistance) || (Math.abs(blPosition()) > leftDistance);
     }
 
     /**
      * determines if the left side has reached the target disance
      *
-     * @param rightdistance target distance
+     * @param rightDistance target distance
      * @return if the encoders are greater than or equal to the target distance
      */
     //Has the right side reached a certain encoder value.
-    boolean hasRightReached(double rightdistance) {
-        return (Math.abs(frPosition()) > rightdistance)  || (Math.abs(brPosition()) > rightdistance);
+    boolean hasRightReached(double rightDistance) {
+        return (Math.abs(frPosition()) > rightDistance)  || (Math.abs(brPosition()) > rightDistance);
     }
     /**
      * sets the left motors to a specific power, keeping in mind the acceptable limits
