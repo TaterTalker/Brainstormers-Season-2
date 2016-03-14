@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
  * <p/>
  * Enables control of the robot via the gamepad
  */
-public class Cameracontroller {
+public class CameraController {
 
     LinearOpMode opMode;
 
@@ -42,7 +42,7 @@ public class Cameracontroller {
     private String data;
     public int color;
 
-    public Cameracontroller(LinearOpMode opMode){
+    public CameraController(LinearOpMode opMode){
         this.opMode = opMode;
     }
 
