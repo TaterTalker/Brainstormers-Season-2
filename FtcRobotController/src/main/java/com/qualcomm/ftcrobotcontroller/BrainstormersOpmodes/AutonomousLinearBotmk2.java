@@ -31,28 +31,31 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         debDumper.setPosition((turnDirection + 1) / 2);
         sleep(5000);
         telemetry.addData("Init", "done");
-        boolean tigBacon=true;
+        boolean triggerBeacon=true;
 
         while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
-            if(gamepad1.y==true)
-                tigBacon=false;
-            if (gamepad1.dpad_up)
+            if(gamepad1.y) {
+                triggerBeacon = false;
+            }
+            if (gamepad1.dpad_up) {
                 delay = delay + 1000;
-            else if (gamepad1.dpad_down)
+            }
+            else if (gamepad1.dpad_down) {
                 delay = delay - 1000;
+            }
             telemetry.addData("Delay Seconds:", delay / 1000);
             sleep(250);
         }
 
         if (gamepad1.a)  //sets starting position of robot
-            startNearRamp=true;
+            startNearRamp = true;
 
         if (startNearRamp)
             telemetry.addData("Near Ramp","");
         else
             telemetry.addData("Far From Ramp", "");
         telemetry.addData("Ready", "");
-        if(tigBacon){
+        if(triggerBeacon){
             telemetry.addData("Beacon" , "Activated");
         }
         else{
@@ -100,7 +103,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
 
 
         //use camera to analyze the image and get the left and right red values
-        if (tigBacon==true) {
+        if (triggerBeacon) {
             sleep (700);
             int leftred = cameraController.getLeftRed();
             int rightred = cameraController.getRightRed();

@@ -11,7 +11,7 @@ public class AutonomousTesting extends AdvancedMethods {
             adaFruitGyro.initIMU();
         }
         sleep(100);
-        PIdrive(4000,1);
+        piDrive(4000, 1);
         sleep(150000);
 }
     public void turnTest() throws InterruptedException {

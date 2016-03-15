@@ -4,14 +4,14 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
  * Created by August on 3/5/2016.
  */
 public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
-    void PIdrive(int distance, double power) throws InterruptedException {
+    void piDrive(int distance, double power) throws InterruptedException {
         adaFruitGyro.startIUM();
         resetEncoderDelta();
         final double deviationGain = 0.25; //how much deviation effects the robot
         double overShoot = 0;
         double deviation = 0;
-        boolean hasReached=false;
-        while(hasReached==false){
+        boolean hasReached = false;
+        while(hasReached == false){
             telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
             telemetry.addData("overShoot", overShoot);
             telemetry.addData("deviation", deviation);
@@ -32,18 +32,21 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
     }
 
     void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
-       adaFruitGyro.startIUM(); //0s gyro
-        final double gain = 0.015;
-        int  countWithinTolerence = 0, count = 0;
+
+        final double GAIN = 0.015;
+
+        int countWithinTolerence = 0;
+        int count = 0;
         double heading;
         double difference;
         double cyclesMaxPower = 0;
-
-        degrees *= turnDirection;
         double power;
         boolean rightTurn = false;
+        boolean hasTurned = false;
+        degrees *= turnDirection;
+
         runUsingEncoders();
-        boolean hasTurned=false;
+        adaFruitGyro.startIUM(); //0s gyro
 
         while (!hasTurned) { //while the turn hasn't been completed we run through this loop
             count++;
@@ -57,7 +60,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
             }
 
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
-            power = Math.abs(difference*gain);
+            power = Math.abs(difference*GAIN);
             power = clip(power, 0.03, 0.35);
 
             if (cyclesMaxPower == 0) {
@@ -73,7 +76,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
             if (Math.abs(difference) <= tolerance) { //how far off the turn can be while still being successful (tolerance of turn)
                 countWithinTolerence++;
                 if (countWithinTolerence > 15) {
-                    hasTurned=true;
+                    hasTurned = true;
                 }
                 setLeftPower(0);
                 setRightPower(0);

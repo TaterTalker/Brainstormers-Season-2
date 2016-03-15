@@ -87,18 +87,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     }
 
     /**
-     * sets all motors to a specific speed
-     *
-     * @param speed target speed
-     */
-    void driveForever(double speed) {
-        // Start the drive wheel motors at full power
-        runUsingEncoders();
-        setLeftPower(speed);
-        setRightPower(speed);
-    }
-
-    /**
      * sets all drive encoders to 0
      */
     //Resets the Drive Encoders.
@@ -131,20 +119,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * @return if the encoders are greater than or equal to the target distance
      */
     //Has the left side reached a certain encoder value.
-    boolean hasLeftReached(double leftDistance) {
-        return (Math.abs(fLPosition()) > leftDistance) || (Math.abs(blPosition()) > leftDistance);
-    }
-
-    /**
-     * determines if the left side has reached the target disance
-     *
-     * @param rightDistance target distance
-     * @return if the encoders are greater than or equal to the target distance
-     */
-    //Has the right side reached a certain encoder value.
-    boolean hasRightReached(double rightDistance) {
-        return (Math.abs(frPosition()) > rightDistance)  || (Math.abs(brPosition()) > rightDistance);
-    }
     /**
      * sets the left motors to a specific power, keeping in mind the acceptable limits
      * sets the left motors to a specific power, keeping in mind the acceptable limits
@@ -215,10 +189,12 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
                 tmpVal = sensor.getUltrasonicLevel();
                 waitOneFullHardwareCycle();
             } while (tmpVal == 0);
-            if (tmpVal < minVal)
+            if (tmpVal < minVal) {
                 minVal = tmpVal;
-            if (tmpVal > maxVal)
+            }
+            if (tmpVal > maxVal) {
                 maxVal = tmpVal;
+            }
             val += tmpVal;
             waitOneFullHardwareCycle();
         }
@@ -233,8 +209,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * @throws InterruptedException
      */
     void stopMotors() throws InterruptedException {
-        int iterations=0;
-        while ((fr.isBusy() || br.isBusy() || fl.isBusy() || bl.isBusy())&&iterations<10) {
+        int iterations = 0;
+        while ((fr.isBusy() || br.isBusy() || fl.isBusy() || bl.isBusy()) && iterations < 10) {
             iterations++;
             telemetry.addData("motor status", fr.isBusy() + " " + br.isBusy() + " " + fl.isBusy() + " " + bl.isBusy());
             runUsingEncoders();

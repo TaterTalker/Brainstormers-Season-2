@@ -79,7 +79,7 @@ public abstract class TeleOpOctopus extends OpMode {
     /**
      * the servo that controls the climber dumping arm for the blue side
      */
-    Servo climberDumperB;
+    Servo climberDumper;
     /**
      * left side arm control servo
      */
@@ -139,7 +139,7 @@ public abstract class TeleOpOctopus extends OpMode {
     float xVal;
     /**
      * this is pressed when the arm is fully retracted
-     * it is used by {@link #processArm()}
+     * it is used by {@link #armControl()}
      */
     TouchSensor extStop;
 
@@ -165,7 +165,7 @@ public abstract class TeleOpOctopus extends OpMode {
         pullUp1 = hardwareMap.dcMotor.get("pullUp1");
         pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         armAngleMotor = hardwareMap.dcMotor.get("ext");
-        climberDumperB = hardwareMap.servo.get("climberDumper");
+        climberDumper = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         beacon = hardwareMap.servo.get("beacon");
@@ -184,7 +184,7 @@ public abstract class TeleOpOctopus extends OpMode {
         pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         lock1.setPosition(1);
         lock2.setPosition(0);
-        climberDumperB.setPosition(0);
+        climberDumper.setPosition(0);
         beacon.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
@@ -217,16 +217,16 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * this processes inputs directly related to moving the wheels
-     * @see #getInput()
+     * @see #readInput()
      * @see #processInput()
      * @see #slowRobot()
-     * @see #setPower()
+     * @see #powerRobot()
      */
     private void drive() {
-        getInput();
+        readInput();
         processInput();
         slowRobot();
-        setPower();
+        powerRobot();
     }
 
     /**
@@ -234,7 +234,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * @see #collector()
      * @see #dumping()
      * @see #climberDumper()
-     * @see #processArm()
+     * @see #armControl()
      * @see #angleArm()
      */
     public void attachments() {
@@ -242,7 +242,7 @@ public abstract class TeleOpOctopus extends OpMode {
         dumping();
         climberDumper();
         sideArm();
-        processArm();
+        armControl();
         hook();
         angleArm();
     }
@@ -272,8 +272,8 @@ public abstract class TeleOpOctopus extends OpMode {
     int moveCount = 0;
     int oldCount = 51;
 
-    final int MAXDUMPINGPOSISTION = 250;
-    final int MAXCOUNT =  51;
+
+    final int MINCOUNT =  51;
     final int MAXMOVECOUNT = 250;
 
     private void dumping() {
@@ -285,8 +285,8 @@ public abstract class TeleOpOctopus extends OpMode {
                 doorR.setPosition(0.3);
                 moveCount++;
 
-                if(moveCount > MAXDUMPINGPOSISTION){
-                    moveCount = MAXDUMPINGPOSISTION;
+                if(moveCount > MAXMOVECOUNT){
+                    moveCount = MAXMOVECOUNT;
                 }
 
                 oldCount = moveCount;
@@ -302,7 +302,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 }
                 else {
                     dumpingBlock.setPosition(0.5);
-                    oldCount = MAXCOUNT;
+                    oldCount = MINCOUNT;
                 }
                 if((oldCount - moveCount) > 50) {
                     doorR.setPosition(0.85);
@@ -319,7 +319,6 @@ public abstract class TeleOpOctopus extends OpMode {
                 if(moveCount > MAXMOVECOUNT){
                     moveCount = MAXMOVECOUNT;
                 }
-
                 oldCount = moveCount;
             }
             else if (gamepad2.dpad_right) {
@@ -329,9 +328,10 @@ public abstract class TeleOpOctopus extends OpMode {
                 if(moveCount > 0){
                     dumpingBlock.setPosition(0);
                     moveCount--;
-                } else {
+                }
+                else {
                     dumpingBlock.setPosition(0.5);
-                    oldCount = 51;
+                    oldCount = MINCOUNT;
                 }
                 if((oldCount - moveCount) > 50) {
                     doorL.setPosition(0.15);
@@ -347,12 +347,14 @@ public abstract class TeleOpOctopus extends OpMode {
     private void climberDumper() {
         // climber dumpingBlock
             if (gamepad2.y) {
-                climberDumperB.setPosition(1);
-            } else {
-                climberDumperB.setPosition(0.1);
+                climberDumper.setPosition(1);
+            }
+            else {
+                climberDumper.setPosition(0.1);
                 beacon.setPosition(1);
             }
     }
+
 
     /**
      * runs everything involving extending and retracting the main dumpingBlock arm {@link #armAngleMotor} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
@@ -361,7 +363,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
      */
 
-    private void processArm() {
+    private void armControl() {
         /**
          * if the left trigger is pressed, the arm is retracted
          */
@@ -382,7 +384,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 lock2.setPosition(0);
             }
             if (lock2.getPosition()>0.9)
-                climberDumperB.setPosition(0.5);
+                climberDumper.setPosition(0.5);
         }
 
 
@@ -423,42 +425,22 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(0);
             pullUp2.setPower(0);
         }
-
-        /**
-         * if the arm is fully retracted this stops it from trying to retract further
-         * it is controlled by touch sensor {@link #extStop}
-         */
-
-        /**
-         * if a is pressed, this tightens the pull up motor
-         */
-        //tension the pullUp motor
-
-        /**
-         * if b is pressed, this loosens the pull up motor
-         */
     }
-
-    double clip(double variable, double min, double max) {
-
-        if (variable < min) variable = min;
-        if (variable > max) variable = max;
-
-        return variable;
-    }
-
 
     /**
      * sets the angle of the arm
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
-        if(gamepad2.left_stick_y > .03)
+        if(gamepad2.left_stick_y > .03) {
             armAngleMotor.setPower(1);
-        else if (gamepad2.left_stick_y < -.03)
+        }
+        else if (gamepad2.left_stick_y < -.03) {
             armAngleMotor.setPower(-1);
-        else
+        }
+        else {
             armAngleMotor.setPower(0);
+        }
     }
 
     /**
@@ -467,7 +449,8 @@ public abstract class TeleOpOctopus extends OpMode {
     private void hook(){
         if (gamepad1.left_bumper){
             armHook.setPosition(0.6);
-        } else {
+        }
+        else {
             armHook.setPosition(0.3);
         }
     }
@@ -479,15 +462,18 @@ public abstract class TeleOpOctopus extends OpMode {
                 if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
                     sideArmL.setPosition(0.8);
                     sideArmR.setPosition(1);//0.8
-                } else {
+                }
+                else {
                     sideArmL.setPosition(0.8);
                     sideArmR.setPosition(0.05);
                 }
-            } else if (side == -1) {
+            }
+            else if (side == -1) {
                 if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
                     sideArmL.setPosition(0);//0.1
                     sideArmR.setPosition(0.05);
-                } else {
+                }
+                else {
                     sideArmL.setPosition(0.8);
                     sideArmR.setPosition(0.05);
                 }
@@ -505,10 +491,12 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
             //switched armAngleMotor less thn to greater than
-            if (armAngleMotor.getCurrentPosition()>0)
+            if (armAngleMotor.getCurrentPosition()>0) {
                 armAngleMotor.setPower(-.5);
-            else
+            }
+            else {
                 armAngleMotor.setPower(0);
+            }
 
             fr.setPower(1);
             br.setPower(1);
@@ -527,7 +515,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * {@link #gamepad1} left stick y axis controls forwards and backwards
      * {@link #gamepad1} right stick x axis controls rotation
      */
-    private void getInput() {
+    private void readInput() {
         yVal = gamepad1.left_stick_y;
         xVal = gamepad1.right_stick_x;
     }
@@ -557,7 +545,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * @see #fl
      * @see #bl
      */
-    private void setPower() {
+    private void powerRobot() {
         if (!gamepad1.y){
             fr.setPower(Range.clip(frPower, -1, 1) * driveMod);
             br.setPower(Range.clip(brPower, -1, 1) * driveMod);
@@ -576,7 +564,8 @@ public abstract class TeleOpOctopus extends OpMode {
             if (fr.getPower() > 0) {
                 driveMod = 1f;
 
-            } else if (fr.getPower() < 0) {
+            }
+            else if (fr.getPower() < 0) {
                 driveMod = 0.5f;
 
             }
