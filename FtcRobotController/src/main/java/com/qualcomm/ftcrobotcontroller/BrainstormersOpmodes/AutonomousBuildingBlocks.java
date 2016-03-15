@@ -156,7 +156,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
      * @return returns the variable, exept it is inside the exeptable vlues
      */
     //Clip the values.
-    double clip(double variable,final double MIN,final double MAX) {
+    double clip(double variable, double MIN, double MAX) {
 
         if (variable < MIN) {
             variable = MIN;

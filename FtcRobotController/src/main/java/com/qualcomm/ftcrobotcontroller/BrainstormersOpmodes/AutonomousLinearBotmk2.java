@@ -33,7 +33,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
 
-        while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
+      /*  while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
             if(gamepad1.y) {
                 triggerBeacon = false;
             }

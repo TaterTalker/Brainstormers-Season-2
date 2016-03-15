@@ -7,24 +7,27 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
     void piDrive(int distance, double power) throws InterruptedException {
         adaFruitGyro.startIUM();
         resetEncoderDelta();
-        final double deviationGain = 0.25; //how much deviation effects the robot
+        final double DEVIATIONGAIN = 0.3; //how much deviation effects the robot
         double overShoot = 0;
         double deviation = 0;
         boolean hasReached = false;
         while(hasReached == false){
-            telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
-            telemetry.addData("overShoot", overShoot);
-            telemetry.addData("deviation", deviation);
             double yaw = adaFruitGyro.getYaw();
-            deviation = yaw * deviationGain;
+            telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
+            telemetry.addData("yaw", yaw);
+            telemetry.addData("deviation", deviation);
+            deviation =  ( yaw * DEVIATIONGAIN );
+            if (deviation != 0) {
+                deviation = Math.sqrt(Math.abs(deviation)) * (deviation / Math.abs(deviation));
+            }
 
             runUsingEncoders();
-            double leftPower = -deviation * Math.abs(power);
-            double rightPower = deviation * Math.abs(power);
+            double leftPower = -deviation;
+            double rightPower = deviation;
             leftPower += power;
             rightPower += power;
-            setLeftPower(leftPower);
-            setRightPower(rightPower);
+            setLeftPower(clip(leftPower, -1, 1));
+            setRightPower(clip(rightPower, -1, 1));
             hasReached = Math.abs(brPosition() + blPosition()) / 2 > Math.abs(distance);
             waitOneFullHardwareCycle();
         }

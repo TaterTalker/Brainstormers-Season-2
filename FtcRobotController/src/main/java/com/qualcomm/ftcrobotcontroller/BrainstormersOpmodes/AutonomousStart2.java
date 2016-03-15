@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousStart2 extends AutonomousMethods {
+public abstract class AutonomousStart2 extends AdvancedMethods {
     /**
      * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
@@ -53,7 +53,7 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
         collector.setPower(-0.7);
 
         //collector.setPower(-1);
-        drive(2000, .4, false, false, 0);
+    /*    drive(2000, .4, false, false, 0);
         if (turnDirectionInput == 1){
             turnTo(40, 0);
         }
@@ -145,6 +145,7 @@ public abstract class AutonomousStart2 extends AutonomousMethods {
         long end=System.currentTimeMillis();
         telemetry.addData("timing", Long.toString(end-start));
         sleep(150000);
+        */
     }
 }
 
