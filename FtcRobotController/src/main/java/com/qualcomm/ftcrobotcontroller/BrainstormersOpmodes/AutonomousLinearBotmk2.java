@@ -70,14 +70,6 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         while (!isStarted()) {
             adaFruitGyro.initIMU();
         }
-        beaconR.setPosition(1);
-        climberDumper.setPosition(1);
-        beaconL.setPosition(1);
-        sleep(1000);
-        beaconR.setPosition(0);
-        climberDumper.setPosition(0);
-        beaconL.setPosition(0);
-        sleep(10000);
 
         beaconR.setPosition(1);
         sleep(delay);
