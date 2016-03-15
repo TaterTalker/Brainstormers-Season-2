@@ -22,13 +22,11 @@ public abstract class AutonomousStart2 extends AdvancedMethods {
         //gyroSensor.calibrate();
         climberDumper.setPosition(0);
         //  climberDumperR.setPosition(1);
-        armAngle1.setPosition(0.5);
-        armAngle2.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
         doorL.setPosition(0.3);
         doorR.setPosition(0.8);
-        beacon.setPosition(0);
+        beaconR.setPosition(0);
         debDumper.setPosition((turnDirection + 1) / 2);
         cameraController.startCam();
         sleep(5000);
@@ -47,7 +45,7 @@ public abstract class AutonomousStart2 extends AdvancedMethods {
 
 
         waitForStart(); //everything before this happens when you press init
-        beacon.setPosition(1);
+        beaconR.setPosition(1);
         sleep(300);
         sleep(delay);
         collector.setPower(-0.7);

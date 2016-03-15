@@ -8,7 +8,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
         resetEncoderDelta();
         int rollOvers=0;
         final double oldGyro =  adaFruitGyro.getYaw();
-        final double DEVIATIONGAIN = 0.3; //how much deviation effects the robot
+        final double DEVIATIONGAIN = 0.20; //how much deviation effects the robot
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
@@ -84,7 +84,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
 
             telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
             power = Math.abs(difference*GAIN);
-            power = clip(power, 0.05, 0.35);
+            power = clip(power, 0.1, 0.5);
 
             if (cyclesMaxPower == 0) {
                 cyclesMaxPower = Math.abs(difference / 30.0) + 3;
@@ -104,7 +104,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
                 setLeftPower(0);
                 setRightPower(0);
 
-                stopMotors();
+               // stopMotors();
             } else if (difference > 0) {
                 countWithinTolerence = 0;
 
@@ -189,7 +189,6 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
                 setLeftPower(0);
                 setRightPower(0);
 
-                stopMotors();
             } else if (difference > 0) {
                 countWithinTolerence = 0;
                 setLeftPower(power);

@@ -21,16 +21,14 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         resetDriveEncoders();
         //  gyroSensor.calibrate();
         climberDumper.setPosition(0.5);
-        armAngle1.setPosition(0.5);
-        armAngle2.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
         beaconR.setPosition(0);
         beaconL.setPosition(0);
-        debDumper.setPosition((turnDirection + 1) / 2);
-        sleep(5000);
+        debDumper.setPosition(0.5);
+        sleep(500);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
         cameraController.startCam();
@@ -73,10 +71,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
             adaFruitGyro.initIMU();
         }
 
-        waitForStart(); //everything before this happens when you press init
-
-        beacon.setPosition(1);
-        sleep(300);
+        beaconR.setPosition(1);
         sleep(delay);
         collector.setPower(-0.7);
         climberDumper.setPosition(0.5);
@@ -98,10 +93,10 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
             }
             piDrive(7000, 1, 0);
         }
-        newGyroTurn(45, 2);
+        newGyroTurn(43, 3);
         piDrive(700, .20,1);
-        piDrive(200,.2,0);
-        pivot(88,1, 1);
+        piDrive(900,.2,0);
+        pivot(88,-1, 1);
 
 
         stopMotors();

@@ -46,8 +46,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     //Variables
     int turnDirection = 1;
     private boolean didEncodersReset = false;
-    Servo armAngle1; //I have no idea what these are supposed to do --> bad name
-    Servo armAngle2;
+
 
 
     public AutonomousBuildingBlocks (){
@@ -82,8 +81,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         fl = hardwareMap.dcMotor.get("fl");
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
-        armAngle1 = hardwareMap.servo.get("armAngle1");
-        armAngle2 = hardwareMap.servo.get("armAngle2");
         doorR = hardwareMap.servo.get("doorR");
         doorL = hardwareMap.servo.get("doorL");
     }
