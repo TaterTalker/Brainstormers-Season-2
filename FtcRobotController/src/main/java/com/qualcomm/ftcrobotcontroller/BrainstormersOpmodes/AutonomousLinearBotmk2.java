@@ -19,21 +19,22 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         //Configure and Reset
         runUsingEncoders();
         resetDriveEncoders();
-      //  gyroSensor.calibrate();
+        //  gyroSensor.calibrate();
         climberDumper.setPosition(0);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
-        doorL.setPosition(0.3);
-        doorR.setPosition(0.8);
+        doorR.setPosition(0.85);
+        doorL.setPosition(0.15);
         beacon.setPosition(0);
         debDumper.setPosition((turnDirection + 1) / 2);
         sleep(5000);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
+        cameraController.startCam();
 
-      /*  while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
+        while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
             if(gamepad1.y) {
                 triggerBeacon = false;
             }
@@ -48,18 +49,27 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         }
 
         if (gamepad1.a)  //sets starting position of robot
+        {
             startNearRamp = true;
+        }
 
-        if (startNearRamp)
-            telemetry.addData("Near Ramp","");
-        else
+        if (startNearRamp) {
+            telemetry.addData("Near Ramp", "");
+        }
+        else {
             telemetry.addData("Far From Ramp", "");
+        }
         telemetry.addData("Ready", "");
         if(triggerBeacon){
-            telemetry.addData("Beacon" , "Activated");
+            telemetry.addData("Beacon", "Activated");
         }
         else{
-            telemetry.addData(" No Beacon" , "Deactivated");
+            telemetry.addData(" No Beacon", "Deactivated");
+        }
+
+
+        while (!isStarted()) {
+            adaFruitGyro.initIMU();
         }
 
         waitForStart(); //everything before this happens when you press init
@@ -70,41 +80,38 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         collector.setPower(-0.7);
         climberDumper.setPosition(0.1);
         if (startNearRamp) { //near ramp position
-            drive(2000, .4, false, false, 0);
+            piDrive(2000, .7, 0);
             if (turnDirectionInput == 1) {
-                turnTo(36, 0);
+                newGyroTurn(36, 1);
             } else {
-                turnTo(37, 0);
+                newGyroTurn(37, 1);
             }
-            drive(4600, 1, true, true, 0);
+            piDrive(4600, 1, 0);
         }
         else { //far ramp position
-            drive(1600, .4, false, false, 0);
+            piDrive(1600, .7, 0);
             if (turnDirectionInput == 1) {
-                turnTo(50, 0);
+                newGyroTurn(50, 1);
             } else {
-                turnTo(51, 0);
+                newGyroTurn(51, 1);
             }
-            drive(7000, 1, true, true, 0);
+            piDrive(7000, 1, 0);
         }
-        cameraController.startCam();
-        turnTo(25, 1);
-        drive(873, .15, false, false, 1);
-        drive(700, .20, false, false, 0);
+        newGyroTurn(45, 2);
+        piDrive(700, .20,1);
+        piDrive(800, 0.2, 0);
         if (turnDirectionInput == 1){
-            turnTo(88, 0);
+            newGyroTurn(88, 1);
         }
         else{
-            turnTo(86,0);
+            newGyroTurn(86,1);
         }
         stopMotors();
         collector.setPower(0);
-        driveUntilUltra(30, 0.1, 600);
-
-
+        driveUntilUltra(30, 0.1, 1200);
         //use camera to analyze the image and get the left and right red values
         if (triggerBeacon) {
-            sleep (700);
+            sleep(100);
             int leftred = cameraController.getLeftRed();
             int rightred = cameraController.getRightRed();
 
@@ -124,17 +131,16 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
         driveUntilUltra(15, 0.1, 200);
-        drive(65, -0.2, false, false, 0);
         climberDumper.setPosition(1);
         sleep(1000);
         climberDumper.setPosition(0);
-        drive(500, -0.25, false, false, 0);
+        piDrive(500, -0.25,0);
         beacon.setPosition(0.9);
-        turnTo(-170, 1);
+        newGyroTurn(-180, 2);
         collector.setPower(1);
-        drive(3000, 1, false, false, 0);
+        piDrive(3000, 1,0);
         collector.setPower(1);
-        turnTo(135, 1);
+        newGyroTurn(135, 2);
         /*
         if (turnDirectionInput == 1) {
             turnTo(-52, 1);

@@ -10,11 +10,11 @@ public class AutonomousTesting extends AdvancedMethods {
         while (!isStarted()) {
             adaFruitGyro.initIMU();
         }
-        piDrive(8000, -1);
         sleep(100);
-        piDrive(8000, 1);
-        sleep(150000);
-}
+        pivot(60,-1,1);
+        sleep(500);
+        pivot(60,1,1);
+    }
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();
         newGyroTurn(36, 0.5);
@@ -27,4 +27,5 @@ public class AutonomousTesting extends AdvancedMethods {
         telemetry.addData("timing", Long.toString(end-start));
         sleep(150000);
     }
+
 }

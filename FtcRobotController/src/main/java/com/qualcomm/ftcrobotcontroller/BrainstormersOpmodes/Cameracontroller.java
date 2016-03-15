@@ -126,11 +126,11 @@ public class CameraController {
      * exports the getRedInPixel value minus the getBlue value from the bottom left quadrant of the camera frame
      * @return total getRedInPixel-total getBlue
      */
-    public int getLeftRed() {
+    public int getRightRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = 0; x < width / 2; x+= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = height / 2; y < height; y+=5) {
+            for (int y = 0; y < height/2; y = y + 5) {
                 value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }
@@ -141,11 +141,11 @@ public class CameraController {
      * exports the getRedInPixel value minus the getBlue value from the bottom right quadrant of the camera frame
      * @return total getRedInPixel minus total getBlue
      */
-    public int getRightRed() {
+    public int getLeftRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = width - 1; x > width / 2; x -= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = height / 2; y < height; y = y + 5) {
+            for (int y = 0; y < height/2; y = y + 5) {
                 value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }
