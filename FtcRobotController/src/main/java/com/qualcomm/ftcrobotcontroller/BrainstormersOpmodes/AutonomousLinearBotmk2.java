@@ -80,11 +80,11 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         collector.setPower(-0.7);
         climberDumper.setPosition(0.1);
         if (startNearRamp) { //near ramp position
-            piDrive(2000, .7, 0);
+            piDrive(1600, .7, 0);
             if (turnDirectionInput == 1) {
-                newGyroTurn(36, 1);
+                pivot(36,1, 1);
             } else {
-                newGyroTurn(37, 1);
+                pivot(37,-1, 1);
             }
             piDrive(4600, 1, 0);
         }
@@ -99,13 +99,10 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         }
         newGyroTurn(45, 2);
         piDrive(700, .20,1);
-        piDrive(800, 0.2, 0);
-        if (turnDirectionInput == 1){
-            newGyroTurn(88, 1);
-        }
-        else{
-            newGyroTurn(86,1);
-        }
+        piDrive(200,.2,0);
+        pivot(88,1, 1);
+
+
         stopMotors();
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 1200);
@@ -136,11 +133,12 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         climberDumper.setPosition(0);
         piDrive(500, -0.25,0);
         beacon.setPosition(0.9);
-        newGyroTurn(-180, 2);
+        pivot(-180,-1, 2);
         collector.setPower(1);
         piDrive(3000, 1,0);
         collector.setPower(1);
         newGyroTurn(135, 2);
+        piDrive(1000,1,0);
         /*
         if (turnDirectionInput == 1) {
             turnTo(-52, 1);
