@@ -105,9 +105,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         piDrive(700, .20,1);
         piDrive(900,.2,0);
         pivot(88,-1, 1);
-
-
-        stopMotors();
+       // stopMotors();
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 1200);
         //use camera to analyze the image and get the left and right red values
@@ -127,12 +125,12 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
                     beaconR.setPosition(0.7);
                 else
                     beaconR.setPosition(0.3);
-            sleep(500);
+            sleep(100);
         }
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
         driveUntilUltra(15, 0.1, 200);
-        climberDumper.setPosition(0.75);
+        climberDumper.setPosition(1);
         sleep(800);
         climberDumper.setPosition(0);
         sleep(200);
@@ -141,7 +139,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         beaconR.setPosition(0.9);
         newGyroTurn(-180, 2);
         collector.setPower(1);
-        piDrive(3000, 1,0);
+        piDrive(3500, 1,0);
         collector.setPower(1);
         newGyroTurn(135, 2);
         piDrive(1000,1,0);

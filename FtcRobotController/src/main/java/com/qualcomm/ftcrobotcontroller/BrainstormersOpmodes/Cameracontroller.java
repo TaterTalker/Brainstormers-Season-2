@@ -129,8 +129,8 @@ public class Cameracontroller {
     public int getRightRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
-        for (int x = 0; x < width / 2; x+= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = 0; y < height/2; y = y + 5) {
+        for (int x = 0; x < width / 2; x+= 10) { //reads the values of all of the pixels in the proper quadrant
+            for (int y = 0; y < height/2; y = y + 10) {
                 value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }
@@ -144,8 +144,8 @@ public class Cameracontroller {
     public int getLeftRed() {
         convertImage(); //converts the image
         int value = 0; //resets the value
-        for (int x = width - 1; x > width / 2; x -= 5) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = 0; y < height/2; y = y + 5) {
+        for (int x = width - 1; x > width / 2; x -= 10) { //reads the values of all of the pixels in the proper quadrant
+            for (int y = 0; y < height/2; y = y + 10) {
                 value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
             }
         }

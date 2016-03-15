@@ -217,7 +217,8 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
             driveForever(speed);
             waitOneFullHardwareCycle();
         }
-        stopMotors();
+      setLeftPower(0);
+        setRightPower(0);
     }
 
     void driveForever(double speed) {
