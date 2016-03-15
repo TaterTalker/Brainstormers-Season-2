@@ -27,7 +27,8 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         sideArmR.setPosition(0);
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
-        beacon.setPosition(0);
+        beaconR.setPosition(0);
+        beaconL.setPosition(0);
         debDumper.setPosition((turnDirection + 1) / 2);
         sleep(5000);
         telemetry.addData("Init", "done");
@@ -115,14 +116,14 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred) //left side is red
                 if (turnDirection == -1)
-                    beacon.setPosition(0.3);
+                    beaconR.setPosition(0.3);
                 else
-                    beacon.setPosition(0.7);
+                    beaconR.setPosition(0.7);
             else //right side is red
                 if (turnDirection == -1)
-                    beacon.setPosition(0.7);
+                    beaconR.setPosition(0.7);
                 else
-                    beacon.setPosition(0.3);
+                    beaconR.setPosition(0.3);
             sleep(500);
         }
         driveUntilUltra(15, 0.1, 200);
@@ -134,7 +135,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         sleep(200);
         climberDumper.setPosition(0.5);
         piDrive(500, -0.25,0);
-        beacon.setPosition(0.9);
+        beaconR.setPosition(0.9);
         pivot(-180,-1, 2);
         collector.setPower(1);
         piDrive(3000, 1,0);

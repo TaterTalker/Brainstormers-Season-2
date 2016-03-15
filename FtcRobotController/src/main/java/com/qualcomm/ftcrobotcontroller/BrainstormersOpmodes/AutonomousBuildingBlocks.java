@@ -34,7 +34,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     UltrasonicSensor ultra2;
 
     //Servo
-    Servo beacon;
+    Servo beaconR;
+    Servo beaconL;
     Servo climberDumper;
     Servo debDumper;
     Servo sideArmL;
@@ -73,7 +74,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         debDumper = hardwareMap.servo.get("dumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
-        beacon = hardwareMap.servo.get("beacon");
+        beaconR = hardwareMap.servo.get("beacon right");
+        beaconL = hardwareMap.servo.get("beacon left");
 
         //Motors
         fr = hardwareMap.dcMotor.get("fr");
