@@ -6,13 +6,19 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
     void piDrive(int distance, double power,int targetType ) throws InterruptedException {
         resetEncoderDelta();
+        int rollOvers=0;
         final double oldGyro =  adaFruitGyro.getYaw();
         final double DEVIATIONGAIN = 0.3; //how much deviation effects the robot
-        double overShoot = 0;
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
-            double yaw = adaFruitGyro.getYaw()-oldGyro ;
+            double yaw = (adaFruitGyro.getYaw() - oldGyro) % 360; //calculates the angle based on where the robot is now and how far it has to go
+
+            if (yaw > 180) { //determines which way the robot will turn (left or right)
+                yaw = yaw - 360.0;
+            } else if (yaw < -180) {
+                yaw = 360.0 + yaw;
+            }
             telemetry.addData("encoder positions", " back right "+ brPosition()+" back left "+ blPosition());
             telemetry.addData("yaw", yaw);
             telemetry.addData("deviation", deviation);

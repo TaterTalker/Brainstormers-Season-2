@@ -14,7 +14,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
    //Controllers
     AdafruitIMUmethods adaFruitGyro;
-    CameraController cameraController;
+    Cameracontroller cameraController;
 
     //Driving Motors
     DcMotor fl;
@@ -52,7 +52,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     public AutonomousBuildingBlocks (){
         super();
         adaFruitGyro = new AdafruitIMUmethods(this);
-        cameraController = new CameraController(this);
+        cameraController = new Cameracontroller(this);
 
     }
 
@@ -284,7 +284,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         fLold = fl.getCurrentPosition();
         bLold = bl.getCurrentPosition();
     }
-
 
 
 }

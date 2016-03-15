@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Created by August on 2/7/2016.
  */
 public class rampDetection extends LinearOpMode {
-    CameraController cameraController;
+    Cameracontroller cameraController;
 
     public rampDetection(){
         super();
-        cameraController = new CameraController(this);
+        cameraController = new Cameracontroller(this);
     }
 
     @Override

@@ -20,7 +20,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         runUsingEncoders();
         resetDriveEncoders();
         //  gyroSensor.calibrate();
-        climberDumper.setPosition(0);
+        climberDumper.setPosition(0.5);
         armAngle1.setPosition(0.5);
         armAngle2.setPosition(0.5);
         sideArmL.setPosition(0.75);
@@ -78,7 +78,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         sleep(300);
         sleep(delay);
         collector.setPower(-0.7);
-        climberDumper.setPosition(0.1);
+        climberDumper.setPosition(0.5);
         if (startNearRamp) { //near ramp position
             piDrive(1600, .7, 0);
             if (turnDirectionInput == 1) {
@@ -128,9 +128,11 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
         driveUntilUltra(15, 0.1, 200);
-        climberDumper.setPosition(1);
-        sleep(1000);
+        climberDumper.setPosition(0.75);
+        sleep(800);
         climberDumper.setPosition(0);
+        sleep(200);
+        climberDumper.setPosition(0.5);
         piDrive(500, -0.25,0);
         beacon.setPosition(0.9);
         pivot(-180,-1, 2);
