@@ -85,7 +85,7 @@ public abstract class Autonomous extends AdvancedMethods {
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
-            pivot(36.5, 1, 0.5);
+            pivot(36.5, 1, 0.3);
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
@@ -93,7 +93,8 @@ public abstract class Autonomous extends AdvancedMethods {
             drive(7000, 1, 0);
         }
         newGyroTurn(42, 1);
-        drive(700, .2, 1); //drives to white line
+        drive(2000, .2, 1); //drives to white line
+        drive(50, -0.2, 0);
         newGyroTurn(90, 0.5);
        // stopMotors();
         collector.setPower(0); //kills colector
@@ -121,7 +122,7 @@ public abstract class Autonomous extends AdvancedMethods {
         }
         driveUntilUltra(15, 0.1, 200); //presses buttons
         waitForNextHardwareCycle();
-        climberDumper.setPosition(0.8); //dumps climbers
+        climberDumper.setPosition(0.65); //dumps climbers
         sleep(2000);
         climberDumper.setPosition(0.5);
         beaconL.setPosition(1);
@@ -132,10 +133,10 @@ public abstract class Autonomous extends AdvancedMethods {
             else {
                 sideArmL.setPosition(0.3);
             }
-            drive(1500, -0.25, 0);
-            pivot(180, 1, 2);
+            drive(1000, -0.25, 0);
+            pivot(190, 1, 2);
             collector.setPower(1);
-            drive(3000, 1, 0);
+            drive(1800, 1, 0);
             newGyroTurn(-45, 2);
             drive(5000, -1, 0);
         } else { //goes into place next to ramp

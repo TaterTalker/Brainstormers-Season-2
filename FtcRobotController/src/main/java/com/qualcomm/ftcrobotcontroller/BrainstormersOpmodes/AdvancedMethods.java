@@ -40,7 +40,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
                     hasReached = Math.abs(brPosition() + blPosition()) / 2 > Math.abs(distance);
                     break;
                 case 1:
-                    hasReached = colorSensor.alpha() >= 1 || Math.abs(brPosition() + blPosition()) / 2 > Math.abs(distance);
+                    hasReached = colorSensor.alpha() >= 2 || Math.abs(brPosition() + blPosition()) / 2 > Math.abs(distance);
                     telemetry.addData("alpha", colorSensor.alpha());
                     break;
                 default:
