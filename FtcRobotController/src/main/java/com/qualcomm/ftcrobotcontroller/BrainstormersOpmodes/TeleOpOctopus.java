@@ -32,16 +32,13 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     DcMotor fr;
     /**
-     * the forwards backwards power
+     * main drivers forwards backwards power
      */
     float yPower;
     /**
-     * the rotational power
+     * main drivers pivoting power
      */
     float xPower;
-    /**
-     * the arm's last value
-     */
 
     //Scoring
     /**
@@ -142,6 +139,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is pressed when the arm is fully retracted
      * it is used by {@link #armControl()}
      */
+
     TouchSensor extStop;
 
     boolean wasDown=false;
@@ -205,8 +203,7 @@ public abstract class TeleOpOctopus extends OpMode {
         attachments();
         drive();
         hang();
-
-        telemetry.addData("Ext", "" + armAngleMotor.getCurrentPosition());
+        telemetry.addData("Arm Angle", "" + armAngleMotor.getCurrentPosition());
         telemetry.addData("PullUp1", "" + pullUp1.getCurrentPosition());
     }
 
@@ -215,7 +212,6 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     @Override
     public void stop() {
-
     }
 
     /**
@@ -234,6 +230,7 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * this processes all inputs that do not affect the movement of the wheels
+     * basically all of these functions are controlled by Driver 2
      * @see #collector()
      * @see #dumping()
      * @see #climberDumper()
@@ -279,6 +276,10 @@ public abstract class TeleOpOctopus extends OpMode {
     final int MINCOUNT =  51;
     final int MAXMOVECOUNT = 250;
 
+
+    /**
+     * configures our dumping system based on what team we're on
+     */
     private void dumping() {
         telemetry.addData("Moving", "move: " + moveCount + "old: " + oldCount);
 
@@ -297,7 +298,7 @@ public abstract class TeleOpOctopus extends OpMode {
             else if (gamepad2.dpad_left) {
                 dumpingBlock.setPosition(1);
             }
-            else { //default position
+            else {
 
                 if(moveCount >0){
                     dumpingBlock.setPosition(1);
@@ -345,10 +346,9 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * dumps the climber if the {@link #gamepad2} y button is pressed
+     * allows for the manual release of climbers if we don't run autonomous
      */
     private void climberDumper() {
-        // climber dumpingBlock
             if (gamepad2.y) {
                 climberDumper.setPosition(1);
             }
@@ -365,12 +365,7 @@ public abstract class TeleOpOctopus extends OpMode {
      * {@link #gamepad2} a button tightens the arm
      * if the arm is fully retracted, the arm cannot retract more became {@link #extStop} is pressed
      */
-
     private void armControl() {
-        /**
-         * if the left trigger is pressed, the arm is retracted
-         */
-        //brings arm in
         if (gamepad1.y) {
             if (gamepad1.dpad_down && !wasDown) {
                 wasDown = true;
@@ -389,9 +384,6 @@ public abstract class TeleOpOctopus extends OpMode {
             if (lock2.getPosition()>0.9)
                 climberDumper.setPosition(0.5);
         }
-
-
-        //sends arm in
         if (gamepad2.b) {
             pullUp1.setPower(-1);
             pullUp2.setPower(1);
@@ -415,9 +407,6 @@ public abstract class TeleOpOctopus extends OpMode {
                 pullUp2.setPower(0);
             }
         }
-        /**
-         * if the right trigger is pressed, the arm is extended
-         */
         else if (gamepad2.right_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
@@ -431,7 +420,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * sets the angle of the arm
+     * sets the angle of the arm allowing us to hang
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
@@ -447,7 +436,7 @@ public abstract class TeleOpOctopus extends OpMode {
     }
 
     /**
-     * Makes the hook go out
+     * Makes the hook on the end of the arm go out to allow us to hang
      */
     private void hook(){
         if (gamepad1.left_bumper){
@@ -458,7 +447,9 @@ public abstract class TeleOpOctopus extends OpMode {
         }
     }
 
-
+    /**
+     * extends our side wings so we can hit the climber releases when we go up the ramp
+     */
     private void sideArm(){
         if (fr.getPower()>0) {
             if (side == 1) {
@@ -488,12 +479,13 @@ public abstract class TeleOpOctopus extends OpMode {
         }
     }
 
-
+    /**
+     * we autonomized hang to put less stress on our drivers and hopefully let us hang 100% of the time
+     */
     private void hang(){
         if (gamepad1.y) {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
-            //switched armAngleMotor less thn to greater than
             if (armAngleMotor.getCurrentPosition()>0) {
                 armAngleMotor.setPower(-.5);
             }
@@ -506,8 +498,7 @@ public abstract class TeleOpOctopus extends OpMode {
             fl.setPower(-1);
             bl.setPower(-1);
 
-            telemetry.addData("hang", "" + armAngleMotor.getCurrentPosition());
-
+            telemetry.addData("Arm Angle", "" + armAngleMotor.getCurrentPosition());
         }
     }
 
@@ -559,9 +550,9 @@ public abstract class TeleOpOctopus extends OpMode {
 
     /**
      * if {@link #gamepad1} right trigger is pressed, it causes the robot to slow down
+     * used for climbing the ramp
      */
     private void slowRobot() {
-
         if(gamepad1.right_trigger == 1) {
 
             if (fr.getPower() > 0) {
