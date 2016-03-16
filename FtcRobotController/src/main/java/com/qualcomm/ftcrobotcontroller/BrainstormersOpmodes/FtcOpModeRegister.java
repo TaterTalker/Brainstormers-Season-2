@@ -57,9 +57,9 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
         //manager.register("why are we making changes at the competition this a bad idea", excusetomakechangesatthecompetition.class);
         //manager.register("ramp detection", rampDetection.class);
-        //manager.register("autonomous test", AutonomousTesting.class);
+        //manager.register("autonomous test", ServoOptimizer.class);
         manager.register("new gyo test", AdafruitIMUTest.class);
-        manager.register("autonmoose test", AutonomousTesting.class);
+        manager.register("autonmoose test", ServoOptimizer.class);
         manager.register("elephant teleop", ElephantTeleOp.class);
 
     }

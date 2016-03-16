@@ -20,7 +20,6 @@ public abstract class Autonomous extends AdvancedMethods {
         //Configure and Reset
         runUsingEncoders();
         resetDriveEncoders();
-        //  gyroSensor.calibrate();
         climberDumper.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
@@ -45,7 +44,7 @@ public abstract class Autonomous extends AdvancedMethods {
             else if (gamepad1.dpad_down) {
                 delay = delay - 1000;
             }
-            if (gamepad1.x){
+            if (gamepad1.x){ //if pressed gets out of way and avoids ramp
                 goToRamp=false;
             }
             telemetry.addData("trigger beacon ", triggerBeacon);
@@ -80,59 +79,66 @@ public abstract class Autonomous extends AdvancedMethods {
         waitForStart();
 
         beaconR.setPosition(1);
+        beaconL.setPosition(0);
         sleep(delay);
-        collector.setPower(-0.7);
-        climberDumper.setPosition(0.5);
+        collector.setPower(-0.7); //flaps backward to avoid getting cubes stuck
+        climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
-            pivot(36,1, 0.5);
+            pivot(36.5, 1, 0.5);
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
             pivot(50, 1, 0.5);
             drive(7000, 1, 0);
         }
-        newGyroTurn(47, 2);
-        drive(700, .20, 1);
-        drive(900, .2, 0);
-        pivot(90,-1, 1);
+        newGyroTurn(42, 1);
+        drive(700, .2, 1); //drives to white line
+        newGyroTurn(90, 0.5);
        // stopMotors();
-        collector.setPower(0);
-        driveUntilUltra(30, 0.1, 1200);
-        //use camera to analyze the image and get the left and right red values
-        if (triggerBeacon) {
+        collector.setPower(0); //kills colector
+        driveUntilUltra(30, 0.1, 1200); //drives until 30 cm from wall
+        if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
-            int leftred = cameraController.getLeftRed();
+            int leftred = cameraController.getLeftRed();//read image
             int rightred = cameraController.getRightRed();
 
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
-            if (leftred > rightred) //left side is red
-                if (turnDirection == -1)
-                    beaconL.setPosition(0.3);
-                else
-                    beaconR.setPosition(0.7);
-            else //right side is red
-                if (turnDirection == -1)
-                    beaconR.setPosition(0.7);
-                else
-                    beaconL.setPosition(0.3);
+            if (leftred > rightred){ //left side is red
+                if (turnDirection == -1) { //on red team
+                    beaconL.setPosition(0.7);
+                } else { //on blue team
+                    beaconR.setPosition(0.2);
+                }
+            } else { //right side is red
+                if (turnDirection == -1) { //on red team
+                    beaconR.setPosition(0.2);
+                } else { //on blue team
+                    beaconL.setPosition(0.7);
+                }
+            }
             sleep(100);
         }
-        driveUntilUltra(15, 0.1, 200);
+        driveUntilUltra(15, 0.1, 200); //presses buttons
         waitForNextHardwareCycle();
-        climberDumper.setPosition(1);
-        sleep(1000);
+        climberDumper.setPosition(0.8); //dumps climbers
+        sleep(2000);
         climberDumper.setPosition(0.5);
         beaconL.setPosition(1);
-        if (goToRamp) {
-            drive(900, -0.25, 0);
-            newGyroTurn(180, 2);
+        if (goToRamp) { //goes to ramp
+            if (turnDirectionInput==1){
+                sideArmR.setPosition(0.5);
+            }
+            else {
+                sideArmL.setPosition(0.3);
+            }
+            drive(1500, -0.25, 0);
+            pivot(180, 1, 2);
             collector.setPower(1);
-            drive(3500, 1, 0);
-            collector.setPower(1);
-            newGyroTurn(135, 2);
-            drive(1000, 1, 0);
-        } else {
+            drive(3000, 1, 0);
+            newGyroTurn(-45, 2);
+            drive(5000, -1, 0);
+        } else { //goes into place next to ramp
             newGyroTurn(180,2);
             drive(1500, 1, 0);
         }

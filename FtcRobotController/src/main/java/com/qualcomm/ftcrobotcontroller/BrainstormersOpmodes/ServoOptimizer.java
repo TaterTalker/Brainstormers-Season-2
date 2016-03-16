@@ -3,35 +3,31 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * Created by August on 2/13/2016.
  */
-public class AutonomousTesting extends AdvancedMethods {
+public class ServoOptimizer extends AdvancedMethods {
     @Override
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
         while (!adaFruitGyro.initDone) {
             adaFruitGyro.initIMU();
         }
+
+        boolean oldUp=false;
+        boolean oldDown=false;
+        double position=0.5;
+
         waitForStart();
         while (true) {
-            if (gamepad1.x) {
-                climberDumper.setPosition(1);
+            if (gamepad1.dpad_up!=oldUp&&oldUp==false){
+                position+=0.1;
             }
-            else {
-                climberDumper.setPosition(0);
+            if (gamepad1.dpad_down!=oldDown&&oldDown==false){
+                position-=0.1;
             }
-
-            if (gamepad1.a) {
-                beaconR.setPosition(1);
-            }
-            else {
-                beaconR.setPosition(0);
-            }
-
-            if (gamepad1.y) {
-                beaconL.setPosition(1);
-            }
-            else {
-                beaconL.setPosition(0);
-            }
+            sideArmL.setPosition(position);
+            oldUp=gamepad1.dpad_up;
+            oldDown=gamepad1.dpad_down;
+            telemetry.addData("position ", position);
+            sleep(1);
         }
     }
     public void turnTest() throws InterruptedException {
