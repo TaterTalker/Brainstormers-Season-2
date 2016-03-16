@@ -4,9 +4,8 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
  * Created by August on 3/5/2016.
  */
 public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
-    void piDrive(int distance, double power,int targetType ) throws InterruptedException {
+    void drive(int distance, double power, int targetType) throws InterruptedException {
         resetEncoderDelta();
-        int rollOvers=0;
         final double oldGyro =  adaFruitGyro.getYaw();
         final double DEVIATIONGAIN = 0.20; //how much deviation effects the robot
         double deviation = 0;
@@ -55,7 +54,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
         stopMotors();
     }
 
-    void pivot (double degrees, int wheels, double tolerance) throws InterruptedException{
+    void pivot (double degrees, int wheels, double tolerance) throws InterruptedException{ //if wheels = 1, use left wheels for blue, if wheels = -1 use right wheels for blue
 
         final double GAIN = 0.03;
 

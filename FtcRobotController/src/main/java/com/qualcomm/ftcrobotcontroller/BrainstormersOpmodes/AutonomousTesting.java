@@ -8,12 +8,11 @@ public class AutonomousTesting extends AdvancedMethods {
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
         while (!isStarted()) {
-            adaFruitGyro.initIMU();
+            //adaFruitGyro.initIMU();
         }
-        sleep(100);
-        pivot(60,-1,1);
-        sleep(500);
-        pivot(60,1,1);
+        while (true) {
+            climberDumper.setPosition(0.5);
+        }
     }
     public void turnTest() throws InterruptedException {
         long start= System.currentTimeMillis();

@@ -9,6 +9,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
      * @throws InterruptedException
      */
     boolean startNearRamp=false;  //Decides where starting position is
+    boolean goToRamp=true;
 
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
@@ -33,6 +34,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         boolean triggerBeacon=true;
         cameraController.startCam();
 
+
         while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
             if(gamepad1.y) {
                 triggerBeacon = false;
@@ -43,7 +45,12 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
             else if (gamepad1.dpad_down) {
                 delay = delay - 1000;
             }
-            telemetry.addData("Delay Seconds:", delay / 1000);
+            if (gamepad1.x){
+                goToRamp=false;
+            }
+            telemetry.addData("trigger beacon ", triggerBeacon);
+            telemetry.addData("go to ramp ", goToRamp);
+            telemetry.addData("Delay Seconds ", delay / 1000);
             sleep(250);
         }
 
@@ -76,27 +83,26 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         collector.setPower(-0.7);
         climberDumper.setPosition(0.5);
         if (startNearRamp) { //near ramp position
-            piDrive(1600, .7, 0);
+            drive(1600, .7, 0);
             if (turnDirectionInput == 1) {
                 pivot(36,1, 1);
             } else {
                 pivot(37,-1, 1);
             }
-            piDrive(4600, 1, 0);
-        }
-        else { //far ramp position
-            piDrive(1600, .7, 0);
+            drive(4500, 1, 0);
+        } else { //far ramp position
+            drive(1600, .7, 0);
             if (turnDirectionInput == 1) {
                 newGyroTurn(50, 1);
             } else {
                 newGyroTurn(51, 1);
             }
-            piDrive(7000, 1, 0);
+            drive(7000, 1, 0);
         }
-        newGyroTurn(43, 3);
-        piDrive(700, .20,1);
-        piDrive(900,.2,0);
-        pivot(88,-1, 1);
+        newGyroTurn(47, 2);
+        drive(700, .20, 1);
+        drive(900, .2, 0);
+        pivot(90,-1, 1);
        // stopMotors();
         collector.setPower(0);
         driveUntilUltra(30, 0.1, 1200);
@@ -121,20 +127,25 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         }
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
-        driveUntilUltra(15, 0.1, 200);
         climberDumper.setPosition(1);
         sleep(800);
         climberDumper.setPosition(0);
         sleep(200);
         climberDumper.setPosition(0.5);
-        piDrive(500, -0.25, 0);
-        beaconR.setPosition(0.9);
-        newGyroTurn(-180, 2);
-        collector.setPower(1);
-        piDrive(3500, 1,0);
-        collector.setPower(1);
-        newGyroTurn(135, 2);
-        piDrive(1000,1,0);
+        if (goToRamp) {
+            drive(500, -0.25, 0);
+            beaconR.setPosition(0.9);
+            newGyroTurn(-180, 2);
+            collector.setPower(1);
+            drive(3500, 1, 0);
+            collector.setPower(1);
+            newGyroTurn(135, 2);
+            drive(1000, 1, 0);
+        }
+        else {
+            newGyroTurn(180,2);
+            drive(1500, 1, 0);
+        }
         /*
         if (turnDirectionInput == 1) {
             turnTo(-52, 1);
