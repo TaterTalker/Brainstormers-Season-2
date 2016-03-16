@@ -64,25 +64,29 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     //Configures the Robots Motors and Sensors.
     void getRobotConfig() {
 
+
         //Sensors
-        climberDumper = hardwareMap.servo.get("climberDumper");
-        colorSensor = hardwareMap.colorSensor.get("cs2");
+        telemetry.addData("fat", " fat");
+        doorR = hardwareMap.servo.get("doorR");
+        doorL = hardwareMap.servo.get("doorL");
         collector = hardwareMap.dcMotor.get("collect");
-        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
-        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
         debDumper = hardwareMap.servo.get("dumper");
+        climberDumper = hardwareMap.servo.get("climberDumper");
         sideArmL = hardwareMap.servo.get("sideArmL");
         sideArmR = hardwareMap.servo.get("sideArmR");
         beaconR = hardwareMap.servo.get("beacon right");
         beaconL = hardwareMap.servo.get("beacon left");
+
+        colorSensor = hardwareMap.colorSensor.get("cs2");
+        ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
+        ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");
 
         //Motors
         fr = hardwareMap.dcMotor.get("fr");
         fl = hardwareMap.dcMotor.get("fl");
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
-        doorR = hardwareMap.servo.get("doorR");
-        doorL = hardwareMap.servo.get("doorL");
+        telemetry.addData("squishy", " squishy");
     }
 
     /**
