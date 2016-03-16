@@ -7,11 +7,31 @@ public class AutonomousTesting extends AdvancedMethods {
     @Override
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
-        while (!isStarted()) {
-            //adaFruitGyro.initIMU();
+        while (!adaFruitGyro.initDone) {
+            adaFruitGyro.initIMU();
         }
+        waitForStart();
         while (true) {
-            climberDumper.setPosition(0.5);
+            if (gamepad1.x) {
+                climberDumper.setPosition(1);
+            }
+            else {
+                climberDumper.setPosition(0);
+            }
+
+            if (gamepad1.a) {
+                beaconR.setPosition(1);
+            }
+            else {
+                beaconR.setPosition(0);
+            }
+
+            if (gamepad1.y) {
+                beaconL.setPosition(1);
+            }
+            else {
+                beaconL.setPosition(0);
+            }
         }
     }
     public void turnTest() throws InterruptedException {

@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
-public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
+public abstract class Autonomous extends AdvancedMethods {
     /**
      * run all other functions to perform autonomous
      * @param turnDirectionInput 1=blue -1=red
@@ -27,7 +27,7 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
         beaconR.setPosition(0);
-        beaconL.setPosition(0);
+        beaconL.setPosition(1);
         debDumper.setPosition(0.5);
         sleep(500);
         telemetry.addData("Init", "done");
@@ -74,9 +74,10 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         }
 
 
-        while (!isStarted()) {
+        while (!adaFruitGyro.initDone) {
             adaFruitGyro.initIMU();
         }
+        waitForStart();
 
         beaconR.setPosition(1);
         sleep(delay);
@@ -84,19 +85,11 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
         climberDumper.setPosition(0.5);
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
-            if (turnDirectionInput == 1) {
-                pivot(36,1, 1);
-            } else {
-                pivot(37,-1, 1);
-            }
+            pivot(36,1, 0.5);
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
-            if (turnDirectionInput == 1) {
-                newGyroTurn(50, 1);
-            } else {
-                newGyroTurn(51, 1);
-            }
+            pivot(50, 1, 0.5);
             drive(7000, 1, 0);
         }
         newGyroTurn(47, 2);
@@ -115,34 +108,31 @@ public abstract class AutonomousLinearBotmk2 extends AdvancedMethods {
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred) //left side is red
                 if (turnDirection == -1)
-                    beaconR.setPosition(0.3);
+                    beaconL.setPosition(0.3);
                 else
                     beaconR.setPosition(0.7);
             else //right side is red
                 if (turnDirection == -1)
                     beaconR.setPosition(0.7);
                 else
-                    beaconR.setPosition(0.3);
+                    beaconL.setPosition(0.3);
             sleep(100);
         }
         driveUntilUltra(15, 0.1, 200);
         waitForNextHardwareCycle();
         climberDumper.setPosition(1);
-        sleep(800);
-        climberDumper.setPosition(0);
-        sleep(200);
+        sleep(1000);
         climberDumper.setPosition(0.5);
+        beaconL.setPosition(1);
         if (goToRamp) {
-            drive(500, -0.25, 0);
-            beaconR.setPosition(0.9);
-            newGyroTurn(-180, 2);
+            drive(900, -0.25, 0);
+            newGyroTurn(180, 2);
             collector.setPower(1);
             drive(3500, 1, 0);
             collector.setPower(1);
             newGyroTurn(135, 2);
             drive(1000, 1, 0);
-        }
-        else {
+        } else {
             newGyroTurn(180,2);
             drive(1500, 1, 0);
         }

@@ -1,9 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
 /**
- * runs {@link AutonomousLinearBotmk2} set up for red
+ * runs {@link Autonomous} set up for red
  */
-public class AutonomousRedBotmk2 extends AutonomousLinearBotmk2 {
+public class AutonomousRedBotmk2 extends Autonomous {
     @Override
     public void runOpMode() throws InterruptedException {
         super.runOpMode(-1);

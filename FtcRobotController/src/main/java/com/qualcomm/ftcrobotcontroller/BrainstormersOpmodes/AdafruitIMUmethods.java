@@ -19,6 +19,8 @@ public  class AdafruitIMUmethods{
 
     AdafruitIMU boschBNO055;
 
+    public boolean initDone;
+
     //The following arrays contain both the Euler angles reported by the IMU (indices = 0) AND the
     // Tait-Bryan angles calculated from the 4 components of the quaternion vector (indices = 1)
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
@@ -30,6 +32,7 @@ public  class AdafruitIMUmethods{
      * before "start" runs.
      */
     public void initIMU() {
+        initDone=false;
         opmode.telemetry.addData("1","");
         systemTime = System.nanoTime();
         try {
@@ -45,6 +48,7 @@ public  class AdafruitIMUmethods{
                     , (byte)AdafruitIMU.OPERATION_MODE_IMU);
                     boschBNO055.startIMU();
             opmode.telemetry.addData("passed", "passed");
+            initDone=true;
         } catch (RobotCoreException e){
             Log.i("FtcRobotController", "Exception: " + e.getMessage());
             opmode.telemetry.addData("3", "");

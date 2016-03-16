@@ -7,7 +7,7 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
     void drive(int distance, double power, int targetType) throws InterruptedException {
         resetEncoderDelta();
         final double oldGyro =  adaFruitGyro.getYaw();
-        final double DEVIATIONGAIN = 0.20; //how much deviation effects the robot
+        final double DEVIATIONGAIN = 0.23; //how much deviation effects the robot
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
