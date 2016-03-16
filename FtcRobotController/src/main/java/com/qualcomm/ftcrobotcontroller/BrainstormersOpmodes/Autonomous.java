@@ -71,6 +71,12 @@ public abstract class Autonomous extends AdvancedMethods {
         else{
             telemetry.addData(" No Beacon", "Deactivated");
         }
+        if (goToRamp){
+            telemetry.addData("going to", "ramp");
+        }
+        else {
+            telemetry.addData("going to", "place next to ramp");
+        }
 
 
         while (!adaFruitGyro.initDone) {
