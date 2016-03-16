@@ -171,10 +171,10 @@ public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
             power = clip(power, 0.05, 0.35);
 
             if (cyclesMaxPower == 0) {
-                cyclesMaxPower = Math.abs(difference / 30.0) + 3;
+                cyclesMaxPower = Math.abs(difference / 30.0);
             }
 
-            if (count < cyclesMaxPower && Math.abs(difference) > 20) { //speeds up out power to speed up turn during the beginning of the turn
+            if (count < cyclesMaxPower && Math.abs(difference) > 30) { //speeds up out power to speed up turn during the beginning of the turn
                 power = 1;
                 telemetry.addData("1", "power");
             }

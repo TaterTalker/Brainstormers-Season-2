@@ -78,8 +78,8 @@ public abstract class Autonomous extends AdvancedMethods {
         }
         waitForStart();
 
-        beaconR.setPosition(1);
-        beaconL.setPosition(0);
+        beaconR.setPosition(0.9);
+        beaconL.setPosition(0.1);
         sleep(delay);
         collector.setPower(-0.7); //flaps backward to avoid getting cubes stuck
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
@@ -89,13 +89,13 @@ public abstract class Autonomous extends AdvancedMethods {
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
-            pivot(50, 1, 0.5);
-            drive(7000, 1, 0);
+            pivot(52.5, 1, 0.3);
+            drive(6500, 1, 0);
         }
         newGyroTurn(42, 1);
         drive(2000, .2, 1); //drives to white line
-        drive(50, -0.2, 0);
-        newGyroTurn(90, 0.5);
+        drive(60, -0.2, 0);
+        newGyroTurn(90, 0.75);
        // stopMotors();
         collector.setPower(0); //kills colector
         driveUntilUltra(30, 0.1, 1200); //drives until 30 cm from wall
@@ -125,7 +125,8 @@ public abstract class Autonomous extends AdvancedMethods {
         climberDumper.setPosition(0.65); //dumps climbers
         sleep(2000);
         climberDumper.setPosition(0.5);
-        beaconL.setPosition(1);
+        beaconR.setPosition(0.9);
+        beaconL.setPosition(0.1);
         if (goToRamp) { //goes to ramp
             if (turnDirectionInput==1){
                 sideArmR.setPosition(0.5);
@@ -134,9 +135,9 @@ public abstract class Autonomous extends AdvancedMethods {
                 sideArmL.setPosition(0.3);
             }
             drive(1000, -0.25, 0);
-            pivot(190, 1, 2);
+            pivot(200, 1, 2);
             collector.setPower(1);
-            drive(1800, 1, 0);
+            drive(2000, 1, 0);
             newGyroTurn(-45, 2);
             drive(5000, -1, 0);
         } else { //goes into place next to ramp
