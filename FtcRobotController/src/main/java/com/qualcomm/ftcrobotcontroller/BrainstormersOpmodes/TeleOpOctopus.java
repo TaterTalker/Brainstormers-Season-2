@@ -185,14 +185,15 @@ public abstract class TeleOpOctopus extends OpMode {
         lock1.setPosition(1);
         lock2.setPosition(0);
         climberDumper.setPosition(0.5);
-        beaconR.setPosition(0);
-        beaconL.setPosition(1);
+        beaconR.setPosition(1);
+        beaconL.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
         dumpingBlock.setPosition(0.5);
         armHook.setPosition(0.3);
+        climberDumper.setPosition(0);
     }
 
     /**
@@ -202,6 +203,11 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     @Override
     public void loop() {
+        if (System.currentTimeMillis()-oldTime<500){
+            climberDumper.setPosition(1);
+        } else{
+            climberDumper.setPosition(0.5);
+        }
         pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         attachments();
@@ -209,6 +215,11 @@ public abstract class TeleOpOctopus extends OpMode {
         hang();
         telemetry.addData("Arm Angle", "" + armAngleMotor.getCurrentPosition());
         telemetry.addData("PullUp1", "" + pullUp1.getCurrentPosition());
+    }
+    long oldTime;
+    @Override
+    public void start(){
+        oldTime=System.currentTimeMillis();
     }
 
     /**
@@ -237,14 +248,12 @@ public abstract class TeleOpOctopus extends OpMode {
      * basically all of these functions are controlled by Driver 2
      * @see #collector()
      * @see #dumping()
-     * @see #climberDumper()
      * @see #armControl()
      * @see #angleArm()
      */
     public void attachments() {
         collector();
         dumping();
-        climberDumper();
         sideArm();
         armControl();
         hook();
@@ -346,18 +355,6 @@ public abstract class TeleOpOctopus extends OpMode {
         }
     }
 
-    /**
-     * allows for the manual release of climbers if we don't run autonomous
-     */
-    private void climberDumper() {
-            if (gamepad2.y) {
-                climberDumper.setPosition(1);
-            }
-            else {
-                climberDumper.setPosition(0);
-            }
-    }
-
 
     /**
      * runs everything involving extending and retracting the main dumpingBlock arm {@link #armAngleMotor} and synchronizing it with {@link #pullUp1} and {@link #pullUp2}
@@ -384,7 +381,7 @@ public abstract class TeleOpOctopus extends OpMode {
             if (lock2.getPosition()>0.9)
                 beaconL.setPosition(0.5);
             else {
-                beaconL.setPosition(1);
+                beaconL.setPosition(0);
             }
         }
         if (gamepad2.b) {
