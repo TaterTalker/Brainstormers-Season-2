@@ -16,6 +16,9 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     AdafruitIMUmethods adaFruitGyro;
     Cameracontroller cameraController;
 
+
+
+
     //Driving Motors
     DcMotor fl;
     DcMotor fr;
@@ -42,6 +45,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     Servo sideArmR;
     Servo doorR;
     Servo doorL;
+    Servo lock1;
+    Servo lock2;
 
     //Variables
     int turnDirection = 1;
@@ -76,7 +81,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         beaconR = hardwareMap.servo.get("beacon right");
         beaconL = hardwareMap.servo.get("beacon left");
-
+        lock1 = hardwareMap.servo.get("lock1");
+        lock2 = hardwareMap.servo.get("lock2");
         colorSensor = hardwareMap.colorSensor.get("cs2");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
         ultra2 = hardwareMap.ultrasonicSensor.get("ultraR");

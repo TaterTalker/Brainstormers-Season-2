@@ -21,9 +21,11 @@ public abstract class Autonomous extends AdvancedMethods {
 
         turnDirection = turnDirectionInput; //adjusts turns based on team color
         getRobotConfig();//Map Motors and Sensors
+        telemetry.addData("Init", "running2");
         //Configure and Reset
         runUsingEncoders();
         resetDriveEncoders();
+        telemetry.addData("Init", "running3");
         climberDumper.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
@@ -32,12 +34,17 @@ public abstract class Autonomous extends AdvancedMethods {
         beaconR.setPosition(0);
         beaconL.setPosition(1);
         debDumper.setPosition(0.5);
+        lock1.setPosition(1);
+        lock2.setPosition(0);
+        telemetry.addData("Init", "running4");
+
+
         dumpingBlock = hardwareMap.servo.get("dumper");
         sleep(500);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
         cameraController.startCam();
-
+        telemetry.addData("Init", "running5");
 
         while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
             if(gamepad1.y) {
@@ -102,11 +109,11 @@ public abstract class Autonomous extends AdvancedMethods {
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
-            pivot(36.5, 1, 0.3);
+            pivot(36.5, 1, 0.5);
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
-            pivot(52.5, 1, 0.3);
+            pivot(52.5, 1, 0.5);
             drive(6500, 1, 0);
         }
         newGyroTurn(42, 1);
@@ -124,26 +131,26 @@ public abstract class Autonomous extends AdvancedMethods {
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred){ //left side is red
                 if (turnDirection == -1) { //on red team
-                    beaconL.setPosition(0.7);
+                    beaconL.setPosition(0.6);
                 } else { //on blue team
-                    beaconR.setPosition(0.2);
+                    beaconR.setPosition(0.3);
                 }
             } else { //right side is red
                 if (turnDirection == -1) { //on red team
-                    beaconR.setPosition(0.2);
+                    beaconR.setPosition(0.3);
                 } else { //on blue team
-                    beaconL.setPosition(0.7);
+                    beaconL.setPosition(0.6);
                 }
             }
             sleep(100);
         }
         driveUntilUltra(15, 0.1, 200); //presses buttons
         waitForNextHardwareCycle();
-        climberDumper.setPosition(0.65); //dumps climbers
+        climberDumper.setPosition(0.8); //dumps climbers
         sleep(2000);
-        climberDumper.setPosition(0.5);
-        beaconR.setPosition(0.9);
-        beaconL.setPosition(0.1);
+        climberDumper.setPosition(0.4);
+        beaconR.setPosition(.7);
+        beaconL.setPosition(.2);
         if (goToRamp) { //goes to ramp
             if (turnDirectionInput==1){
                 sideArmR.setPosition(0.5);
@@ -154,8 +161,15 @@ public abstract class Autonomous extends AdvancedMethods {
             drive(1000, -0.25, 0);
             pivot(200, 1, 2);
             collector.setPower(1);
-            drive(2000, 1, 0);
+            drive(2200, 1, 0);
             newGyroTurn(-45, 2);
+            drive(1000, -1,0);
+            if(turnDirection == -1){
+                sideArmL.setPosition(0);
+            }
+            else{
+                sideArmR.setPosition(1);
+            }
             drive(5000, -1, 0);
         } else { //goes into place next to ramp
             newGyroTurn(180,2);

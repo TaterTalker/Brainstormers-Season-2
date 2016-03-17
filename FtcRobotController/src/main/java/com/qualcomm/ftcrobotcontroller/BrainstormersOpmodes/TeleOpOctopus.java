@@ -319,7 +319,7 @@ public abstract class TeleOpOctopus extends OpMode {
                     dumpingBlock.setPosition(0.5);
                     oldCount = MINCOUNT;
                 }
-                if((oldCount - moveCount) > 50) {
+                if((oldCount - moveCount) > 20) {
                     doorR.setPosition(0.85);
                     doorL.setPosition(0.15);
                 }
@@ -347,7 +347,7 @@ public abstract class TeleOpOctopus extends OpMode {
                     dumpingBlock.setPosition(0.5);
                     oldCount = MINCOUNT;
                 }
-                if((oldCount - moveCount) > 50) {
+                if((oldCount - moveCount) > 20) {
                     doorL.setPosition(0.15);
                     doorR.setPosition(0.95);
                 }
