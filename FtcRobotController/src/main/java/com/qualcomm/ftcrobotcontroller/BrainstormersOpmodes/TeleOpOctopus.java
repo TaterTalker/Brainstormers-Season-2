@@ -184,11 +184,15 @@ public abstract class TeleOpOctopus extends OpMode {
         pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         lock1.setPosition(1);
         lock2.setPosition(0);
-        climberDumper.setPosition(0);
+        climberDumper.setPosition(0.5);
         beaconR.setPosition(0);
         beaconL.setPosition(0);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
+        doorR.setPosition(0.85);
+        doorL.setPosition(0.15);
+        dumpingBlock.setPosition(0.5);
+        armHook.setPosition(0.3);
     }
 
     /**
@@ -294,11 +298,9 @@ public abstract class TeleOpOctopus extends OpMode {
                 }
 
                 oldCount = moveCount;
-            }
-            else if (gamepad2.dpad_left) {
+            } else if (gamepad2.dpad_left) {
                 dumpingBlock.setPosition(1);
-            }
-            else {
+            } else {
 
                 if(moveCount >0){
                     dumpingBlock.setPosition(1);
@@ -313,8 +315,7 @@ public abstract class TeleOpOctopus extends OpMode {
                     doorL.setPosition(0.15);
                 }
             }
-        }
-        else if(side == RED) {
+        } else if(side == RED) {
             if (gamepad2.dpad_left) {
                 moveCount++;
                 dumpingBlock.setPosition(1);
@@ -353,7 +354,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 climberDumper.setPosition(1);
             }
             else {
-                climberDumper.setPosition(0.1);
+                climberDumper.setPosition(0.5);
                 beaconR.setPosition(1);
             }
     }
@@ -375,7 +376,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 wasDown = false;
             }
             if (lockDown) {
-                lock1.setPosition(0.1);
+                lock1.setPosition(0);
                 lock2.setPosition(1);
             } else {
                 lock1.setPosition(1);
@@ -392,7 +393,7 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
         }
-        else if (gamepad2.left_trigger != 0) {
+        else if (gamepad2.left_trigger != 0&&-pullUp1.getCurrentPosition()>0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
             pullUp1.setPower(gamepad2.left_trigger);
