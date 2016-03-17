@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * determines which OpModes show uop on the control phone screen
@@ -56,6 +57,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
         manager.register("teleoptest" , TeleopTest.class);
         manager.register("autonomous test", AutonomousTest.class);
+        manager.register("servo test", ServoOptimizer.class);
         //manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
         //manager.register("why are we making changes at the competition this a bad idea", excusetomakechangesatthecompetition.class);
         //manager.register("ramp detection", rampDetection.class);

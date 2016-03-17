@@ -1,9 +1,13 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
+import com.qualcomm.robotcore.hardware.Servo;
+
 /**
  * Created by August on 2/13/2016.
  */
 public class ServoOptimizer extends AdvancedMethods {
+    Servo lock1;
+    Servo lock2;
     @Override
     public void runOpMode() throws InterruptedException {
         getRobotConfig();
@@ -14,16 +18,18 @@ public class ServoOptimizer extends AdvancedMethods {
         boolean oldUp=false;
         boolean oldDown=false;
         double position=0.5;
-
+        lock1 = hardwareMap.servo.get("lock1");
+        lock2 = hardwareMap.servo.get("lock2");
         waitForStart();
         while (true) {
             if (gamepad1.dpad_up!=oldUp&&oldUp==false){
                 position+=0.1;
             }
-            if (gamepad1.dpad_down!=oldDown&&oldDown==false){
+            if (gamepad1.dpad_down!=oldDown&& oldDown ==false){
                 position-=0.1;
             }
-            sideArmL.setPosition(position);
+            lock1.setPosition(position);
+            lock2.setPosition(position);
             oldUp=gamepad1.dpad_up;
             oldDown=gamepad1.dpad_down;
             telemetry.addData("position ", position);

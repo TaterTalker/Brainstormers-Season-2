@@ -1,4 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
+
+import com.qualcomm.robotcore.hardware.Servo;
+
 /**
  * contains all the code to run Autonomous, it has no inherent side
  */
@@ -10,13 +13,14 @@ public abstract class Autonomous extends AdvancedMethods {
      */
     boolean startNearRamp=false;  //Decides where starting position is
     boolean goToRamp=true;
+    Servo dumpingBlock;
+
 
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
 
         turnDirection = turnDirectionInput; //adjusts turns based on team color
         getRobotConfig();//Map Motors and Sensors
-
         //Configure and Reset
         runUsingEncoders();
         resetDriveEncoders();
@@ -28,6 +32,7 @@ public abstract class Autonomous extends AdvancedMethods {
         beaconR.setPosition(0);
         beaconL.setPosition(1);
         debDumper.setPosition(0.5);
+        dumpingBlock = hardwareMap.servo.get("dumper");
         sleep(500);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
@@ -83,6 +88,12 @@ public abstract class Autonomous extends AdvancedMethods {
             adaFruitGyro.initIMU();
         }
         waitForStart();
+
+        if (turnDirectionInput==-1){
+            dumpingBlock.setPosition(0.35);
+        } else {
+            dumpingBlock.setPosition(0.55);
+        }
 
         beaconR.setPosition(0.9);
         beaconL.setPosition(0.1);
