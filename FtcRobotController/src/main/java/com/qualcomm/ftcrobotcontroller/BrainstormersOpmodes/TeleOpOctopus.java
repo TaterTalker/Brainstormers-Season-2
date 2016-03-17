@@ -186,7 +186,7 @@ public abstract class TeleOpOctopus extends OpMode {
         lock2.setPosition(0);
         climberDumper.setPosition(0.5);
         beaconR.setPosition(0);
-        beaconL.setPosition(0);
+        beaconL.setPosition(1);
         sideArmL.setPosition(0.8);
         sideArmR.setPosition(0.05);
         doorR.setPosition(0.85);
@@ -354,8 +354,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 climberDumper.setPosition(1);
             }
             else {
-                climberDumper.setPosition(0.5);
-                beaconR.setPosition(1);
+                climberDumper.setPosition(0);
             }
     }
 
@@ -383,7 +382,10 @@ public abstract class TeleOpOctopus extends OpMode {
                 lock2.setPosition(0);
             }
             if (lock2.getPosition()>0.9)
-                climberDumper.setPosition(0.5);
+                beaconL.setPosition(0.5);
+            else {
+                beaconL.setPosition(1);
+            }
         }
         if (gamepad2.b) {
             pullUp1.setPower(-1);
