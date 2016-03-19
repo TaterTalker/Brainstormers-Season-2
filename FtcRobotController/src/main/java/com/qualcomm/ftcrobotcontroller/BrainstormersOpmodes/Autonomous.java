@@ -29,11 +29,13 @@ public abstract class Autonomous extends AdvancedMethods {
         climberDumper.setPosition(0.5);
         sideArmL.setPosition(0.75);
         sideArmR.setPosition(0);
+        armHook.setPosition(0);
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
         beaconR.setPosition(0);
         beaconL.setPosition(1);
         debDumper.setPosition(0.5);
+
         lock1.setPosition(1);
         lock2.setPosition(0);
         telemetry.addData("Init", "running4");
@@ -146,7 +148,7 @@ public abstract class Autonomous extends AdvancedMethods {
         }
         driveUntilUltra(15, 0.1, 200); //presses buttons
         waitForNextHardwareCycle();
-        climberDumper.setPosition(0.8); //dumps climbers
+        climberDumper.setPosition(0.575); //dumps climbers
         sleep(2000);
         climberDumper.setPosition(0.4);
         beaconR.setPosition(.7);
@@ -163,7 +165,12 @@ public abstract class Autonomous extends AdvancedMethods {
             collector.setPower(1);
             drive(2200, 1, 0);
             newGyroTurn(-45, 2);
+
+            pullUp1.setPower(-1);
+            pullUp2.setPower(1);
             drive(1000, -1,0);
+            pullUp1.setPower(0);
+            pullUp2.setPower(0);
             if(turnDirection == -1){
                 sideArmL.setPosition(0);
             }
