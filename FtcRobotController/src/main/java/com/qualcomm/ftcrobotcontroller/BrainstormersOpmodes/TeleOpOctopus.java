@@ -203,7 +203,7 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     @Override
     public void loop() {
-        if (System.currentTimeMillis()-oldTime<500){
+        if (System.currentTimeMillis()-oldTime<100){
             climberDumper.setPosition(1);
         } else{
             climberDumper.setPosition(0.5);
@@ -391,8 +391,13 @@ public abstract class TeleOpOctopus extends OpMode {
         else if (gamepad2.a) {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
+
+            pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
-        else if (gamepad2.left_trigger != 0&&-pullUp1.getCurrentPosition()>0) {
+        else if (gamepad2.left_trigger != 0) {
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);
             pullUp1.setPower(gamepad2.left_trigger);

@@ -17,6 +17,11 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     Cameracontroller cameraController;
 
 
+    DcMotor pullUp1;
+    /**
+     * pull up control motor 2
+     */
+    DcMotor pullUp2;
 
 
     //Driving Motors
@@ -37,6 +42,8 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     UltrasonicSensor ultra2;
 
     //Servo
+
+
     Servo beaconR;
     Servo beaconL;
     Servo climberDumper;
@@ -47,6 +54,7 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
     Servo doorL;
     Servo lock1;
     Servo lock2;
+    Servo armHook;
 
     //Variables
     int turnDirection = 1;
@@ -81,7 +89,10 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         beaconR = hardwareMap.servo.get("beacon right");
         beaconL = hardwareMap.servo.get("beacon left");
+        pullUp1 = hardwareMap.dcMotor.get("pullUp1");
+        pullUp2 = hardwareMap.dcMotor.get("pullUp2");
         lock1 = hardwareMap.servo.get("lock1");
+        armHook = hardwareMap.servo.get("armHook");
         lock2 = hardwareMap.servo.get("lock2");
         colorSensor = hardwareMap.colorSensor.get("cs2");
         ultra1 = hardwareMap.ultrasonicSensor.get("ultraL");
