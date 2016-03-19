@@ -21,10 +21,8 @@ public class ServoOptimizer extends AdvancedMethods {
         beaconR = hardwareMap.servo.get("beacon right");
         beaconL = hardwareMap.servo.get("beacon left");
         waitForStart();
-       climberDumper.setPosition(0.575);
 
-        lock1.setPosition(0);
-        lock2.setPosition(1);
+        climberDumper.setPosition(1);
 
         sleep (10000);
 //        while (true) {
