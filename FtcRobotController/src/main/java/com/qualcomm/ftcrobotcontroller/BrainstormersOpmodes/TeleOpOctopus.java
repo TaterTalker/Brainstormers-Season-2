@@ -15,6 +15,9 @@ public abstract class TeleOpOctopus extends OpMode {
     //Drive
     final int RED = -1;
     final int BLUE = 1;
+
+    int minpullup = 0;
+
     /**
      * front left drive motor
      */
@@ -210,11 +213,14 @@ public abstract class TeleOpOctopus extends OpMode {
         }
         pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+
         attachments();
         drive();
         hang();
         telemetry.addData("Arm Angle", "" + armAngleMotor.getCurrentPosition());
         telemetry.addData("PullUp1", "" + pullUp1.getCurrentPosition());
+        telemetry.addData("min", "min" + minpullup);
     }
     long oldTime;
     @Override
@@ -393,9 +399,13 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp2.setPower(-1);
 
             pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-            pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
             pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-            pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+
+            minpullup = pullUp1.getCurrentPosition();
+
         }
         else if (gamepad2.left_trigger != 0) {
             sideArmL.setPosition(0.5);
@@ -404,7 +414,7 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp2.setPower(-gamepad2.left_trigger);
         }
         else if (gamepad1.right_trigger==1 && fr.getPower()>0) {
-            if (Math.abs(pullUp1.getCurrentPosition()) < 2500) {
+            if (Math.abs(pullUp1.getCurrentPosition()) < 2500  ) {
                 pullUp1.setPower(-1);
                 pullUp2.setPower(1);
             } else {

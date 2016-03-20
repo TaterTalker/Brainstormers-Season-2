@@ -27,7 +27,7 @@ public abstract class Autonomous extends AdvancedMethods {
         resetDriveEncoders();
         telemetry.addData("Init", "running3");
         climberDumper.setPosition(0.5);
-        sideArmL.setPosition(0.75);
+        sideArmL.setPosition(0.85);
         sideArmR.setPosition(0);
         armHook.setPosition(0);
         doorR.setPosition(0.85);
@@ -98,6 +98,8 @@ public abstract class Autonomous extends AdvancedMethods {
         }
         waitForStart();
 
+        sideArmL.setPosition(0.75);
+
         if (turnDirectionInput==-1){
             dumpingBlock.setPosition(0.35);
         } else {
@@ -111,17 +113,17 @@ public abstract class Autonomous extends AdvancedMethods {
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
-            pivot(36.5, 1, 0.5);
+            pivot(38.5, 1, 0.5);
             drive(4500, 1, 0);
         } else { //far ramp position
             drive(1600, .7, 0);
             pivot(52.5, 1, 0.5);
             drive(6500, 1, 0);
         }
-        newGyroTurn(42, 1);
+        //newGyroTurn(42, 1);
         drive(2000, .2, 1); //drives to white line
         drive(60, -0.2, 0);
-        newGyroTurn(90, 0.75);
+        newGyroTurn(90, 1);
        // stopMotors();
         collector.setPower(0); //kills colector
         driveUntilUltra(30, 0.1, 1200); //drives until 30 cm from wall
@@ -147,6 +149,8 @@ public abstract class Autonomous extends AdvancedMethods {
             sleep(100);
         }
         driveUntilUltra(15, 0.1, 200); //presses buttons
+        drive(50,0.2, 0);
+        drive(50,-0.2, 0);
         waitForNextHardwareCycle();
         climberDumper.setPosition(0.575); //dumps climbers
         sleep(2000);
