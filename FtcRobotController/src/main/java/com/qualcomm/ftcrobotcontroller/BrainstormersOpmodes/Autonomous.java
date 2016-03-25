@@ -149,14 +149,17 @@ public abstract class Autonomous extends AdvancedMethods {
             sleep(100);
         }
         driveUntilUltra(15, 0.1, 200); //presses buttons
-        drive(50,0.2, 0);
-        drive(50,-0.2, 0);
+        drive(50, 0.2, 0);
+        drive(80, -0.2, 0);
+
         waitForNextHardwareCycle();
         climberDumper.setPosition(0.575); //dumps climbers
         sleep(2000);
         climberDumper.setPosition(0.4);
+
         beaconR.setPosition(.7);
         beaconL.setPosition(.2);
+        drive(40, 0.2,0);
         if (goToRamp) { //goes to ramp
             if (turnDirectionInput==1){
                 sideArmR.setPosition(0.5);
