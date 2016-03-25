@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
  * <p/>
  * Enables control of the robot via the gamepad
  */
-public class Cameracontroller {
+public class FrontCameraController {
 
     LinearOpMode opMode;
 
@@ -40,7 +40,7 @@ public class Cameracontroller {
     private String data;
     public int color;
 
-    public Cameracontroller(LinearOpMode opMode){
+    public FrontCameraController(LinearOpMode opMode){
         this.opMode = opMode;
     }
 
@@ -101,14 +101,45 @@ public class Cameracontroller {
     /**
      * initializes the camera
      */
-    public void startCam() {
-        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).camera;
+    public void startFrontCam() {
+        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).frontcamera;
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters
-
         ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
+
+
+
     }
+
+    public int getBlockCount(){
+        int blockcount = 0;
+        int yellowcount = 0;
+        final int HEIGHT = 200;
+        convertImage();
+
+        for (int x = 0; x < width; x++) { //reads the values of all of the pixels in the proper quadrant
+
+
+            if (getPixelColors(x, HEIGHT)[0] > 150 && getPixelColors(x, HEIGHT)[1] > 150){
+                yellowcount++;
+            }
+
+
+
+
+
+        }
+
+
+        return yellowcount;
+    }
+    int[] getPixelColors(int x, int y) {
+        int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
+        int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
+        return tmpArray; //exports rbg values
+    }
+
 
     /**
      * allows for the easy reading of a getPixelColors by other functions
@@ -116,39 +147,5 @@ public class Cameracontroller {
      * @param y the y coordinate of the getPixelColors
      * @return outputs the getRedInPixel, getGreen, and getBlue vlues of the getPixelColors
      */
-    int[] getPixelColors(int x, int y) {
-        int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
-        int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
-        return tmpArray; //exports rbg values
-    }
 
-    /**
-     * exports the getRedInPixel value minus the getBlue value from the bottom left quadrant of the camera frame
-     * @return total getRedInPixel-total getBlue
-     */
-    public int getRightRed() {
-        convertImage(); //converts the image
-        int value = 0; //resets the value
-        for (int x = 0; x < width / 2; x+= 10) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = 0; y < height/2; y = y + 10) {
-                value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
-            }
-        }
-        return value;
-    }
-
-    /**
-     * exports the getRedInPixel value minus the getBlue value from the bottom right quadrant of the camera frame
-     * @return total getRedInPixel minus total getBlue
-     */
-    public int getLeftRed() {
-        convertImage(); //converts the image
-        int value = 0; //resets the value
-        for (int x = width - 1; x > width / 2; x -= 10) { //reads the values of all of the pixels in the proper quadrant
-            for (int y = 0; y < height/2; y = y + 10) {
-                value += getPixelColors(x, y)[0] - getPixelColors(x, y)[2];
-            }
-        }
-        return value;
-    }
 }

@@ -45,7 +45,7 @@ public abstract class Autonomous extends AdvancedMethods {
         sleep(500);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
-        cameraController.startCam();
+        cameraController.startBackCam();
         telemetry.addData("Init", "running5");
 
         while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press

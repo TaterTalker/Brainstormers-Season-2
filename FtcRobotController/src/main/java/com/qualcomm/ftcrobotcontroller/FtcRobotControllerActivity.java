@@ -62,7 +62,8 @@ import com.qualcomm.ftccommon.FtcRobotControllerService.FtcRobotControllerBinder
 import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.Restarter;
 import com.qualcomm.ftccommon.UpdateUI;
-import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.Cameracontroller;
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.BackCameraController;
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FrontCameraController;
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FtcOpModeRegister;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
@@ -180,7 +181,8 @@ public class FtcRobotControllerActivity extends Activity{
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "");
 
         hittingMenuButtonBrightensScreen();
-        camera = openBackFacingCamera();
+        backcamera = openBackFacingCamera();
+        frontcamera = openFrontFacingCamera();
 
         if (USE_DEVICE_EMULATION) {
             HardwareFactory.enableDeviceEmulation();
@@ -398,7 +400,8 @@ public class FtcRobotControllerActivity extends Activity{
         });
     }
 
-    public Camera camera;
+    public Camera backcamera;
+    public Camera frontcamera;
 
     private Camera openFrontFacingCamera() {
         int cameraId = -1;
@@ -440,7 +443,7 @@ public class FtcRobotControllerActivity extends Activity{
         return cam;
     }
 
-    public void initPreview(final Camera camera, final Cameracontroller context, final Camera.PreviewCallback previewCallback) {
+    public void initPreview(final Camera camera, final FrontCameraController context, final Camera.PreviewCallback previewCallback) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

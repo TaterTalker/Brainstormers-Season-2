@@ -28,7 +28,7 @@ public abstract class AutonomousStart2 extends AdvancedMethods {
         doorR.setPosition(0.8);
         beaconR.setPosition(0);
         debDumper.setPosition((turnDirection + 1) / 2);
-        cameraController.startCam();
+        cameraController.startBackCam();
         sleep(5000);
         telemetry.addData("Init", "done");
         while (!gamepad1.a) {

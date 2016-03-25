@@ -32,13 +32,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        // The Surface has been created, now tell the camera where to draw the preview.
+        // The Surface has been created, now tell the backcamera where to draw the preview.
         try {
             mCamera.setPreviewCallback(previewCallback);
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
-            Log.d(TAG, "Error setting camera preview: " + e.getMessage());
+            Log.d(TAG, "Error setting backcamera preview: " + e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.startPreview();
 
         } catch (Exception e){
-            Log.d(TAG, "Error starting camera preview: " + e.getMessage());
+            Log.d(TAG, "Error starting backcamera preview: " + e.getMessage());
         }
     }
 }
