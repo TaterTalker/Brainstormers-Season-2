@@ -108,7 +108,7 @@ public abstract class Autonomous extends AdvancedMethods {
 
         beaconR.setPosition(0.9);
         beaconL.setPosition(0.1);
-        sleep(delay);
+        sleep(delay + 500);
         collector.setPower(-0.7); //flaps backward to avoid getting cubes stuck
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
@@ -123,13 +123,21 @@ public abstract class Autonomous extends AdvancedMethods {
         //newGyroTurn(42, 1);
         drive(2000, .2, 1); //drives to white line
         drive(60, -0.2, 0);
-        newGyroTurn(90, 1);
+        newGyroTurn(90, 2);
        // stopMotors();
         collector.setPower(0); //kills colector
-        driveUntilUltra(30, 0.1, 1200); //drives until 30 cm from wall
+        driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
+        climberDumper.setPosition(0.575); //dumps climbers
+        sleep(2000);
+        climberDumper.setPosition(0.4);
+        telemetry.addData("before drive after climbers", "");
+        drive(100, -0.1, 0);
+        telemetry.addData("after drive before beacon", "");
         if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
+            telemetry.addData("before camera call","");
             int leftred = cameraController.getLeftRed();//read image
+            telemetry.addData("after left camera call", "");
             int rightred = cameraController.getRightRed();
 
             telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
@@ -148,14 +156,13 @@ public abstract class Autonomous extends AdvancedMethods {
             }
             sleep(100);
         }
+        telemetry.addData("beacon check", "");
         driveUntilUltra(15, 0.1, 200); //presses buttons
         drive(50, 0.2, 0);
         drive(80, -0.2, 0);
 
         waitForNextHardwareCycle();
-        climberDumper.setPosition(0.575); //dumps climbers
-        sleep(2000);
-        climberDumper.setPosition(0.4);
+
 
         beaconR.setPosition(.7);
         beaconL.setPosition(.2);

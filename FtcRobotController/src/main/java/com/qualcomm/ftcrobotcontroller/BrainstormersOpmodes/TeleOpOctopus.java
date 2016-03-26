@@ -302,7 +302,11 @@ public abstract class TeleOpOctopus extends OpMode {
     private void dumping() {
         telemetry.addData("Moving", "move: " + moveCount + "old: " + oldCount);
 
-        if (side == BLUE) {
+        if (gamepad2.right_stick_x > .15) {
+            doorR.setPosition(0.3);
+        } else if (gamepad2.right_stick_x < -.15){
+            doorL.setPosition(0.7);
+        } else if (side == BLUE) {
             if (gamepad2.dpad_right) {
                 dumpingBlock.setPosition(0);
                 doorR.setPosition(0.3);
