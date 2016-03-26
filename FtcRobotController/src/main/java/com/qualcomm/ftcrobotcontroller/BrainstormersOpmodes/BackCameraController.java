@@ -107,7 +107,7 @@ public class BackCameraController {
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters
 
-      //  ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
+       ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
     }
     /**
      * allows for the easy reading of a getPixelColors by other functions

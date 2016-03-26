@@ -182,7 +182,7 @@ public class FtcRobotControllerActivity extends Activity{
 
         hittingMenuButtonBrightensScreen();
         backcamera = openBackFacingCamera();
-        frontcamera = openFrontFacingCamera();
+       // frontcamera = openFrontFacingCamera();
 
         if (USE_DEVICE_EMULATION) {
             HardwareFactory.enableDeviceEmulation();
@@ -443,7 +443,7 @@ public class FtcRobotControllerActivity extends Activity{
         return cam;
     }
 
-    public void initPreview(final Camera camera, final FrontCameraController context, final Camera.PreviewCallback previewCallback) {
+    public void initPreview(final Camera camera, final BackCameraController context, final Camera.PreviewCallback previewCallback) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
