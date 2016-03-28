@@ -305,15 +305,29 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void dumping() {
         telemetry.addData("Moving", "move: " + moveCount + "old: " + oldCount);
+        if (side == BLUE) {
+            if (gamepad2.dpad_right || gamepad2.right_stick_x > .15) {
+                doorR.setPosition(0.3);
+            }
+            else {
+                doorR.setPosition(0.85);
+                doorL.setPosition(0.15);
+            }
+        }
+        else if (side == RED) {
+            if (gamepad2.dpad_left || gamepad2.right_stick_x < -.15) {
+                doorL.setPosition(0.7);
+            }
+            else {
+                doorR.setPosition(0.85);
+                doorL.setPosition(0.15);
+            }
+        }
 
-        if (gamepad2.right_stick_x > .15) {
-            doorR.setPosition(0.3);
-        } else if (gamepad2.right_stick_x < -.15){
-            doorL.setPosition(0.7);
-        } else if (side == BLUE) {
+
+         if (side == BLUE) {
             if (gamepad2.dpad_right) {
                 dumpingBlock.setPosition(0);
-                doorR.setPosition(0.3);
                 moveCount++;
 
                 if(moveCount > MAXMOVECOUNT){
@@ -323,9 +337,10 @@ public abstract class TeleOpOctopus extends OpMode {
                 oldCount = moveCount;
             } else if (gamepad2.dpad_left) {
                 dumpingBlock.setPosition(1);
-            } else {
 
-                if(moveCount >0){
+            }
+            else {
+                if(moveCount > 0 && gamepad2.right_stick_x < .15){
                     dumpingBlock.setPosition(1);
                     moveCount--;
                 }
@@ -333,16 +348,13 @@ public abstract class TeleOpOctopus extends OpMode {
                     dumpingBlock.setPosition(0.5);
                     oldCount = MINCOUNT;
                 }
-                if((oldCount - moveCount) > 20) {
-                    doorR.setPosition(0.85);
-                    doorL.setPosition(0.15);
-                }
             }
+
+
         } else if(side == RED) {
             if (gamepad2.dpad_left) {
                 moveCount++;
                 dumpingBlock.setPosition(1);
-                doorL.setPosition(0.7);
 
                 if(moveCount > MAXMOVECOUNT){
                     moveCount = MAXMOVECOUNT;
@@ -352,18 +364,14 @@ public abstract class TeleOpOctopus extends OpMode {
             else if (gamepad2.dpad_right) {
                 dumpingBlock.setPosition(0);
             }
-            else{
-                if(moveCount > 0){
+            else {
+                if(moveCount > 0 && gamepad2.right_stick_x > -.15){
                     dumpingBlock.setPosition(0);
                     moveCount--;
                 }
                 else {
                     dumpingBlock.setPosition(0.5);
                     oldCount = MINCOUNT;
-                }
-                if((oldCount - moveCount) > 20) {
-                    doorL.setPosition(0.15);
-                    doorR.setPosition(0.95);
                 }
             }
         }
