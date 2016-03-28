@@ -179,12 +179,16 @@ public abstract class TeleOpOctopus extends OpMode {
 
         armAngleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armAngleMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+
         pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
 
         pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+
         lock1.setPosition(1);
         lock2.setPosition(0);
         climberDumper.setPosition(0.5);
@@ -443,14 +447,14 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is controlled by {@link #gamepad2} left stick y axis
      */
     private void angleArm() {
-        if(gamepad2.left_stick_y > .03) {
-            armAngleMotor.setPower(1);
-        }
-        else if (gamepad2.left_stick_y < -.03) {
-            armAngleMotor.setPower(-1);
-        }
-        else {
-            armAngleMotor.setPower(0);
+        if (!gamepad1.y) {
+            if (gamepad2.left_stick_y > .03) {
+                armAngleMotor.setPower(1);
+            } else if (gamepad2.left_stick_y < -.03) {
+                armAngleMotor.setPower(-1);
+            } else {
+                armAngleMotor.setPower(0);
+            }
         }
     }
 
@@ -505,8 +509,8 @@ public abstract class TeleOpOctopus extends OpMode {
         if (gamepad1.y) {
             pullUp1.setPower(1);
             pullUp2.setPower(-1);
-            if (armAngleMotor.getCurrentPosition()>0) {
-                armAngleMotor.setPower(-.5);
+            if (armAngleMotor.getCurrentPosition()<0) {
+                armAngleMotor.setPower(1);
             }
             else {
                 armAngleMotor.setPower(0);
