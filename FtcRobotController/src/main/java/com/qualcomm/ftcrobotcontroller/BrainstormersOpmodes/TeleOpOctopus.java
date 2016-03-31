@@ -65,6 +65,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     Servo armHook;
     /**
+     * servo that hits the all clear symbol when we are ready to hang
+     */
+    Servo allClear;
+    /**
      * pull up control motor 1
      */
     DcMotor pullUp1;
@@ -176,6 +180,7 @@ public abstract class TeleOpOctopus extends OpMode {
         armHook = hardwareMap.servo.get("armHook");
         lock1 = hardwareMap.servo.get("lock1");
         lock2 = hardwareMap.servo.get("lock2");
+        allClear = hardwareMap.servo.get("allClear");
 
         armAngleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armAngleMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -201,6 +206,7 @@ public abstract class TeleOpOctopus extends OpMode {
         dumpingBlock.setPosition(0.5);
         armHook.setPosition(0.3);
         climberDumper.setPosition(0);
+        allClear.setPosition(0.5);
     }
 
     /**
@@ -268,6 +274,7 @@ public abstract class TeleOpOctopus extends OpMode {
         armControl();
         hook();
         angleArm();
+        allClearSymbol();
     }
 
     /**
@@ -294,10 +301,12 @@ public abstract class TeleOpOctopus extends OpMode {
 
     int moveCount = 0;
     int oldCount = 51;
-
+    int moveCountAllClear = 0;
+    int oldCountAllClear = 51;
 
     final int MINCOUNT =  51;
     final int MAXMOVECOUNT = 250;
+
 
 
     /**
@@ -424,8 +433,6 @@ public abstract class TeleOpOctopus extends OpMode {
 
         }
         else if (gamepad2.left_trigger != 0) {
-            sideArmL.setPosition(0.5);
-            sideArmR.setPosition(0.5);
             pullUp1.setPower(gamepad2.left_trigger);
             pullUp2.setPower(-gamepad2.left_trigger);
         }
@@ -439,8 +446,6 @@ public abstract class TeleOpOctopus extends OpMode {
             }
         }
         else if (gamepad2.right_trigger != 0) {
-            sideArmL.setPosition(0.5);
-            sideArmR.setPosition(0.5);
             pullUp1.setPower(-gamepad2.right_trigger);
             pullUp2.setPower(gamepad2.right_trigger);
         }
@@ -484,9 +489,9 @@ public abstract class TeleOpOctopus extends OpMode {
     private void sideArm(){
         if (fr.getPower()>0) {
             if (side == 1) {
-                if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
+                if (gamepad1.right_trigger != 0 || gamepad1.y) {
                     sideArmL.setPosition(0.8);
-                    sideArmR.setPosition(1);//0.8
+                    sideArmR.setPosition(1);
                 }
                 else {
                     sideArmL.setPosition(0.8);
@@ -494,8 +499,8 @@ public abstract class TeleOpOctopus extends OpMode {
                 }
             }
             else if (side == -1) {
-                if (gamepad1.right_bumper || gamepad1.right_trigger != 0) {
-                    sideArmL.setPosition(0);//0.1
+                if (gamepad1.right_trigger != 0 || gamepad1.y) {
+                    sideArmL.setPosition(0);
                     sideArmR.setPosition(0.05);
                 }
                 else {
@@ -503,6 +508,10 @@ public abstract class TeleOpOctopus extends OpMode {
                     sideArmR.setPosition(0.05);
                 }
             }
+        }
+        else if (gamepad2.right_trigger !=0 || gamepad2.left_trigger !=0){
+            sideArmL.setPosition(0.5);
+            sideArmR.setPosition(0.5);
         }
         else {
             sideArmL.setPosition(0.8);
@@ -597,6 +606,30 @@ public abstract class TeleOpOctopus extends OpMode {
         }
         else
             driveMod = 1;
+    }
+
+    private void allClearSymbol() {
+        if (gamepad2.x) {
+            allClear.setPosition(1);
+            moveCountAllClear++;
+
+            if (moveCountAllClear > MAXMOVECOUNT) {
+                moveCountAllClear = MAXMOVECOUNT;
+            }
+
+            oldCountAllClear = moveCountAllClear;
+        }
+        else {
+            if(moveCountAllClear > 0){
+                allClear.setPosition(0);
+                moveCountAllClear--;
+            }
+            else {
+                allClear.setPosition(0.5);
+                oldCountAllClear = MINCOUNT;
+            }
+        }
+
     }
 }
 
