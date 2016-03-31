@@ -126,12 +126,16 @@ public abstract class Autonomous extends AdvancedMethods {
         newGyroTurn(90, 2);
        // stopMotors();
         collector.setPower(0); //kills colector
+        beaconR.setPosition(0);
+        beaconL.setPosition(1);
         driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
-        climberDumper.setPosition(0.575); //dumps climbers
+        drive(200, .2,0);
+        climberDumper.setPosition(1); //dumps climbers
         sleep(2000);
         climberDumper.setPosition(0.4);
         telemetry.addData("before drive after climbers", "");
-        drive(100, -0.1, 0);
+        drive(500, -0.1, 0);
+        climberDumper.setPosition(0.5);
         telemetry.addData("after drive before beacon", "");
         if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
@@ -161,12 +165,9 @@ public abstract class Autonomous extends AdvancedMethods {
         drive(50, 0.2, 0);
         drive(80, -0.2, 0);
 
-        waitForNextHardwareCycle();
-
-
         beaconR.setPosition(.7);
         beaconL.setPosition(.2);
-        drive(40, 0.2,0);
+        //drive(40, 0.2,0);
         if (goToRamp) { //goes to ramp
             if (turnDirectionInput==1){
                 sideArmR.setPosition(0.5);
