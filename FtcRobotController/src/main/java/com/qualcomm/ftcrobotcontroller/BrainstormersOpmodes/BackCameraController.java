@@ -101,8 +101,9 @@ public class BackCameraController {
     /**
      * initializes the camera
      */
-    public void startBackCam() {
-        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).backcamera;
+    public void startBackCam() throws InterruptedException {
+        ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).openBackFacingCamera();
+        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).theCamera;
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters

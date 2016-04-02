@@ -30,11 +30,11 @@ public class FrontCameraController {
     /**
      * width of the image
      */
-    private int width;
+    public int width;
     /**
      * height of the image
      */
-    private int height;
+    public int height;
     private YuvImage yuvImage = null;
     private int looped = 0;
     private String data;
@@ -102,44 +102,43 @@ public class FrontCameraController {
      * initializes the camera
      */
     public void startFrontCam() {
-        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).frontcamera;
+        ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).openFrontFacingCamera();
+        camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).theCamera;
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters
-       // ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
-
-
+        ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
 
     }
 
-    public int getBlockCount(){
-        int blockcount = 0;
-        int yellowcount = 0;
-        final int HEIGHT = 200;
-        convertImage();
-
-        for (int x = 0; x < width; x++) { //reads the values of all of the pixels in the proper quadrant
-
-
-            if (getPixelColors(x, HEIGHT)[0] > 150 && getPixelColors(x, HEIGHT)[1] > 150){
-                yellowcount++;
-            }
-
-
-
-
-
-        }
-
-
-        return yellowcount;
-    }
+//    public int getBlockCount(){
+//        int blockcount = 0;
+//        int yellowcount = 0;
+//        final int HEIGHT = 200;
+//        convertImage();
+//
+//        for (int x = 0; x < width; x++) { //reads the values of all of the pixels in the proper quadrant
+//
+//
+//            if (getPixelColors(x, HEIGHT)[0] > 150 && getPixelColors(x, HEIGHT)[1] > 150){
+//                yellowcount++;
+//            }
+//
+//
+//
+//
+//
+//        }
+//
+//
+//        return yellowcount;
+//    }
     int[] getPixelColors(int x, int y) {
+        convertImage();
         int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
         int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
         return tmpArray; //exports rbg values
     }
-
 
     /**
      * allows for the easy reading of a getPixelColors by other functions
