@@ -91,11 +91,11 @@ public class FrontCameraController {
     /**
      * converts the yuv image into a bitmap
      */
-    private void convertImage() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out); //compresses yuv image into a jpeg
-        byte[] imageBytes = out.toByteArray();
-        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length); //turns the jpeg into a bitmap
+    public void convertImage() {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out); //compresses yuv image into a jpeg
+            byte[] imageBytes = out.toByteArray();
+            image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length); //turns the jpeg into a bitmap
     }
 
     /**
@@ -107,6 +107,9 @@ public class FrontCameraController {
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
         Camera.Parameters parameters = camera.getParameters(); //gets the camera's parameters
         data = parameters.flatten(); //flattens the parameters
+        parameters.setPictureSize(320, 240);
+        parameters.setPreviewSize(320, 240);
+        camera.setParameters(parameters);
         ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
 
     }
@@ -133,18 +136,16 @@ public class FrontCameraController {
 //
 //        return yellowcount;
 //    }
-    int[] getPixelColors(int x, int y) {
-        convertImage();
-        int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
-        int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
-        return tmpArray; //exports rbg values
-    }
-
     /**
      * allows for the easy reading of a getPixelColors by other functions
      * @param x the x coorinate of the getPixelColors
      * @param y the y coordinate of the getPixelColors
      * @return outputs the getRedInPixel, getGreen, and getBlue vlues of the getPixelColors
      */
+    int[] getPixelColors(int x, int y) {
+        int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
+        int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
+        return tmpArray; //exports rbg values
+    }
 
 }

@@ -33,7 +33,6 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * determines which OpModes show uop on the control phone screen
@@ -65,7 +64,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("new gyo test", AdafruitIMUTest.class);
         manager.register("autonmoose test", ServoOptimizer.class);
         manager.register("elephant teleop", ElephantTeleOp.class);
-        manager.register("block detection test", CameraDebrisCountingTest.class);
+        manager.register("block detection test", CameraDebrisCounter.class);
         manager.register("wtf m8", jskdfkjsalkfdjlsjfdlskfdj.class);
 
     }

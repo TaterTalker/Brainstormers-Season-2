@@ -14,8 +14,6 @@ public abstract class Autonomous extends AdvancedMethods {
     boolean startNearRamp=false;  //Decides where starting position is
     boolean goToRamp=true;
     Servo dumpingBlock;
-
-
     public void runOpMode(int turnDirectionInput) throws InterruptedException {
         telemetry.addData("Init", "running");
 
@@ -45,7 +43,7 @@ public abstract class Autonomous extends AdvancedMethods {
         sleep(500);
         telemetry.addData("Init", "done");
         boolean triggerBeacon=true;
-        cameraController.startBackCam();
+        frontCam.startFrontCam();
         telemetry.addData("Init", "running5");
 
         while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
@@ -97,7 +95,7 @@ public abstract class Autonomous extends AdvancedMethods {
             adaFruitGyro.initIMU();
         }
         waitForStart();
-
+        //debrisCounter.start();
         sideArmL.setPosition(0.75);
 
         if (turnDirectionInput==-1){
@@ -109,7 +107,6 @@ public abstract class Autonomous extends AdvancedMethods {
         beaconR.setPosition(0.9);
         beaconL.setPosition(0.1);
         sleep(delay + 500);
-        collector.setPower(-0.7); //flaps backward to avoid getting cubes stuck
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
         if (startNearRamp) { //near ramp position
             drive(1600, .7, 0);
@@ -125,7 +122,9 @@ public abstract class Autonomous extends AdvancedMethods {
         drive(60, -0.2, 0);
         newGyroTurn(90, 2);
        // stopMotors();
-        collector.setPower(0); //kills colector
+        //debrisCounter.interrupt();
+        collector.setPower(0);
+        cameraController.startBackCam();
         beaconR.setPosition(0);
         beaconL.setPosition(1);
         driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
@@ -177,7 +176,7 @@ public abstract class Autonomous extends AdvancedMethods {
             }
             drive(1000, -0.25, 0);
             pivot(200, 1, 2);
-            collector.setPower(1);
+            collector.setPower(-1);
             drive(2200, 1, 0);
             newGyroTurn(-45, 2);
 
