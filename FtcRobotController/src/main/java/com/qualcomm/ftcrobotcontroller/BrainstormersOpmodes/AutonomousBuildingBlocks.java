@@ -81,7 +81,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
 
 
         //Sensors
-        telemetry.addData("fat", " fat");
         doorR = hardwareMap.servo.get("doorR");
         doorL = hardwareMap.servo.get("doorL");
         collector = hardwareMap.dcMotor.get("collect");
@@ -105,7 +104,6 @@ public abstract class AutonomousBuildingBlocks extends LinearOpMode {
         fl = hardwareMap.dcMotor.get("fl");
         br = hardwareMap.dcMotor.get("br");
         bl = hardwareMap.dcMotor.get("bl");
-        telemetry.addData("squishy", " squishy");
     }
 
     /**

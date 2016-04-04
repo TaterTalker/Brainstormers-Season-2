@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -146,8 +146,8 @@ public abstract class TeleOpOctopus extends OpMode {
      * this is pressed when the arm is fully retracted
      * it is used by {@link #armControl()}
      */
-
-    TouchSensor extStop;
+    ColorSensor colorSensor;
+    AdafruitIMUmethods adaFruitGyro;
 
     boolean wasDown=false;
     boolean lockDown=false;
@@ -158,6 +158,10 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     public void init(int sideInput) {
         side=sideInput;
+
+        adaFruitGyro = new AdafruitIMUmethods(this);
+        colorSensor = hardwareMap.colorSensor.get("cs2");
+
 
         fr = hardwareMap.dcMotor.get("fr");
         fl = hardwareMap.dcMotor.get("fl");
@@ -176,7 +180,6 @@ public abstract class TeleOpOctopus extends OpMode {
         sideArmR = hardwareMap.servo.get("sideArmR");
         beaconR = hardwareMap.servo.get("beacon right");
         beaconL = hardwareMap.servo.get("beacon left");
-        extStop = hardwareMap.touchSensor.get("extStop");
         armHook = hardwareMap.servo.get("armHook");
         lock1 = hardwareMap.servo.get("lock1");
         lock2 = hardwareMap.servo.get("lock2");
@@ -207,6 +210,11 @@ public abstract class TeleOpOctopus extends OpMode {
         armHook.setPosition(0.3);
         climberDumper.setPosition(0);
         allClear.setPosition(0.5);
+
+        while (!adaFruitGyro.initDone) {
+            adaFruitGyro.initIMU();
+        }
+        telemetry.addData("Initialization Done", "");
     }
 
     /**
@@ -436,7 +444,7 @@ public abstract class TeleOpOctopus extends OpMode {
             pullUp1.setPower(gamepad2.left_trigger);
             pullUp2.setPower(-gamepad2.left_trigger);
         }
-        else if (gamepad1.right_trigger==1 && fr.getPower()>0) {
+        else if ((gamepad1.right_trigger==1  || adaFruitGyro.getRoll() > 2 )&& fr.getPower()>0) {
             if (Math.abs(pullUp1.getCurrentPosition()) < 2500  ) {
                 pullUp1.setPower(-1);
                 pullUp2.setPower(1);
@@ -461,7 +469,7 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void angleArm() {
         if (!gamepad1.y) {
-            if (gamepad2.left_stick_y > .03) {
+            if (gamepad2.left_stick_y > .03 && armAngleMotor.getCurrentPosition()<0) {
                 armAngleMotor.setPower(1);
             } else if (gamepad2.left_stick_y < -.03) {
                 armAngleMotor.setPower(-1);
@@ -479,7 +487,7 @@ public abstract class TeleOpOctopus extends OpMode {
             armHook.setPosition(0.6);
         }
         else {
-            armHook.setPosition(0.3);
+            armHook.setPosition(0.2);
         }
     }
 
@@ -489,7 +497,7 @@ public abstract class TeleOpOctopus extends OpMode {
     private void sideArm(){
         if (fr.getPower()>0) {
             if (side == 1) {
-                if (gamepad1.right_trigger != 0 || gamepad1.y) {
+                if (gamepad1.right_trigger != 0  || adaFruitGyro.getRoll() > 3.5 || gamepad1.y) {
                     sideArmL.setPosition(0.8);
                     sideArmR.setPosition(1);
                 }
@@ -499,7 +507,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 }
             }
             else if (side == -1) {
-                if (gamepad1.right_trigger != 0 || gamepad1.y) {
+                if (gamepad1.right_trigger != 0 || adaFruitGyro.getRoll() > 3.5 || gamepad1.y) {
                     sideArmL.setPosition(0);
                     sideArmR.setPosition(0.05);
                 }
@@ -593,14 +601,15 @@ public abstract class TeleOpOctopus extends OpMode {
      * used for climbing the ramp
      */
     private void slowRobot() {
-        if(gamepad1.right_trigger == 1) {
+        telemetry.addData("GyroPitch", " " + adaFruitGyro.getRoll());
+        if(gamepad1.right_trigger == 1 || adaFruitGyro.getRoll() > 6) {
 
             if (fr.getPower() > 0) {
                 driveMod = 1f;
 
             }
             else if (fr.getPower() < 0) {
-                driveMod = 0.5f;
+                driveMod = 0.3f;
 
             }
         }

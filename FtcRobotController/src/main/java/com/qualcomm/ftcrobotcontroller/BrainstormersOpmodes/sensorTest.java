@@ -15,8 +15,6 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
  * prints all sensor values
  */
 public class sensorTest extends LinearOpMode{
-    //OpticalDistanceSensor odmtry1;
-    //GyroSensor gyroSensor;
     ColorSensor sensorRGB;
     UltrasonicSensor ultra1;
     //Servo beacon;

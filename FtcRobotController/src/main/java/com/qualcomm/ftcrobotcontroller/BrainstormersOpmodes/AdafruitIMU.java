@@ -575,6 +575,8 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
             tempQuatPitch = Math.asin((tempQuatPitch > 1.0) ? 1.0
                     : ((tempQuatPitch < -1.0) ? -1.0 : tempQuatPitch)) * 180.0 /Math.PI;
             tempPitch = -((double) tempP) / 16.0; //Correct for the fixed-point scaling and make tempPitch
+
+            tempRoll = -((double) tempR) / 16.0;
             // agree with tempQuatPitch with respect to sign
             //tempQuatYaw is the "psi" angle in the Tait-Bryan equations. It is converted from the range
             // [-pi to +pi radians] to the range [-180 to +180 degrees]. Angle increases with COUNTERclockwise
@@ -603,13 +605,17 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
                 Log.i("FtcRobotController", String.format("Number of \"reads\" to initialize offsets: %d"
                         , totalI2Creads));
             }
-            roll[0] = 0.0;
-            roll[1] = 0.0;
+            roll[0] = tempRoll - rollOffset[0];
+            roll[0] = (roll[0] > 90.0) ? 90.0 : ((roll[0] < -90.0) ? -90.0 : roll[0]);
+            roll[1] = tempQuatRoll - rollOffset[1];
+            roll[1] = (roll[1] > 90.0) ? 90.0 : ((roll[1] < -90.0) ? -90.0 : roll[1]);
+
             //Output pitch angles are offset-corrected and range-limited to -90 thru +90
             pitch[0] = tempPitch - pitchOffset[0];
             pitch[0] = (pitch[0] > 90.0) ? 90.0 : ((pitch[0] < -90.0) ? -90.0 : pitch[0]);
             pitch[1] = tempQuatPitch - pitchOffset[1];
             pitch[1] = (pitch[1] > 90.0) ? 90.0 : ((pitch[1] < -90.0) ? -90.0 : pitch[1]);
+
             //Output yaw(heading) angles are offset-corrected and range-limited to -180 thru 180
             yaw[0] = tempYaw - yawOffset[0];
             yaw[0] = (yaw[0] >= 180.0) ? (yaw[0] - 360.0) : ((yaw[0] < -180.0) ? (yaw[0] + 360.0) : yaw[0]);
