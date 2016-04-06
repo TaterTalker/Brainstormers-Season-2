@@ -190,13 +190,11 @@ public abstract class TeleOpOctopus extends OpMode {
         armAngleMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         armAngleMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
+        pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         pullUp2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         pullUp1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-
-        pullUp1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        pullUp2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
 
         lock1.setPosition(1);
@@ -427,7 +425,7 @@ public abstract class TeleOpOctopus extends OpMode {
                 beaconL.setPosition(0);
             }
         }
-        if (gamepad2.left_trigger != 0) {
+        else if (gamepad2.left_trigger != 0) {
             pullUp1.setPower(gamepad2.left_trigger);
             pullUp2.setPower(-gamepad2.left_trigger);
         }
@@ -589,7 +587,7 @@ public abstract class TeleOpOctopus extends OpMode {
      */
     private void slowRobot() {
         telemetry.addData("GyroPitch", " " + (adaFruitGyro.getRoll() + gyroOffset));
-        if(gamepad1.right_trigger == 1 || (adaFruitGyro.getRoll() + gyroOffset) > 6) {
+        if(gamepad1.right_trigger == 1 || ((adaFruitGyro.getRoll() + gyroOffset) > 6 && (adaFruitGyro.getRoll() + gyroOffset) < 50)) {
 
             if (fr.getPower() > 0) {
                 driveMod = 1f;
