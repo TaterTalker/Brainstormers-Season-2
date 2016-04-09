@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.NewStructure;
 
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.CameraDebrisCounter;
+import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -8,8 +10,11 @@ import com.qualcomm.robotcore.util.Range;
  * Created by ethan on 4/8/2016.
  */
 public class AutoBot extends Robot {
-
+    public int collectorDirection=0;
     int side;
+    BlockCounter blockCounter;
+
+
     LinearOpMode opMode;
 
     boolean triggerBeacon;
@@ -32,6 +37,11 @@ public class AutoBot extends Robot {
     public int getDelay() {
         return delay;
     }
+
+    public void setCollectorDirection(int direction){
+        collectorDirection = direction;
+    }
+
 
     public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
         super(side,varopMode);
@@ -112,10 +122,9 @@ public class AutoBot extends Robot {
     }
 
     public void start(){
-
+        blockCounter = new BlockCounter(this);
         sideArms.setSideArmLpos(0.75f);
         dumper.resetDumpingBlock();
-
         beaconR.setPosition(0.9);
         beaconL.setPosition(0.1);
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
@@ -128,6 +137,7 @@ public class AutoBot extends Robot {
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
+            collector.setPower(collectorDirection);
             double yaw = (adaFruitGyro.getYaw() - oldGyro) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (yaw > 180) { //determines which way the robot will turn (left or right)

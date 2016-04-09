@@ -4,6 +4,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
  * Created by August on 3/5/2016.
  */
 public abstract class AdvancedMethods extends AutonomousBuildingBlocks {
+
     void drive(int distance, double power, int targetType) throws InterruptedException {
         resetEncoderDelta();
         final double oldGyro =  adaFruitGyro.getYaw();

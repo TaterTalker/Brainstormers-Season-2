@@ -1,12 +1,13 @@
 package com.qualcomm.ftcrobotcontroller.NewStructure;
 
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.CameraDebrisCounter;
+import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by ethan on 4/8/2016.
  */
 public class NewAutonomous extends LinearOpMode {
-
     AutoBot autoBot;
     int side = 1;
 
@@ -32,6 +33,7 @@ public class NewAutonomous extends LinearOpMode {
         autoBot.newGyroTurn(90, 2);
         // stopMotors();
         //debrisCounter.interrupt();
+        autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
         autoBot.cameraController.startBackCam();
         autoBot. beaconR.setPosition(0);
@@ -85,6 +87,7 @@ public class NewAutonomous extends LinearOpMode {
             }
             autoBot.drive(1000, -0.25, 0);
             autoBot.pivot(200, 1, 2);
+            autoBot.setCollectorDirection(-1);
             autoBot.collector.setPower(-1);
             autoBot.drive(2200, 1, 0);
             autoBot.newGyroTurn(-45, 2);

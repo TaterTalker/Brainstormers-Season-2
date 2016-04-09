@@ -142,7 +142,7 @@ public class FrontCameraController {
      * @param y the y coordinate of the getPixelColors
      * @return outputs the getRedInPixel, getGreen, and getBlue vlues of the getPixelColors
      */
-    int[] getPixelColors(int x, int y) {
+    public int[] getPixelColors(int x, int y) {
         int pixelTarg = image.getPixel(x, y); //turns coordinates into one int
         int[] tmpArray = {getRedInPixel(pixelTarg), getGreen(pixelTarg), getBlue(pixelTarg)}; //gets values from getPixelColors
         return tmpArray; //exports rbg values
