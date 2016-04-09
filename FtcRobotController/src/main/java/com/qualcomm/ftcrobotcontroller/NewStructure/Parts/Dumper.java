@@ -47,8 +47,6 @@ public class Dumper {
             dumpingBlock.setPosition(0.55);
         }
     }
-
-
     /**
      * configures our dumping system based on what team we're on
      */

@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.NewStructure;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
@@ -10,14 +11,72 @@ public class NewAutonomous extends LinearOpMode {
     AutoBot autoBot;
     int side = 1;
 
+    boolean triggerBeacon = true;
+
+    boolean startNearRamp=false;  //Decides where starting position is
+    boolean goToRamp=true;
+    int delay = 0;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         autoBot = new AutoBot(side, this);
 
+        telemetry.addData("finished", "finished it");
+
+        while (!gamepad1.a && !gamepad1.b) {//adds in delay from button press
+            if(gamepad1.y) {
+                triggerBeacon = false;
+            }
+            if (gamepad1.dpad_up) {
+                delay = delay + 1000;
+            }
+            else if (gamepad1.dpad_down) {
+                delay = delay - 1000;
+            }
+            if (gamepad1.x){ //if pressed gets out of way and avoids ramp
+                goToRamp=false;
+            }
+            telemetry.addData("trigger beacon ", triggerBeacon);
+            telemetry.addData("go to ramp ", goToRamp);
+            telemetry.addData("Delay Seconds ", delay / 1000);
+            sleep(250);
+        }
+
+        if (gamepad1.a)  //sets starting position of robot
+        {
+            startNearRamp = true;
+        }
+
+        if (startNearRamp) {
+            telemetry.addData("Near Ramp", "");
+        }
+        else {
+            telemetry.addData("Far From Ramp", "");
+        }
+        telemetry.addData("Ready", "");
+        if(triggerBeacon){
+            telemetry.addData("Beacon", "Activated");
+        }
+        else{
+            telemetry.addData(" No Beacon", "Deactivated");
+        }
+        if (goToRamp){
+            telemetry.addData("going to", "ramp");
+        }
+        else {
+            telemetry.addData("going to", "place next to ramp");
+        }
+
+
+        while (!autoBot.adaFruitGyro.initDone) {
+            autoBot.adaFruitGyro.initIMU();
+        }
+
         waitForStart();
         autoBot.start();
-        sleep(100+ autoBot.getDelay());
-        if (autoBot.isStartNearRamp()) { //near ramp position
+        sleep(100+ delay);
+        if (startNearRamp) { //near ramp position
             autoBot.drive(1600, .7, 0);
             autoBot.pivot(38.5, 1, 0.5);
             autoBot.drive(4500, 1, 0);
@@ -34,7 +93,7 @@ public class NewAutonomous extends LinearOpMode {
         //debrisCounter.interrupt();
         autoBot.collector.setPower(0);
         autoBot.cameraController.startBackCam();
-        autoBot. beaconR.setPosition(0);
+        autoBot.beaconR.setPosition(0);
         autoBot.beaconL.setPosition(1);
         autoBot.driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
         autoBot.drive(200, .2,0);
@@ -45,7 +104,7 @@ public class NewAutonomous extends LinearOpMode {
         autoBot.drive(500, -0.1, 0);
         autoBot.climberDumper.setPosition(0.5);
         telemetry.addData("after drive before beacon", "");
-        if (autoBot.isTriggerBeacon()) { //goes to trigger beacon
+        if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
             telemetry.addData("before camera call","");
             int leftred = autoBot.cameraController.getLeftRed();//read image
@@ -76,7 +135,7 @@ public class NewAutonomous extends LinearOpMode {
         autoBot.beaconR.setPosition(.7);
         autoBot.beaconL.setPosition(.2);
         //autoBot.drive(40, 0.2,0);
-        if (autoBot.isGoToRamp()) { //goes to ramp
+        if (goToRamp) { //goes to ramp
             if (side==1){
                 autoBot.sideArms.setSideArmLpos(0.5f);
             }
