@@ -25,7 +25,7 @@ public class Robot {
     //Controllers
     AdafruitIMUmethods adaFruitGyro;
     BackCameraController cameraController;
-    FrontCameraController frontCam;
+    public FrontCameraController frontCam;
     OpMode opMode;
 
     Arm arm;

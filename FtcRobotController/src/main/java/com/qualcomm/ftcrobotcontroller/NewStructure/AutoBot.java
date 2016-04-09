@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.NewStructure;
 
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.BackCameraController;
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FrontCameraController;
+import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
@@ -12,9 +13,14 @@ import com.qualcomm.robotcore.util.Range;
  */
 public class AutoBot extends Robot {
 
+    int collectorDirection=0;
 
+    public void setCollectorDirection(int direction){
+        collectorDirection=direction;
+    }
 
-
+    BlockCounter blockCounter;
+    Thread blockCounterThread;
     public AutoBot (int side, OpMode varopMode) throws InterruptedException{
         super(side,varopMode);
         cameraController = new BackCameraController((LinearOpMode)varopMode);
@@ -26,7 +32,6 @@ public class AutoBot extends Robot {
         wheelBase.runUsingEncoders();
         wheelBase.resetDriveEncoders();
         opMode.telemetry.addData("Init", "running3");
-
         climberDumper.setPosition(0.5);
         opMode.telemetry.addData("Init", "running4");
         sideArms.initSideArms();
@@ -43,7 +48,9 @@ public class AutoBot extends Robot {
     }
 
     public void start(){
-
+        blockCounter = new BlockCounter(this);
+        blockCounterThread = new Thread(blockCounter);
+        blockCounterThread.start();
         sideArms.setSideArmLpos(0.75f);
         dumper.resetDumpingBlock();
 
@@ -59,6 +66,8 @@ public class AutoBot extends Robot {
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
+            collector.setPower(collectorDirection);
+
             double yaw = (adaFruitGyro.getYaw() - oldGyro) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (yaw > 180) { //determines which way the robot will turn (left or right)
@@ -120,6 +129,7 @@ public class AutoBot extends Robot {
         wheelBase.runUsingEncoders();//0s gyro
 
         while (!hasTurned) { //while the turn hasn't been completed we run through this loop
+            collector.setPower(collectorDirection);
             count++;
             heading = adaFruitGyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
@@ -200,6 +210,7 @@ public class AutoBot extends Robot {
         wheelBase.runUsingEncoders();//0s gyro
 
         while (!hasTurned) { //while the turn hasn't been completed we run through this loop
+            collector.setPower(collectorDirection);
             count++;
             heading = adaFruitGyro.getYaw();
             difference = (degrees - heading) % 360; //calculates the angle based on where the robot is now and how far it has to go
