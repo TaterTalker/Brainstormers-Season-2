@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
+import com.qualcomm.ftcrobotcontroller.NewStructure.NewAutonomous;
+import com.qualcomm.ftcrobotcontroller.NewStructure.NewTeleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -66,6 +68,8 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("elephant teleop", ElephantTeleOp.class);
         manager.register("block detection test", CameraDebrisCounter.class);
         manager.register("wtf m8", jskdfkjsalkfdjlsjfdlskfdj.class);
+        manager.register("newteleop", NewTeleop.class);
+        manager.register("newauto", NewAutonomous.class);
 
     }
 }

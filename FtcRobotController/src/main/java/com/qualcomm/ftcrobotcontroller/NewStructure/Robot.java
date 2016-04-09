@@ -21,14 +21,17 @@ public class Robot {
 
 
     int minpullup = 0;
-    int side;
-    double gyroOffset=0;
 
     //Controllers
     AdafruitIMUmethods adaFruitGyro;
     BackCameraController cameraController;
+<<<<<<< HEAD
     public FrontCameraController frontCam;
    OpMode opMode;
+=======
+    FrontCameraController frontCam;
+    OpMode opMode;
+>>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
 
     Arm arm;
     Dumper dumper;
@@ -47,20 +50,16 @@ public class Robot {
     Servo beaconL;
     Servo allClear;
     Servo climberDumper;
-
-
     Servo armHook;
 
     //Variables
     int turnDirection = 1;
-    private boolean didEncodersReset = false;
-
 
     public Robot (int side , OpMode varopMode) {
+        opMode = varopMode;
+        opMode.telemetry.addData("First Worked", "Working");
 
-
-        this.side = side;
-        this.opMode = varopMode;
+        turnDirection = side;
 
 
         arm = new Arm(opMode);
@@ -81,11 +80,9 @@ public class Robot {
         ultra2 = opMode.hardwareMap.ultrasonicSensor.get("ultraR");
 
         //Motors
-
-
         adaFruitGyro = new AdafruitIMUmethods(opMode);
-
         allClear = opMode.hardwareMap.servo.get("allClear");
+
 
     }
 

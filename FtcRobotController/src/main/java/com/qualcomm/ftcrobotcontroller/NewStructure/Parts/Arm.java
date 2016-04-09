@@ -137,7 +137,6 @@ public class Arm {
         }
     }
     public void hang() {
-
         if (opMode.gamepad1.y) {
             setArmPower(1);
             if (getArmAnglePos() < 0) {
@@ -147,10 +146,4 @@ public class Arm {
             }
         }
     }
-
-
-
-
-
-
 }

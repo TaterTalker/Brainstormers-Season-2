@@ -19,7 +19,6 @@ public class WheelBase {
     int bRold;
     int fLold;
     int bLold;
-    int delay=0;
 
     float frPower;
     float brPower;
@@ -93,8 +92,6 @@ public class WheelBase {
 
     }
 
-
-
     /**
      * sets all drive encoders to run using encoders mode
      */
@@ -132,9 +129,9 @@ public class WheelBase {
             fr.setPower(0);
 
         }
-        opMode.telemetry.addData("stopping", "complete");
-    }
 
+    opMode.telemetry.addData("stopping", "complete");
+}
     public void stopMotors(){
         br.setPower(0);
         bl.setPower(0);
@@ -148,13 +145,28 @@ public class WheelBase {
         fLold = fl.getCurrentPosition();
         bLold = bl.getCurrentPosition();
     }
-
-    public float getBrPos(){
-        return br.getCurrentPosition();
+   public int brPosition() {
+        return (br.getCurrentPosition() - bRold);
     }
 
-    public float getBlPos(){
-        return bl.getCurrentPosition();
+    /**
+     * gets adjusted position of the front left motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     *
+     * @return the adjusted value
+     */
+    public int fLPosition() {
+        return (fLold - fl.getCurrentPosition());
+    }
+
+    /**
+     * gets adjusted position of the back left motor
+     * reset to 0 using {@link #resetEncoderDelta()}
+     *
+     * @return the adjusted value
+     */
+    public int blPosition() {
+        return (bLold - bl.getCurrentPosition());
     }
 
 }

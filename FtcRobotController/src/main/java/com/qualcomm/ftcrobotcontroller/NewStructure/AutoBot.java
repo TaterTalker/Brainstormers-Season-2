@@ -1,8 +1,14 @@
 package com.qualcomm.ftcrobotcontroller.NewStructure;
 
+<<<<<<< HEAD
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.CameraDebrisCounter;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
+=======
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.BackCameraController;
+import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FrontCameraController;
+>>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -10,26 +16,20 @@ import com.qualcomm.robotcore.util.Range;
  * Created by ethan on 4/8/2016.
  */
 public class AutoBot extends Robot {
+<<<<<<< HEAD
     public int collectorDirection=0;
     int side;
     BlockCounter blockCounter;
 
 
     LinearOpMode opMode;
+=======
 
-    boolean triggerBeacon;
+>>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
 
-    boolean startNearRamp=false;  //Decides where starting position is
-    boolean goToRamp=true;
-    int delay;
-    public boolean isStartNearRamp() {
-        return startNearRamp;
-    }
 
-    public boolean isGoToRamp() {
-        return goToRamp;
-    }
 
+<<<<<<< HEAD
     public boolean isTriggerBeacon() {
         return triggerBeacon;
     }
@@ -44,81 +44,33 @@ public class AutoBot extends Robot {
 
 
     public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
+=======
+    public AutoBot (int side, OpMode varopMode) throws InterruptedException{
+>>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
         super(side,varopMode);
-        opMode = varopMode;
+        cameraController = new BackCameraController((LinearOpMode)varopMode);
+        frontCam = new FrontCameraController((LinearOpMode)varopMode);
+
         opMode.telemetry.addData("Init", "running");
-
-
-        turnDirection = side; //adjusts turns based on team color
         opMode.telemetry.addData("Init", "running2");
         //Configure and Reset
         wheelBase.runUsingEncoders();
         wheelBase.resetDriveEncoders();
         opMode.telemetry.addData("Init", "running3");
-        climberDumper.setPosition(0.5);
-        sideArms.initSideArms();
-        armHook.setPosition(0);
 
+        climberDumper.setPosition(0.5);
+        opMode.telemetry.addData("Init", "running4");
+        sideArms.initSideArms();
+        opMode.telemetry.addData("Init", "running5");
+        armHook.setPosition(0);
+        opMode.telemetry.addData("Init", "done");
         dumper.startDumper();
         beaconR.setPosition(0);
         beaconL.setPosition(1);
         arm.setLockDown();
-        opMode.telemetry.addData("Init", "running4");
-        opMode.telemetry.addData("Init", "done");
-        triggerBeacon=true;
+
+
         frontCam.startFrontCam();
-        opMode.telemetry.addData("Init", "running5");
-
-        while (!opMode.gamepad1.a && !opMode.gamepad1.b) {//adds in delay from button press
-            if(opMode.gamepad1.y) {
-                triggerBeacon = false;
-            }
-            if (opMode.gamepad1.dpad_up) {
-                delay = delay + 1000;
-            }
-            else if (opMode.gamepad1.dpad_down) {
-                delay = delay - 1000;
-            }
-            if (opMode.gamepad1.x){ //if pressed gets out of way and avoids ramp
-                goToRamp=false;
-            }
-            opMode.telemetry.addData("trigger beacon ", triggerBeacon);
-            opMode.telemetry.addData("go to ramp ", goToRamp);
-            opMode.telemetry.addData("Delay Seconds ", delay / 1000);
-           opMode.sleep(250);
-        }
-
-        if (opMode.gamepad1.a)  //sets starting position of robot
-        {
-            startNearRamp = true;
-        }
-
-        if (startNearRamp) {
-            opMode.telemetry.addData("Near Ramp", "");
-        }
-        else {
-            opMode.telemetry.addData("Far From Ramp", "");
-        }
-        opMode.telemetry.addData("Ready", "");
-        if(triggerBeacon){
-            opMode.telemetry.addData("Beacon", "Activated");
-        }
-        else{
-            opMode.telemetry.addData(" No Beacon", "Deactivated");
-        }
-        if (goToRamp){
-            opMode.telemetry.addData("going to", "ramp");
-        }
-        else {
-            opMode.telemetry.addData("going to", "place next to ramp");
-        }
-
-
-        while (!adaFruitGyro.initDone) {
-            adaFruitGyro.initIMU();
-        }
-
-
     }
 
     public void start(){
@@ -145,7 +97,7 @@ public class AutoBot extends Robot {
             } else if (yaw < -180) {
                 yaw = 360.0 + yaw;
             }
-            opMode.telemetry.addData("encoder positions", " back right " + wheelBase.getBrPos() + " back left " + wheelBase.getBlPos());
+            opMode.telemetry.addData("encoder positions", " back right " + wheelBase.blPosition() + " back left " + wheelBase.brPosition());
             opMode.telemetry.addData("yaw", yaw);
             opMode.telemetry.addData("deviation", deviation);
             deviation =  ( yaw * DEVIATIONGAIN );
@@ -160,14 +112,15 @@ public class AutoBot extends Robot {
             rightPower += power;
             wheelBase.setLeftPower(leftPower);
             wheelBase.setRightPower(rightPower);
-            opMode.waitOneFullHardwareCycle();
+//            opMode.waitOneFullHardwareCycle();
 
             switch (targetType) {  //determines whether or not to stop when the color sensor detects white
                 case 0:
-                    hasReached = Math.abs(wheelBase.getBrPos()+ wheelBase.getBlPos()) / 2 > Math.abs(distance);
+                    hasReached = Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
+                    opMode.telemetry.addData("Has Reached:" , hasReached + " "+ Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2);
                     break;
                 case 1:
-                    hasReached = colorSensor.alpha() >= 2 || Math.abs(wheelBase.getBrPos()+ wheelBase.getBlPos()) / 2 > Math.abs(distance);
+                    hasReached = colorSensor.alpha() >= 2 || Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
                     opMode.telemetry.addData("alpha", colorSensor.alpha());
                     break;
                 default:
@@ -249,7 +202,7 @@ public class AutoBot extends Robot {
                 }
             }
 
-            opMode.waitOneFullHardwareCycle();
+//            opMode.waitOneFullHardwareCycle();
         }
 
         opMode.telemetry.addData("Do", "ne");
@@ -260,9 +213,6 @@ public class AutoBot extends Robot {
 
 
     }
-
-
-
 
     void newGyroTurn(double degrees, double tolerance) throws InterruptedException {
 
@@ -325,7 +275,7 @@ public class AutoBot extends Robot {
                 rightTurn = false;
             }
 
-            opMode.waitOneFullHardwareCycle();
+//            opMode.waitOneFullHardwareCycle();
         }
 
         opMode.telemetry.addData("Do", "ne");
@@ -338,7 +288,7 @@ public class AutoBot extends Robot {
     void driveUntilUltra(int target, double speed, int maxdistance) throws InterruptedException { //drives until the robot gets within a certain distance of an object
         while (readFixedUltra(ultra2) > target || readFixedUltra(ultra2) < 1) {
             driveForever(speed);
-            opMode.waitOneFullHardwareCycle();
+//            opMode.waitOneFullHardwareCycle();
         }
         wheelBase.setLeftPower(0);
         wheelBase.setRightPower(0);
@@ -361,7 +311,7 @@ public class AutoBot extends Robot {
         for (int i = 0; i < 4; i++) {
             do {
                 tmpVal = sensor.getUltrasonicLevel();
-                opMode.waitOneFullHardwareCycle();
+//                opMode.waitOneFullHardwareCycle();
             } while (tmpVal == 0);
             if (tmpVal < minVal) {
                 minVal = tmpVal;
@@ -370,7 +320,7 @@ public class AutoBot extends Robot {
                 maxVal = tmpVal;
             }
             val += tmpVal;
-            opMode.waitOneFullHardwareCycle();
+//            opMode.waitOneFullHardwareCycle();
         }
         val -= (minVal + maxVal);
         val /= 2;
