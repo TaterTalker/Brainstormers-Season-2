@@ -66,6 +66,7 @@ public class AutoBot extends Robot {
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
+            wheelBase.runUsingEncoders();
             collector.setPower(collectorDirection);
 
             double yaw = (adaFruitGyro.getYaw() - oldGyro) % 360; //calculates the angle based on where the robot is now and how far it has to go
@@ -129,6 +130,7 @@ public class AutoBot extends Robot {
         wheelBase.runUsingEncoders();//0s gyro
 
         while (!hasTurned) { //while the turn hasn't been completed we run through this loop
+            wheelBase.runUsingEncoders();
             collector.setPower(collectorDirection);
             count++;
             heading = adaFruitGyro.getYaw();
@@ -210,6 +212,7 @@ public class AutoBot extends Robot {
         wheelBase.runUsingEncoders();//0s gyro
 
         while (!hasTurned) { //while the turn hasn't been completed we run through this loop
+            wheelBase.runUsingEncoders();
             collector.setPower(collectorDirection);
             count++;
             heading = adaFruitGyro.getYaw();
