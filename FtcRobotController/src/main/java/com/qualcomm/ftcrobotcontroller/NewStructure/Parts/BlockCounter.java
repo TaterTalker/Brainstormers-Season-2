@@ -34,7 +34,7 @@ public class BlockCounter implements Runnable{
         int countInTarget=0;
         boolean isComplete=false;
         while(!isComplete){
-            autoBot.setCollectorDirection(1);
+            //autoBot.setCollectorDirection(1);
             int[] colors = getRowColors(120);
             if (colors[0]>18000){
                 countInTarget++;
@@ -49,6 +49,6 @@ public class BlockCounter implements Runnable{
 
         }
 
-        autoBot.setCollectorDirection(-1);
+        //autoBot.setCollectorDirection(-1);
     }
 }

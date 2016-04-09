@@ -1,12 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.NewStructure;
 
-<<<<<<< HEAD
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.CameraDebrisCounter;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
-=======
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.BackCameraController;
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FrontCameraController;
->>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
@@ -16,37 +13,21 @@ import com.qualcomm.robotcore.util.Range;
  * Created by ethan on 4/8/2016.
  */
 public class AutoBot extends Robot {
-<<<<<<< HEAD
-    public int collectorDirection=0;
+    //public int collectorDirection=0;
     int side;
-    BlockCounter blockCounter;
+    //BlockCounter blockCounter;
 
 
     LinearOpMode opMode;
-=======
-
->>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
 
 
 
-<<<<<<< HEAD
-    public boolean isTriggerBeacon() {
-        return triggerBeacon;
-    }
 
-    public int getDelay() {
-        return delay;
-    }
+//    public void setCollectorDirection(int direction){
+//        collectorDirection = direction;
+//    }
 
-    public void setCollectorDirection(int direction){
-        collectorDirection = direction;
-    }
-
-
-    public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
-=======
     public AutoBot (int side, OpMode varopMode) throws InterruptedException{
->>>>>>> 131a2191b2905daf5e3d18e00fda1eaaa68b86b4
         super(side,varopMode);
         cameraController = new BackCameraController((LinearOpMode)varopMode);
         frontCam = new FrontCameraController((LinearOpMode)varopMode);
@@ -74,7 +55,7 @@ public class AutoBot extends Robot {
     }
 
     public void start(){
-        blockCounter = new BlockCounter(this);
+        //blockCounter = new BlockCounter(this);
         sideArms.setSideArmLpos(0.75f);
         dumper.resetDumpingBlock();
         beaconR.setPosition(0.9);
@@ -89,7 +70,7 @@ public class AutoBot extends Robot {
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
-            collector.setPower(collectorDirection);
+            //collector.setPower(collectorDirection);
             double yaw = (adaFruitGyro.getYaw() - oldGyro) % 360; //calculates the angle based on where the robot is now and how far it has to go
 
             if (yaw > 180) { //determines which way the robot will turn (left or right)
