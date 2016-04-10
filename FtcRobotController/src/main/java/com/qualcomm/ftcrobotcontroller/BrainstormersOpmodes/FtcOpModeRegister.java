@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
+import com.qualcomm.ftcrobotcontroller.NewStructure.AutoBlue;
+import com.qualcomm.ftcrobotcontroller.NewStructure.AutoRed;
 import com.qualcomm.ftcrobotcontroller.NewStructure.NewAutonomous;
 import com.qualcomm.ftcrobotcontroller.NewStructure.NewTeleop;
 import com.qualcomm.ftcrobotcontroller.NewStructure.TeleopBlue;
@@ -55,7 +57,8 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("Sensor Test", sensorTest.class);
         manager.register("TeleOp Blue", TeleopBlue.class);
         manager.register("TeleOp Red", TeleopRed.class);
-
+        manager.register("Autonomous Blue", AutoBlue.class);
+        manager.register("Autonomous Red", AutoRed.class);
 
         manager.register("TeleOp Octopus Blue", TeleOpBlue.class);
         manager.register("TeleOp Octopus Red", TeleOpRed.class);
