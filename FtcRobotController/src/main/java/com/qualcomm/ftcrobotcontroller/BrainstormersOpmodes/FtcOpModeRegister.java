@@ -33,6 +33,8 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 
 import com.qualcomm.ftcrobotcontroller.NewStructure.NewAutonomous;
 import com.qualcomm.ftcrobotcontroller.NewStructure.NewTeleop;
+import com.qualcomm.ftcrobotcontroller.NewStructure.TeleopBlue;
+import com.qualcomm.ftcrobotcontroller.NewStructure.TeleopRed;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -49,27 +51,17 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     public void register(OpModeManager manager) {
 
-        
+
         manager.register("Sensor Test", sensorTest.class);
-        //manager.register("color test", ColorTest.class);
+        manager.register("TeleOp Blue", TeleopBlue.class);
+        manager.register("TeleOp Red", TeleopRed.class);
+
+
         manager.register("TeleOp Octopus Blue", TeleOpBlue.class);
         manager.register("TeleOp Octopus Red", TeleOpRed.class);
         manager.register("Auto-Blue Octopus", AutonomousBlueBotmk2.class);
         manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
-        manager.register("teleoptest" , TeleopTest.class);
-        manager.register("autonomous test", AutonomousTest.class);
-        manager.register("servo test", ServoOptimizer.class);
-        //manager.register("Auto-Red Octopus", AutonomousRedBotmk2.class);
-        //manager.register("why are we making changes at the competition this a bad idea", excusetomakechangesatthecompetition.class);
-        //manager.register("ramp detection", rampDetection.class);
-        //manager.register("autonomous test", ServoOptimizer.class);
-        manager.register("new gyo test", AdafruitIMUTest.class);
-        manager.register("autonmoose test", ServoOptimizer.class);
-        manager.register("elephant teleop", ElephantTeleOp.class);
-        manager.register("block detection test", CameraDebrisCounter.class);
-        manager.register("wtf m8", jskdfkjsalkfdjlsjfdlskfdj.class);
-        manager.register("newteleop", NewTeleop.class);
-        manager.register("newauto", NewAutonomous.class);
 
+        manager.register("Block Detection Test", CameraDebrisCounter.class);
     }
 }

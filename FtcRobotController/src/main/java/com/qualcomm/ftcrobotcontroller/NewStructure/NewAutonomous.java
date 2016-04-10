@@ -6,10 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by ethan on 4/8/2016.
  */
-public class NewAutonomous extends LinearOpMode {
+public abstract class NewAutonomous extends LinearOpMode {
 
     AutoBot autoBot;
-    int side = 1;
 
     boolean triggerBeacon = true;
 
@@ -17,9 +16,7 @@ public class NewAutonomous extends LinearOpMode {
     boolean goToRamp=true;
     int delay = 0;
 
-
-    @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode(int side) throws InterruptedException {
         autoBot = new AutoBot(side, this);
 
         telemetry.addData("finished", "finished it");
@@ -98,7 +95,7 @@ public class NewAutonomous extends LinearOpMode {
         autoBot.beaconR.setPosition(0);
         autoBot.beaconL.setPosition(1);
         autoBot.driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
-        autoBot.drive(200, .2,0);
+        autoBot.drive(120, .1,0);
         autoBot.climberDumper.setPosition(1); //dumps climbers
         sleep(2000);
         autoBot.climberDumper.setPosition(0.4);
@@ -139,7 +136,7 @@ public class NewAutonomous extends LinearOpMode {
         //autoBot.drive(40, 0.2,0);
         if (goToRamp) { //goes to ramp
             if (side==1){
-                autoBot.sideArms.setSideArmLpos(0.5f);
+                autoBot.sideArms.setSideArmRpos(0.5f);
             }
             else {
                 autoBot.sideArms.setSideArmLpos(0.3f);
@@ -157,9 +154,11 @@ public class NewAutonomous extends LinearOpMode {
             autoBot.arm.setArmPower(0);
             if(side == -1){
                 autoBot.sideArms.setSideArmLpos(0);
+                autoBot.sideArms.setSideArmRpos(0.05f);
             }
             else{
                 autoBot.sideArms.setSideArmRpos(1);
+                autoBot.sideArms.setSideArmLpos(0.8f);
             }
             autoBot.drive(5000, -1, 0);
         } else { //goes into place next to ramp

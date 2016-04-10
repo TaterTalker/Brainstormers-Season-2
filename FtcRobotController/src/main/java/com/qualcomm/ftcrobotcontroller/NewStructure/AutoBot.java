@@ -13,7 +13,8 @@ import com.qualcomm.robotcore.util.Range;
  */
 public class AutoBot extends Robot {
 
-    int collectorDirection=0;
+    int collectorDirection = 0;
+    LinearOpMode linearOpMode;
 
     public void setCollectorDirection(int direction){
         collectorDirection=direction;
@@ -21,10 +22,11 @@ public class AutoBot extends Robot {
 
     BlockCounter blockCounter;
     Thread blockCounterThread;
-    public AutoBot (int side, OpMode varopMode) throws InterruptedException{
+    public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
         super(side,varopMode);
-        cameraController = new BackCameraController((LinearOpMode)varopMode);
-        frontCam = new FrontCameraController((LinearOpMode)varopMode);
+        linearOpMode = varopMode;
+        cameraController = new BackCameraController(varopMode);
+        frontCam = new FrontCameraController(varopMode);
 
         opMode.telemetry.addData("Init", "running");
         opMode.telemetry.addData("Init", "running2");
@@ -37,12 +39,15 @@ public class AutoBot extends Robot {
         sideArms.initSideArms();
         opMode.telemetry.addData("Init", "running5");
         armHook.setPosition(0);
+        allClear.setPosition(0.5);
         opMode.telemetry.addData("Init", "done");
         dumper.startDumper();
         beaconR.setPosition(0);
         beaconL.setPosition(1);
-        arm.setLockDown();
-
+        arm.setLockUp();
+        dumper.doorR.setPosition(0.85);
+        dumper.doorL.setPosition(0.05);
+        dumper.resetDumpingBlock();
 
         frontCam.startFrontCam();
     }
@@ -52,11 +57,10 @@ public class AutoBot extends Robot {
         blockCounterThread = new Thread(blockCounter);
         blockCounterThread.start();
         sideArms.setSideArmLpos(0.75f);
-        dumper.resetDumpingBlock();
-
         beaconR.setPosition(0.9);
         beaconL.setPosition(0.1);
         climberDumper.setPosition(0.5); //makes sure climber dumper will not move
+        dumper.dumpingBlock.setPosition(0.5);
     }
 
     void drive(int distance, double power, int targetType) throws InterruptedException {
@@ -91,7 +95,7 @@ public class AutoBot extends Robot {
             rightPower += power;
             wheelBase.setLeftPower(leftPower);
             wheelBase.setRightPower(rightPower);
-//            opMode.waitOneFullHardwareCycle();
+            linearOpMode.waitOneFullHardwareCycle();
 
             switch (targetType) {  //determines whether or not to stop when the color sensor detects white
                 case 0:
@@ -183,7 +187,7 @@ public class AutoBot extends Robot {
                 }
             }
 
-//            opMode.waitOneFullHardwareCycle();
+            linearOpMode.waitOneFullHardwareCycle();
         }
 
         opMode.telemetry.addData("Do", "ne");
@@ -258,7 +262,7 @@ public class AutoBot extends Robot {
                 rightTurn = false;
             }
 
-//            opMode.waitOneFullHardwareCycle();
+            linearOpMode.waitOneFullHardwareCycle();
         }
 
         opMode.telemetry.addData("Do", "ne");
@@ -271,7 +275,7 @@ public class AutoBot extends Robot {
     void driveUntilUltra(int target, double speed, int maxdistance) throws InterruptedException { //drives until the robot gets within a certain distance of an object
         while (readFixedUltra(ultra2) > target || readFixedUltra(ultra2) < 1) {
             driveForever(speed);
-//            opMode.waitOneFullHardwareCycle();
+            linearOpMode.waitOneFullHardwareCycle();
         }
         wheelBase.setLeftPower(0);
         wheelBase.setRightPower(0);
@@ -294,7 +298,7 @@ public class AutoBot extends Robot {
         for (int i = 0; i < 4; i++) {
             do {
                 tmpVal = sensor.getUltrasonicLevel();
-//                opMode.waitOneFullHardwareCycle();
+               linearOpMode.waitOneFullHardwareCycle();
             } while (tmpVal == 0);
             if (tmpVal < minVal) {
                 minVal = tmpVal;
@@ -303,7 +307,7 @@ public class AutoBot extends Robot {
                 maxVal = tmpVal;
             }
             val += tmpVal;
-//            opMode.waitOneFullHardwareCycle();
+            linearOpMode.waitOneFullHardwareCycle();
         }
         val -= (minVal + maxVal);
         val /= 2;

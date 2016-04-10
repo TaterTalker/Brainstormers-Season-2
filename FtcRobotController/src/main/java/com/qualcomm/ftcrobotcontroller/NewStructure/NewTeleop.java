@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 /**
  * Created by ethan on 4/8/2016.
  */
-public class NewTeleop extends OpMode {
+public abstract class NewTeleop extends OpMode {
 
     TeleOpBot teleOpBot;
     float oldTime;
     double gyroOffset=0;
-    @Override
-    public void init() {
-        teleOpBot = new TeleOpBot(-1, this);
+
+    public void init(int side) {
+        teleOpBot = new TeleOpBot(side, this);
     }
 
     @Override

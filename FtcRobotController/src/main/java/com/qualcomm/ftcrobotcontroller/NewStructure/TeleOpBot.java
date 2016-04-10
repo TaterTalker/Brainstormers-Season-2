@@ -19,6 +19,7 @@ public class TeleOpBot extends Robot {
         armHook.setPosition(0.3);
         climberDumper.setPosition(0);
         allClear.setPosition(0.5);
+        climberDumper.setPosition(0.5);
 
         while (!adaFruitGyro.initDone) {
             adaFruitGyro.initIMU();

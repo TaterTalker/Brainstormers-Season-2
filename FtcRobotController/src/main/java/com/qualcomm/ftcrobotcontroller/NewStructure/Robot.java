@@ -7,9 +7,11 @@ import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.Arm;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.Dumper;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.SideArms;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.WheelBase;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -79,6 +81,10 @@ public class Robot {
         allClear = opMode.hardwareMap.servo.get("allClear");
 
 
+    }
+
+    public void runUsingEncoders() {
+        collector.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
 

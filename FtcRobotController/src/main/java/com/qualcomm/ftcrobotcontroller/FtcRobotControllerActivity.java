@@ -405,6 +405,7 @@ public class FtcRobotControllerActivity extends Activity{
 
     public Camera openFrontFacingCamera() {
         if (theCamera!=null) {
+            theCamera.setPreviewCallback(null);
             theCamera.stopPreview();
             theCamera.release();
             theCamera = null;
@@ -431,6 +432,8 @@ public class FtcRobotControllerActivity extends Activity{
 
     public Camera openBackFacingCamera() {
         if (theCamera!=null) {
+            //context.preview.getHolder().removePreview(context.preview);
+            theCamera.setPreviewCallback(null);
             theCamera.stopPreview();
             theCamera.release();
             theCamera = null;

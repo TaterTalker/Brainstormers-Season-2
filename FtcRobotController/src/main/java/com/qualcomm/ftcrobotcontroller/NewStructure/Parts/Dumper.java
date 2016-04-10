@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by ethan on 4/5/2016.
  */
 public class Dumper {
-    Servo doorR;
-    Servo doorL;
-    Servo dumpingBlock;
+    public Servo doorR;
+    public Servo doorL;
+    public Servo dumpingBlock;
     int side;
     OpMode opMode;
 
@@ -26,7 +26,6 @@ public class Dumper {
     }
 
     public void startDumper(){
-
         doorR.setPosition(0.85);
         doorL.setPosition(0.15);
         dumpingBlock.setPosition(0.5);
@@ -34,17 +33,15 @@ public class Dumper {
 
     int moveCount = 0;
     int oldCount = 51;
-    int moveCountAllClear = 0;
-    int oldCountAllClear = 51;
 
     final int MINCOUNT =  51;
     final int MAXMOVECOUNT = 250;
 
     public void resetDumpingBlock(){
         if (side==-1){
-            dumpingBlock.setPosition(0.35);
+            dumpingBlock.setPosition(0);
         } else {
-            dumpingBlock.setPosition(0.55);
+            dumpingBlock.setPosition(1);
         }
     }
     /**
@@ -55,6 +52,7 @@ public class Dumper {
         if (side == BLUE) {
             if (opMode.gamepad2.dpad_right || opMode.gamepad2.right_stick_x > .15) {
                 doorR.setPosition(0.3);
+                doorL.setPosition(0.15);
             }
             else {
                 doorR.setPosition(0.85);
@@ -64,6 +62,7 @@ public class Dumper {
         else if (side == RED) {
             if (opMode.gamepad2.dpad_left || opMode.gamepad2.right_stick_x < -.15) {
                 doorL.setPosition(0.7);
+                doorR.setPosition(0.85);
             }
             else {
                 doorR.setPosition(0.85);
