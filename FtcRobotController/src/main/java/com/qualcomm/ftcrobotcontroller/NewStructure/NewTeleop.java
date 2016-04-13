@@ -18,11 +18,6 @@ public abstract class NewTeleop extends OpMode {
 
     @Override
     public void loop() {
-        if (System.currentTimeMillis()-oldTime<100){
-            teleOpBot.climberDumper.setPosition(1);
-        } else{
-            teleOpBot.climberDumper.setPosition(0.5);
-        }
         teleOpBot.arm.runArmEncoders();
 
         attachments();

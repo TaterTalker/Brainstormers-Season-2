@@ -14,14 +14,11 @@ import com.qualcomm.robotcore.util.Range;
 public class AutoBot extends Robot {
 
     int collectorDirection = 0;
+    public boolean blockCounterActive = true;
     LinearOpMode linearOpMode;
-
-    public void setCollectorDirection(int direction){
-        collectorDirection=direction;
-    }
-
     BlockCounter blockCounter;
     Thread blockCounterThread;
+
     public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
         super(side,varopMode);
         linearOpMode = varopMode;
@@ -52,6 +49,10 @@ public class AutoBot extends Robot {
         frontCam.startFrontCam();
     }
 
+    public void setCollectorDirection(int direction){
+        collectorDirection=direction;
+    }
+
     public void start(){
         blockCounter = new BlockCounter(this);
         blockCounterThread = new Thread(blockCounter);
@@ -80,9 +81,9 @@ public class AutoBot extends Robot {
             } else if (yaw < -180) {
                 yaw = 360.0 + yaw;
             }
-            opMode.telemetry.addData("encoder positions", " back right " + wheelBase.blPosition() + " back left " + wheelBase.brPosition());
-            opMode.telemetry.addData("yaw", yaw);
-            opMode.telemetry.addData("deviation", deviation);
+            //opMode.telemetry.addData("encoder positions", " back right " + wheelBase.blPosition() + " back left " + wheelBase.brPosition());
+            //opMode.telemetry.addData("yaw", yaw);
+            //opMode.telemetry.addData("deviation", deviation);
             deviation =  ( yaw * DEVIATIONGAIN );
             if (deviation != 0) {
                 deviation = Math.sqrt(Math.abs(deviation)) * (deviation / Math.abs(deviation));
@@ -100,14 +101,14 @@ public class AutoBot extends Robot {
             switch (targetType) {  //determines whether or not to stop when the color sensor detects white
                 case 0:
                     hasReached = Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
-                    opMode.telemetry.addData("Has Reached:" , hasReached + " "+ Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2);
+                    //opMode.telemetry.addData("Has Reached:" , hasReached + " "+ Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2);
                     break;
                 case 1:
                     hasReached = colorSensor.alpha() >= 2 || Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
-                    opMode.telemetry.addData("alpha", colorSensor.alpha());
+                    //opMode.telemetry.addData("alpha", colorSensor.alpha());
                     break;
                 default:
-                    opMode.telemetry.addData("Invalid input", "stopping");
+                    //opMode.telemetry.addData("Invalid input", "stopping");
                     hasReached = true;
                     break;
             }
@@ -146,7 +147,7 @@ public class AutoBot extends Robot {
                 difference = 360.0 + difference;
             }
 
-            opMode.telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
+            //opMode.telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
             power = Math.abs(difference*GAIN);
             power = Range.clip(power, 0.1, 0.5);
 
@@ -156,10 +157,10 @@ public class AutoBot extends Robot {
 
             if (count < cyclesMaxPower && Math.abs(difference) > 20) { //speeds up out power to speed up turn during the beginning of the turn
                 power = 1;
-                opMode.telemetry.addData("1", "power");
+                //opMode.telemetry.addData("1", "power");
             }
 
-            opMode.telemetry.addData("power", "" + power);
+            //opMode.telemetry.addData("power", "" + power);
             if (Math.abs(difference) <= tolerance) { //how far off the turn can be while still being successful (tolerance of turn)
                 countWithinTolerence++;
                 if (countWithinTolerence > 15) {
@@ -228,7 +229,7 @@ public class AutoBot extends Robot {
                 difference = 360.0 + difference;
             }
 
-            opMode.telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
+            //opMode.telemetry.addData("Heading", " " + heading + " " + difference + " " + rightTurn); //determines how fast the turn should be, as the turn gets greater the speed gets faster
             power = Math.abs(difference*GAIN);
             power = Range.clip(power, 0.05, 0.35);
 
@@ -238,10 +239,10 @@ public class AutoBot extends Robot {
 
             if (count < cyclesMaxPower && Math.abs(difference) > 30) { //speeds up out power to speed up turn during the beginning of the turn
                 power = 1;
-                opMode.telemetry.addData("1", "power");
+                //opMode.telemetry.addData("1", "power");
             }
 
-            opMode.telemetry.addData("power", "" + power);
+           // opMode.telemetry.addData("power", "" + power);
             if (Math.abs(difference) <= tolerance) { //how far off the turn can be while still being successful (tolerance of turn)
                 countWithinTolerence++;
                 if (countWithinTolerence > 15) {
@@ -265,7 +266,7 @@ public class AutoBot extends Robot {
             linearOpMode.waitOneFullHardwareCycle();
         }
 
-        opMode.telemetry.addData("Do", "ne");
+        //opMode.telemetry.addData("Do", "ne");
         wheelBase.setLeftPower(0);
         wheelBase.setRightPower(0);
         wheelBase.setLeftPower(0);

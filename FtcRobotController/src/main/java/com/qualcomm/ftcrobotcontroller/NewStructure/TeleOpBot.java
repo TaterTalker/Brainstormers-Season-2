@@ -17,7 +17,7 @@ public class TeleOpBot extends Robot {
         beaconR.setPosition(1);
         beaconL.setPosition(0) ;
         armHook.setPosition(0.3);
-        climberDumper.setPosition(0);
+        climberDumper.setPosition(0.5);
         allClear.setPosition(0.5);
         climberDumper.setPosition(0.5);
 

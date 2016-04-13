@@ -25,8 +25,8 @@ public class SideArms {
 
    public void initSideArms() {
 
-       sideArmL.setPosition(0.8);
-       sideArmR.setPosition(0.05);
+       sideArmL.setPosition(0.87);
+       sideArmR.setPosition(0.03);
    }
 
     public void sideArm( AdafruitIMUmethods gyro,double gyroOffset, DcMotor fr){

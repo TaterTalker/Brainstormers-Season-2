@@ -91,7 +91,7 @@ public class BackCameraController {
     /**
      * converts the yuv image into a bitmap
      */
-    private void convertImage() {
+    public void convertImage() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out); //compresses yuv image into a jpeg
         byte[] imageBytes = out.toByteArray();
@@ -127,7 +127,6 @@ public class BackCameraController {
      * @return total getRedInPixel-total getBlue
      */
     public int getRightRed() {
-        convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = 0; x < width / 2; x+= 10) { //reads the values of all of the pixels in the proper quadrant
             for (int y = 0; y < height/2; y = y + 10) {
@@ -142,7 +141,6 @@ public class BackCameraController {
      * @return total getRedInPixel minus total getBlue
      */
     public int getLeftRed() {
-        convertImage(); //converts the image
         int value = 0; //resets the value
         for (int x = width - 1; x > width / 2; x -= 10) { //reads the values of all of the pixels in the proper quadrant
             for (int y = 0; y < height/2; y = y + 10) {

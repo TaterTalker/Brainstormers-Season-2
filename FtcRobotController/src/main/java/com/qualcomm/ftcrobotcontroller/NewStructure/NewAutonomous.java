@@ -72,7 +72,7 @@ public abstract class NewAutonomous extends LinearOpMode {
 
         waitForStart();
         autoBot.start();
-        sleep(100+ delay);
+        sleep(100 + delay);
         if (startNearRamp) { //near ramp position
             autoBot.drive(1600, .7, 0);
             autoBot.pivot(38.5, 1, 0.5);
@@ -82,57 +82,58 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.pivot(52.5, 1, 0.5);
             autoBot.drive(6500, 1, 0);
         }
-        //autoBot.newGyroTurn();(42, 1);
         autoBot.drive(2000, .2, 1); //drives to white line
         autoBot.drive(60, -0.2, 0);
         autoBot.newGyroTurn(90, 2);
-        // stopMotors();
-        //debrisCounter.interrupt();
-        autoBot.blockCounterThread.interrupt();
+        autoBot.blockCounterActive = false;
         autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
         autoBot.cameraController.startBackCam();
-        autoBot.beaconR.setPosition(0);
-        autoBot.beaconL.setPosition(1);
-        autoBot.driveUntilUltra(15, 0.1, 1200); //drives until 15 cm from wall
-        autoBot.drive(120, .1,0);
-        autoBot.climberDumper.setPosition(1); //dumps climbers
-        sleep(2000);
-        autoBot.climberDumper.setPosition(0.4);
-        telemetry.addData("before drive after climbers", "");
-        autoBot.drive(500, -0.1, 0);
+        sleep(500);
+        telemetry.addData("Collector Direction A", "" + autoBot.collectorDirection);
+        autoBot.driveUntilUltra(30, 0.1, 1200); //drives until 15 cm from wall
+        //telemetry.addData("before drive after climbers", "");
         autoBot.climberDumper.setPosition(0.5);
-        telemetry.addData("after drive before beacon", "");
+        //telemetry.addData("after drive before beacon", "");
+        telemetry.addData("Collector Direction B", "" + autoBot.collectorDirection);
+        autoBot.climberDumper.setPosition(0.55);
+        autoBot.dumper.stopDumpingBlock();
         if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
-            telemetry.addData("before camera call","");
+            //telemetry.addData("before camera call","");
+            autoBot.cameraController.convertImage();
             int leftred = autoBot.cameraController.getLeftRed();//read image
-            telemetry.addData("after left camera call", "");
+            //telemetry.addData("after left camera call", "");
             int rightred = autoBot.cameraController.getRightRed();
 
-            telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
+            //telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred){ //left side is red
                 if (side == -1) { //on red team
                     autoBot.beaconL.setPosition(0.6);
+                    autoBot.beaconR.setPosition(0);
                 } else { //on blue team
                     autoBot.beaconR.setPosition(0.3);
+                    autoBot.beaconL.setPosition(1);
                 }
             } else { //right side is red
                 if (side == -1) { //on red team
                     autoBot.beaconR.setPosition(0.3);
+                    autoBot.beaconL.setPosition(1);
                 } else { //on blue team
                     autoBot.beaconL.setPosition(0.6);
+                    autoBot.beaconR.setPosition(0);
                 }
             }
             sleep(100);
         }
-        telemetry.addData("beacon check", "");
-        autoBot.driveUntilUltra(15, 0.1, 200); //presses buttons
+        //telemetry.addData("beacon check", "");
+        telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
+        autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
         autoBot.drive(50, 0.2, 0);
+        sleep(1000);
         autoBot.drive(80, -0.2, 0);
 
-        autoBot.beaconR.setPosition(.7);
-        autoBot.beaconL.setPosition(.2);
+        autoBot.blockCounterActive = true; // turns block detection back on
         //autoBot.drive(40, 0.2,0);
         if (goToRamp) { //goes to ramp
             if (side==1){
@@ -142,7 +143,11 @@ public abstract class NewAutonomous extends LinearOpMode {
                 autoBot.sideArms.setSideArmLpos(0.3f);
             }
             autoBot.drive(1000, -0.25, 0);
+            autoBot.beaconR.setPosition(.7);
+            autoBot.beaconL.setPosition(.2);
+            autoBot.climberDumper.setPosition(0.45);
             autoBot.pivot(200, 1, 2);
+            autoBot.climberDumper.setPosition(0.5);
             autoBot.setCollectorDirection(-1);
             autoBot.collector.setPower(-1);
             autoBot.drive(2200, 1, 0);
@@ -162,8 +167,14 @@ public abstract class NewAutonomous extends LinearOpMode {
             }
             autoBot.drive(5000, -1, 0);
         } else { //goes into place next to ramp
-            autoBot.newGyroTurn(180,2);
+            autoBot.beaconR.setPosition(.7);
+            autoBot.beaconL.setPosition(.2);
+            autoBot.climberDumper.setPosition(0.5);
+            autoBot.newGyroTurn(180, 2);
             autoBot.drive(1500, 1, 0);
+            autoBot.beaconR.setPosition(.7);
+            autoBot.beaconL.setPosition(.2);
+            autoBot.climberDumper.setPosition(0.5);
         }
 
     }

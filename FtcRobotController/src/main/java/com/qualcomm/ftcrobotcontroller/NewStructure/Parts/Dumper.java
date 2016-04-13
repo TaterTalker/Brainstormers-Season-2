@@ -39,14 +39,19 @@ public class Dumper {
 
     public void resetDumpingBlock(){
         if (side==-1){
-            dumpingBlock.setPosition(0);
+            dumpingBlock.setPosition(0.4);
         } else {
-            dumpingBlock.setPosition(1);
+            dumpingBlock.setPosition(0.6);
         }
     }
     /**
      * configures our dumping system based on what team we're on
      */
+
+    public void stopDumpingBlock(){
+        dumpingBlock.setPosition(0.5);
+    }
+
     public void dumping() {
         opMode.telemetry.addData("Moving", "move: " + moveCount + "old: " + oldCount);
         if (side == BLUE) {
