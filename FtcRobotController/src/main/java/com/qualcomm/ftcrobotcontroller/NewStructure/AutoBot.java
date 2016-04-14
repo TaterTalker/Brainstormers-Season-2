@@ -4,7 +4,6 @@ import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.BackCameraController
 import com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes.FrontCameraController;
 import com.qualcomm.ftcrobotcontroller.NewStructure.Parts.BlockCounter;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -22,7 +21,7 @@ public class AutoBot extends Robot {
     public AutoBot (int side, LinearOpMode varopMode) throws InterruptedException{
         super(side,varopMode);
         linearOpMode = varopMode;
-        cameraController = new BackCameraController(varopMode);
+        backCameraController = new BackCameraController(varopMode);
         frontCam = new FrontCameraController(varopMode);
 
         opMode.telemetry.addData("Init", "running");

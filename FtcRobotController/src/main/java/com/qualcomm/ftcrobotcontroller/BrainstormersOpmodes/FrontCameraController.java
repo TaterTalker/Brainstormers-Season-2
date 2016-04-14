@@ -102,6 +102,7 @@ public class FrontCameraController {
      * initializes the camera
      */
     public void startFrontCam() {
+        opMode. telemetry.addData("startFrontCam", "");
         ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).openFrontFacingCamera();
         camera = ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).theCamera;
         camera.setPreviewCallback(previewCallback); //sets the camera to the proper camera
@@ -111,7 +112,7 @@ public class FrontCameraController {
         parameters.setPreviewSize(320, 240);
         camera.setParameters(parameters);
         ((FtcRobotControllerActivity) opMode.hardwareMap.appContext).initPreview(camera, this, previewCallback);
-
+        opMode. telemetry.addData("startFrontCam 1", "");
     }
 
 //    public int getBlockCount(){

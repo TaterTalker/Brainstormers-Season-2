@@ -88,7 +88,7 @@ public abstract class NewAutonomous extends LinearOpMode {
         autoBot.blockCounterActive = false;
         autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
-        autoBot.cameraController.startBackCam();
+        autoBot.backCameraController.startBackCam();
         sleep(500);
         telemetry.addData("Collector Direction A", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(30, 0.1, 1200); //drives until 15 cm from wall
@@ -101,10 +101,10 @@ public abstract class NewAutonomous extends LinearOpMode {
         if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
             //telemetry.addData("before camera call","");
-            autoBot.cameraController.convertImage();
-            int leftred = autoBot.cameraController.getLeftRed();//read image
+            autoBot.backCameraController.convertImage();
+            int leftred = autoBot.backCameraController.getLeftRed();//read image
             //telemetry.addData("after left camera call", "");
-            int rightred = autoBot.cameraController.getRightRed();
+            int rightred = autoBot.backCameraController.getRightRed();
 
             //telemetry.addData("Colors", "Left " + leftred / 1000 + " Right: " + rightred / 1000);
             if (leftred > rightred){ //left side is red
@@ -127,13 +127,14 @@ public abstract class NewAutonomous extends LinearOpMode {
             sleep(100);
         }
         //telemetry.addData("beacon check", "");
+       // autoBot.frontCameraController.startFrontCam();
+       // sleep (500);
         telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
         autoBot.drive(50, 0.2, 0);
         sleep(1000);
         autoBot.drive(80, -0.2, 0);
-
-        autoBot.blockCounterActive = true; // turns block detection back on
+        //autoBot.blockCounterActive = true; // turns block detection back on
         //autoBot.drive(40, 0.2,0);
         if (goToRamp) { //goes to ramp
             if (side==1){
@@ -147,6 +148,7 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.beaconL.setPosition(.2);
             autoBot.climberDumper.setPosition(0.45);
             autoBot.pivot(200, 1, 2);
+            autoBot.setCollectorDirection(-1);
             autoBot.climberDumper.setPosition(0.5);
             autoBot.setCollectorDirection(-1);
             autoBot.collector.setPower(-1);
@@ -171,6 +173,7 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.beaconL.setPosition(.2);
             autoBot.climberDumper.setPosition(0.5);
             autoBot.newGyroTurn(180, 2);
+            autoBot.setCollectorDirection(-1);
             autoBot.drive(1500, 1, 0);
             autoBot.beaconR.setPosition(.7);
             autoBot.beaconL.setPosition(.2);
