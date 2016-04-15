@@ -73,6 +73,7 @@ public abstract class NewAutonomous extends LinearOpMode {
         waitForStart();
         autoBot.start();
         sleep(100 + delay);
+        autoBot.dumper.stopDumpingBlock();
         if (startNearRamp) { //near ramp position
             autoBot.drive(1600, .7, 0);
             autoBot.pivot(38.5, 1, 0.5);
@@ -89,15 +90,13 @@ public abstract class NewAutonomous extends LinearOpMode {
         autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
         autoBot.backCameraController.startBackCam();
-        sleep(500);
+        sleep(800);
         telemetry.addData("Collector Direction A", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(30, 0.1, 1200); //drives until 15 cm from wall
         //telemetry.addData("before drive after climbers", "");
         autoBot.climberDumper.setPosition(0.5);
         //telemetry.addData("after drive before beacon", "");
         telemetry.addData("Collector Direction B", "" + autoBot.collectorDirection);
-        autoBot.climberDumper.setPosition(0.55);
-        autoBot.dumper.stopDumpingBlock();
         if (triggerBeacon) { //goes to trigger beacon
             sleep(100);
             //telemetry.addData("before camera call","");
@@ -131,6 +130,7 @@ public abstract class NewAutonomous extends LinearOpMode {
        // sleep (500);
         telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
+        autoBot.climberDumper.setPosition(0.575);
         autoBot.drive(50, 0.2, 0);
         sleep(1000);
         autoBot.drive(80, -0.2, 0);

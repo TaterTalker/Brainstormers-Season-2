@@ -70,10 +70,10 @@ public abstract class NewTeleop extends OpMode {
      */
     private void hook(){
         if (gamepad1.left_bumper){
-            teleOpBot.armHook.setPosition(0.6);
+            teleOpBot.armHook.setPosition(0.9);
         }
         else {
-            teleOpBot.armHook.setPosition(0.2);
+            teleOpBot.armHook.setPosition(0.35);
         }
     }
     /**
@@ -92,7 +92,7 @@ public abstract class NewTeleop extends OpMode {
         telemetry.addData("GyroPitch", " " + (teleOpBot.adaFruitGyro.getRoll() + gyroOffset));
         if(gamepad1.right_trigger == 1 || ((teleOpBot.adaFruitGyro.getRoll() + gyroOffset) > 6 && (teleOpBot.adaFruitGyro.getRoll() + gyroOffset) < 50)) {
 
-            if (teleOpBot.wheelBase.getFr().getPower() > 0) {
+            if (teleOpBot.wheelBase.getFr().getPower() >= 0) {
                 teleOpBot.wheelBase.setDriveMod(1f);
 
             }
