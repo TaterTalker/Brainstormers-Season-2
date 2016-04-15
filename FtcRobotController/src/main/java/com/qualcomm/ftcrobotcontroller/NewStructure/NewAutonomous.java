@@ -128,11 +128,12 @@ public abstract class NewAutonomous extends LinearOpMode {
         //telemetry.addData("beacon check", "");
        // autoBot.frontCameraController.startFrontCam();
        // sleep (500);
+        autoBot.climberDumper.setPosition(0.565);
         telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
-        autoBot.climberDumper.setPosition(0.575);
+        autoBot.climberDumper.setPosition(0.5);
         autoBot.drive(50, 0.2, 0);
-        sleep(1000);
+        sleep(1500);
         autoBot.drive(80, -0.2, 0);
         //autoBot.blockCounterActive = true; // turns block detection back on
         //autoBot.drive(40, 0.2,0);
@@ -167,7 +168,7 @@ public abstract class NewAutonomous extends LinearOpMode {
                 autoBot.sideArms.setSideArmRpos(1);
                 autoBot.sideArms.setSideArmLpos(0.8f);
             }
-            autoBot.drive(5000, -1, 0);
+            autoBot.drive(5000, -0.8, 0);
         } else { //goes into place next to ramp
             autoBot.beaconR.setPosition(.7);
             autoBot.beaconL.setPosition(.2);
