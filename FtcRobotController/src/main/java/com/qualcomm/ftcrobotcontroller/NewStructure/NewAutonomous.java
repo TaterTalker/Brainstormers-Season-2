@@ -76,7 +76,12 @@ public abstract class NewAutonomous extends LinearOpMode {
         autoBot.dumper.stopDumpingBlock();
         if (startNearRamp) { //near ramp position
             autoBot.drive(1600, .7, 0);
-            autoBot.pivot(38.5, 1, 0.5);
+            if (side==1) {
+                autoBot.pivot(39.5, 1, 0.5);
+            }
+            else {
+                autoBot.pivot(37.5, 1, 0.5);
+            }
             autoBot.drive(4500, 1, 0);
         } else { //far ramp position
             autoBot.drive(1600, .7, 0);
@@ -84,18 +89,19 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.drive(6500, 1, 0);
         }
         autoBot.drive(2000, .2, 1); //drives to white line
-        autoBot.drive(30, -0.2, 0);
+        autoBot.drive(25, -0.2, 0);
 
         autoBot.newGyroTurn(90, 10);
         autoBot.newGyroTurn(90, 1.5);
 
         autoBot.blockCounterActive = false;
+        autoBot.blockCounterThread.interrupt();
         autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
         autoBot.backCameraController.startBackCam();
         sleep(800);//keep or else NullPointer
         telemetry.addData("Collector Direction A", "" + autoBot.collectorDirection);
-        autoBot.driveUntilUltra(30, 0.1, 1200); //drives until 15 cm from wall
+        autoBot.driveUntilUltra(30, 0.1); //drives until 15 cm from wall
         autoBot.climberDumper.setPosition(0.6);
         //telemetry.addData("before drive after climbers", "");
         //telemetry.addData("after drive before beacon", "");
@@ -130,9 +136,9 @@ public abstract class NewAutonomous extends LinearOpMode {
         }
         telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
         sleep(500);
-        autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
+        autoBot.driveUntilUltra(15, 0.15); //presses buttons
         autoBot.drive(50, 0.2, 0);
-        //sleep(1500);
+        sleep(1000);
         autoBot.climberDumper.setPosition(0.5);
         autoBot.drive(80, -0.2, 0);
         //autoBot.blockCounterActive = true; // turns block detection back on

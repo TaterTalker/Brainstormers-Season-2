@@ -66,7 +66,7 @@ public class AutoBot extends Robot {
     void drive(int distance, double power, int targetType) throws InterruptedException {
         wheelBase.resetEncoderDelta();
         final double oldGyro =  adaFruitGyro.getYaw();
-        final double DEVIATIONGAIN = 0.23; //how much deviation effects the robot
+        final double DEVIATIONGAIN = 0.25; //how much deviation effects the robot WAS ORRIGNALLY 0.23
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
@@ -272,7 +272,7 @@ public class AutoBot extends Robot {
         wheelBase.setRightPower(0);
     }
 
-    void driveUntilUltra(int target, double speed, int maxdistance) throws InterruptedException { //drives until the robot gets within a certain distance of an object
+    void driveUntilUltra(int target, double speed) throws InterruptedException { //drives until the robot gets within a certain distance of an object
         while (readFixedUltra(ultra2) > target || readFixedUltra(ultra2) < 1) {
             driveForever(speed);
             linearOpMode.waitOneFullHardwareCycle();
@@ -280,6 +280,7 @@ public class AutoBot extends Robot {
         wheelBase.setLeftPower(0);
         wheelBase.setRightPower(0);
     }
+
 
     void driveForever(double speed) {
         // Start the drive wheel motors at full power

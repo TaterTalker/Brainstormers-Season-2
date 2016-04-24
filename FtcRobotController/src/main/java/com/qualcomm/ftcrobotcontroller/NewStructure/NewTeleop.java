@@ -18,6 +18,7 @@ public abstract class NewTeleop extends OpMode {
 
     @Override
     public void loop() {
+        teleOpBot.climberDumper.setPosition(0.5);
         teleOpBot.arm.runArmEncoders();
 
         attachments();
