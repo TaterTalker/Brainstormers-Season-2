@@ -84,17 +84,20 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.drive(6500, 1, 0);
         }
         autoBot.drive(2000, .2, 1); //drives to white line
-        autoBot.drive(60, -0.2, 0);
-        autoBot.newGyroTurn(90, 2);
+        autoBot.drive(30, -0.2, 0);
+
+        autoBot.newGyroTurn(90, 10);
+        autoBot.newGyroTurn(90, 1.5);
+
         autoBot.blockCounterActive = false;
         autoBot.setCollectorDirection(0);
         autoBot.collector.setPower(0);
         autoBot.backCameraController.startBackCam();
-        sleep(800);
+        sleep(800);//keep or else NullPointer
         telemetry.addData("Collector Direction A", "" + autoBot.collectorDirection);
         autoBot.driveUntilUltra(30, 0.1, 1200); //drives until 15 cm from wall
+        autoBot.climberDumper.setPosition(0.6);
         //telemetry.addData("before drive after climbers", "");
-        autoBot.climberDumper.setPosition(0.5);
         //telemetry.addData("after drive before beacon", "");
         telemetry.addData("Collector Direction B", "" + autoBot.collectorDirection);
         if (triggerBeacon) { //goes to trigger beacon
@@ -125,15 +128,12 @@ public abstract class NewAutonomous extends LinearOpMode {
             }
             sleep(100);
         }
-        //telemetry.addData("beacon check", "");
-       // autoBot.frontCameraController.startFrontCam();
-       // sleep (500);
-        autoBot.climberDumper.setPosition(0.565);
         telemetry.addData("Collector Direction C", "" + autoBot.collectorDirection);
+        sleep(500);
         autoBot.driveUntilUltra(15, 0.15, 200); //presses buttons
-        autoBot.climberDumper.setPosition(0.5);
         autoBot.drive(50, 0.2, 0);
-        sleep(1500);
+        //sleep(1500);
+        autoBot.climberDumper.setPosition(0.5);
         autoBot.drive(80, -0.2, 0);
         //autoBot.blockCounterActive = true; // turns block detection back on
         //autoBot.drive(40, 0.2,0);
@@ -154,6 +154,7 @@ public abstract class NewAutonomous extends LinearOpMode {
             autoBot.setCollectorDirection(-1);
             autoBot.collector.setPower(-1);
             autoBot.drive(2200, 1, 0);
+            autoBot.newGyroTurn(-45, 10);
             autoBot.newGyroTurn(-45, 2);
 
 
@@ -168,7 +169,7 @@ public abstract class NewAutonomous extends LinearOpMode {
                 autoBot.sideArms.setSideArmRpos(1);
                 autoBot.sideArms.setSideArmLpos(0.8f);
             }
-            autoBot.drive(5000, -0.8, 0);
+            autoBot.drive(5000, -0.75, 0);
         } else { //goes into place next to ramp
             autoBot.beaconR.setPosition(.7);
             autoBot.beaconL.setPosition(.2);
