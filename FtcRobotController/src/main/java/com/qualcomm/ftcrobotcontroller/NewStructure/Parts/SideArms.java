@@ -33,8 +33,12 @@ public class SideArms {
         if (fr.getPower()>0) {
             if (side == 1) {
                 if (opMode.gamepad1.right_trigger != 0  || (gyro.getRoll() + gyroOffset) > 3.5 || opMode.gamepad1.y) {
+                    if ((gyro.getRoll() + gyroOffset) < 3.5){
+                        sideArmR.setPosition(0.5);
+                    } else {
+                        sideArmR.setPosition(1);
+                    }
                     sideArmL.setPosition(0.8);
-                    sideArmR.setPosition(1);
                 }
                 else {
                     sideArmL.setPosition(0.8);
@@ -43,7 +47,11 @@ public class SideArms {
             }
             else if (side == -1) {
                 if (opMode.gamepad1.right_trigger != 0 || (gyro.getRoll() + gyroOffset) > 3.5 || opMode.gamepad1.y) {
-                    sideArmL.setPosition(0);
+                    if ((gyro.getRoll() + gyroOffset) < 3.5){
+                        sideArmL.setPosition(0.3);
+                    } else {
+                        sideArmL.setPosition(0);
+                    }
                     sideArmR.setPosition(0.05);
                 }
                 else {
@@ -52,6 +60,8 @@ public class SideArms {
                 }
             }
         }
+
+        //makes sure side arms don't get stuck on the arm as it is going out or in
         else if (opMode.gamepad2.right_trigger !=0 || opMode.gamepad2.left_trigger !=0){
             sideArmL.setPosition(0.5);
             sideArmR.setPosition(0.5);

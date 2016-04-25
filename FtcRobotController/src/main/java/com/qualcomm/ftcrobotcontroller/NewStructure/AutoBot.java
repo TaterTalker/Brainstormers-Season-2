@@ -66,7 +66,7 @@ public class AutoBot extends Robot {
     void drive(int distance, double power, int targetType) throws InterruptedException {
         wheelBase.resetEncoderDelta();
         final double oldGyro =  adaFruitGyro.getYaw();
-        final double DEVIATIONGAIN = 0.23; //how much deviation effects the robot WAS ORRIGNALLY 0.23
+        final double DEVIATIONGAIN = 0.21; //how much deviation effects the robot WAS ORRIGNALLY 0.23
         double deviation = 0;
         boolean hasReached = false;
         while(!hasReached){
