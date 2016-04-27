@@ -84,7 +84,7 @@ public abstract class NewTeleop extends OpMode {
         if (gamepad1.y) {
             teleOpBot.arm.hang();
             teleOpBot.wheelBase.driveBackwards();
-
+            gyroOffset = -teleOpBot.adaFruitGyro.getRoll();
             telemetry.addData("Arm Angle", "" + teleOpBot.arm.getArmAnglePos());
         }
     }

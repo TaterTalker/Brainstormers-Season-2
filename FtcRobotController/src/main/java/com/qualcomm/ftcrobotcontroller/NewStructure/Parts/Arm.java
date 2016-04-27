@@ -126,7 +126,7 @@ public class Arm {
             if (Math.abs(getArmPos()) < 2500  ) {
 
                 setArmPower(-1);
-            } else {
+            } else if (opMode.gamepad2.right_trigger == 0 && opMode.gamepad2.left_trigger == 0){
                 setArmPower(0);
             }
         }
