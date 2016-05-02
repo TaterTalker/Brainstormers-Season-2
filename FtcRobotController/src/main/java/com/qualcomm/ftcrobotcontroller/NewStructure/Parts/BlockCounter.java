@@ -34,11 +34,11 @@ public class BlockCounter implements Runnable{
         int countInTarget=0;
         boolean isComplete=false;
         while (true){
-            int[] colors = getRowColors(120);
-            if (colors[0]>18000){
+            int[] colors = getRowColors(76);
+            if (colors[0]>22000){
                 countInTarget++;
             }
-            else if (countInTarget>0&&colors[2]<15000){
+            else if (countInTarget>0&&colors[0]<20000){
                 countInTarget--;
             }
             if (autoBot.blockCounterActive) {

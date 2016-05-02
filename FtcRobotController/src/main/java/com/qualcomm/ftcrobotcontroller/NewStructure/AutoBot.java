@@ -103,7 +103,7 @@ public class AutoBot extends Robot {
                     //opMode.telemetry.addData("Has Reached:" , hasReached + " "+ Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2);
                     break;
                 case 1:
-                    hasReached = colorSensor.alpha() >= 2 || Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
+                    hasReached = colorSensor.alpha() >= 4 || Math.abs(wheelBase.brPosition()+ wheelBase.blPosition()) / 2 > Math.abs(distance);
                     //opMode.telemetry.addData("alpha", colorSensor.alpha());
                     break;
                 default:

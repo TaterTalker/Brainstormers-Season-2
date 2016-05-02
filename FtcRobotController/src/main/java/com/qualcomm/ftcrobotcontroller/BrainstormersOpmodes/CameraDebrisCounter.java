@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by August on 4/2/2016.
@@ -16,8 +17,8 @@ public class CameraDebrisCounter extends AutonomousBuildingBlocks implements Run
         runUsingEncoders();
         collector.setPower(0);
         waitForStart();
-        run();
-        sleep(100000);
+        //run();
+        //sleep(100000);
         while(true){
             if (gamepad1.dpad_up){
                 row-=1;
@@ -56,11 +57,11 @@ public class CameraDebrisCounter extends AutonomousBuildingBlocks implements Run
         while(!isComplete){
             runUsingEncoders();
             collector.setPower(1);
-            int[] colors = getRowColors(120);
-            if (colors[0]>18000){
+            int[] colors = getRowColors(76);
+            if (colors[0]>22000){
                 countInTarget++;
             }
-            else if (countInTarget>0&&colors[2]<15000){
+            else if (countInTarget>0&&colors[0]<20000){
                 countInTarget--;
             }
 
