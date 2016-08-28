@@ -1,56 +1,3 @@
-package com.qualcomm.ftcrobotcontroller.BrainstormersOpmodes;
-
-import android.util.Log;
-
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cController;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-
-import java.util.concurrent.locks.Lock;
-
-/**
- * Created by Owner on 8/25/2015.
- * Original author: Alan M. Gilkes, Alternate Coach of FTC Team 3734 ("imperial Robotics")
- * and Mentor of FTC Team 6832 ("Iron Reign")
- * Contact: Email - agilkes@alum.mit.edu, FTC Technology Forum ID - AlanG
- *
- * Overview:
- *
- * This class uses the FTC SDK to provide a software interface to the BNO055 9-DOF Inertial Measurement
- * Unit (IMU) manufactured by Bosch and sold by Adafruit:
- * https://www.adafruit.com/products/2472 ($34.95, as of 25 August 2015)
- * This software assumes that the IMU is connected via a 4-wire cable to one of the I2C ports on the
- * Modern Robotics (MR) Core Device Interface Module (CDIM). (Note: There is a difference between
- * the 4-wire pinout of the I2C ports and the pinout on the IMU board. Crossovers ARE REQUIRED in the
- * 4-wire cable.
- *
- * The datasheet at http://www.adafruit.com/datasheets/BST_BNO055_DS000_12.pdf explains the IMU's
- * functions and interfaces in detail. Also, this software borrows heavily from the open source sensor
- * driver code located on GitHub at https://github.com/adafruit/Adafruit_BNO055
- * The relevant C++ and header files are: Adafruit_BNO055.cpp and Adafruit_BNO055.h
- *
- * Initial interest in the IMU is as a substitute for a heading (yaw angle) gyro. In its fusion mode,
- * the IMU's built-in microcontroller numerically integrates the rates sampled from its 3 built-in
- * gyros and reports the integration results as Euler angles for roll, pitch and heading.
- * (For an explanation of Euler angles, see https://en.wikipedia.org/wiki/Euler_angles)
- *
- * Revision history:
- *
- * 18 September 2015:
- *  Code to instantiate the class, initialize the IMU, and return pitch and yaw(heading)
- *  angles, when requested (AMG)
- * 28 September 2015:
- *  Revised "I2cDevice" method calls in accordance with the 18 Sepetember 2015 release of the FTC
- *  SDK
- *  26 October 2015 2nd Release
- *  Corrected the typecasting and sign extension bugs in the getIMUGyroAngles method that were
- *  reported on the FTC Technology Forum by "yjw558" and "GearTicks"
- *
- */
-
 public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCallback{
 
     public static final int BNO055_ADDRESS_A = 0x28;//From Adafruit_BNO055.h
@@ -231,7 +178,7 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
     //is plugged into
     //private final int configuredI2CPort=0;//The I2C port on the Core Device Interface Module that the IMU
     //is plugged into
-    private final int baseI2Caddress; //The base I2C address used to address all of the IMU's registers
+    private final I2cAddr baseI2Caddress; //The base I2C address used to address all of the IMU's registers
     private int operationalMode;//The operational mode to which the IMU will be set after its initial
     //reset.
     private final byte[] i2cReadCache;//The interface will insert the bytes which have been read into
@@ -277,9 +224,9 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
     */
 
     //The Constructor for the AdafruitIMU class
-    public AdafruitIMU (HardwareMap currentHWmap, String configuredIMUname,
-                        //String configuredInterfaceName, int configuredPort,
-                        byte baseAddress, byte operMode) throws RobotCoreException{
+    public AdafruitIMU(HardwareMap currentHWmap, String configuredIMUname,
+                       //String configuredInterfaceName, int configuredPort,
+                       byte baseAddress, byte operMode) throws RobotCoreException{
         boolean okSoFar = true;
         long calibrationStartTime = 0L;
         byte[] outboundBytes = new byte[i2cBufferSize];
@@ -293,7 +240,7 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
         //i2cIMU = new I2cDevice(deviceInterface, configuredI2CPort); //Identify the IMU with the port to
         //which it is connected on the Modern Robotics Core Device Interface Module
 
-        baseI2Caddress = (int)baseAddress & 0XFF;
+        baseI2Caddress = I2cAddr.create7bit(baseAddress);
         operationalMode = (int)operMode & 0XFF;
         i2cReadCache = i2cIMU.getI2cReadCache();
         i2cReadCacheLock = i2cIMU.getI2cReadCacheLock();
@@ -313,7 +260,7 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
      * actions should be done each time the AdafruitIMU class is reconstructed:
      * 1. Set the PAGE_ID register to 0, so that Register Map 0 will make the SYS_TRIGGER register
      *    visible. (Datasheet p.50)
-     * 2. Reset the IMU, which causes output values to be reset to zero, and horses accelerometers,
+     * 2. Reset the IMU, which causes output values to be reset to zero, and forces accelerometers,
      *    gyros, and magnetic compasses to autocalibrate. (See IMU data sheet p. 18, Table 4-2, p.51
      *    , and Section 3.10, p.47. Also, set the bit that commands self-test.
      * 3. OPR_MODE register = the user-selected operationalMode (passed in as operMode)
@@ -531,7 +478,7 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
                                 | (i2cReadCache[BNO055_QUATERNION_DATA_Z_LSB_ADDR - readCacheOffset] & 0XFF)) / 16384.0;
         /*
         * See IMU datasheet, Section 3.6.2 on p.30 AND Section 4.2.1 on pp. 51 & 52. IT APPEARS THAT
-        * THE DOCUMENTATION HAS MISLABELED "ROLL" AS "PITCH" AND "PITCH" AS "ROLL". THIS HorseS
+        * THE DOCUMENTATION HAS MISLABELED "ROLL" AS "PITCH" AND "PITCH" AS "ROLL". THIS FORCES
         * CORRECTIONS TO THE WAY THAT THE FIXED-POINT EULER DATA REGISTERS ARE USED: THE "EULER_R"
         * REGISTERS ARE TREATED AS PITCH DATA, AND THE "EULER_P" REGISTERS ARE TREATED AS ROLL DATA.
         */
@@ -575,8 +522,6 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
             tempQuatPitch = Math.asin((tempQuatPitch > 1.0) ? 1.0
                     : ((tempQuatPitch < -1.0) ? -1.0 : tempQuatPitch)) * 180.0 /Math.PI;
             tempPitch = -((double) tempP) / 16.0; //Correct for the fixed-point scaling and make tempPitch
-
-            tempRoll = -((double) tempR) / 16.0;
             // agree with tempQuatPitch with respect to sign
             //tempQuatYaw is the "psi" angle in the Tait-Bryan equations. It is converted from the range
             // [-pi to +pi radians] to the range [-180 to +180 degrees]. Angle increases with COUNTERclockwise
@@ -605,17 +550,13 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
                 Log.i("FtcRobotController", String.format("Number of \"reads\" to initialize offsets: %d"
                         , totalI2Creads));
             }
-            roll[0] = tempRoll - rollOffset[0];
-            roll[0] = (roll[0] > 90.0) ? 90.0 : ((roll[0] < -90.0) ? -90.0 : roll[0]);
-            roll[1] = tempQuatRoll - rollOffset[1];
-            roll[1] = (roll[1] > 90.0) ? 90.0 : ((roll[1] < -90.0) ? -90.0 : roll[1]);
-
+            roll[0] = 0.0;
+            roll[1] = 0.0;
             //Output pitch angles are offset-corrected and range-limited to -90 thru +90
             pitch[0] = tempPitch - pitchOffset[0];
             pitch[0] = (pitch[0] > 90.0) ? 90.0 : ((pitch[0] < -90.0) ? -90.0 : pitch[0]);
             pitch[1] = tempQuatPitch - pitchOffset[1];
             pitch[1] = (pitch[1] > 90.0) ? 90.0 : ((pitch[1] < -90.0) ? -90.0 : pitch[1]);
-
             //Output yaw(heading) angles are offset-corrected and range-limited to -180 thru 180
             yaw[0] = tempYaw - yawOffset[0];
             yaw[0] = (yaw[0] >= 180.0) ? (yaw[0] - 360.0) : ((yaw[0] < -180.0) ? (yaw[0] + 360.0) : yaw[0]);
@@ -651,6 +592,12 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
     }
 
     //All of the following implement the HardwareDevice Interface
+    public void resetDeviceConfigurationForOpMode(){
+
+    }
+    public Manufacturer getManufacturer(){
+        return Manufacturer.AdaFruit;
+    }
 
     public String getDeviceName() {
         return "Bosch 9-DOF IMU BNO055";
